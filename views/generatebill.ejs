@@ -160,23 +160,34 @@
                               <div class="d-flex flex-row align-items-start justify-content-between mt-2">
                                   <span class="fw-bold">CGST:</span>
                                   <span>
-                                      <span class="small">(0%)</span>
-                                      ₹0.00
-                                  </span>
+                                    <div class="my-1 flex-nowrap input-group" >
+                                    <input type="number" name="discountRate" class="bg-white border form-control" style="width: 80px;" placeholder="0.0" min="0.0" step="0.1" max="100.0">
+                                    <span class="bg-light fw-bold text-secondary small input-group-text">(%) ₹123422</span>  
+                                   
+                                  </div>
+                                </span>
                               </div>
                               <div class="d-flex flex-row align-items-start justify-content-between mt-2">
                                 <span class="fw-bold">SGST:</span>
                                 <span>
-                                    <span class="small">(0%)</span>
-                                    ₹0.00
-                                </span>
+                                  <div class="my-1 flex-nowrap input-group" >
+                                  <input type="number" name="discountRate" class="bg-white border form-control" style="width: 80px;" placeholder="0.0" min="0.0" step="0.1" max="100.0">
+                                  <span class="bg-light fw-bold text-secondary small input-group-text">(%) ₹123422</span>  
+                                 
+                                </div>
+                              </span>
                             </div>
                             <div class="d-flex flex-row align-items-start justify-content-between mt-2">
                               <span class="fw-bold">IGST:</span>
-                              <span>
-                                  <span class="small">(0%)</span>
-                                  ₹0.00
-                              </span>
+                                  <span>
+                                    <div class="my-1 flex-nowrap input-group" >
+                                    <input type="number" name="discountRate" class="bg-white border form-control" style="width: 80px;" placeholder="0.0" min="0.0" step="0.1" max="100.0">
+                                    <span class="bg-light fw-bold text-secondary small input-group-text">(%) ₹123422</span>  
+                                   
+                                  </div>
+                                </span>
+                                
+                              
                           </div>
                               <hr>
                               <div style="font-size: 1.125rem;" class="d-flex flex-row align-items-start justify-content-between">
@@ -194,23 +205,7 @@
                   <div class="sticky-top pt-md-3 pt-xl-4">
                       <a href="#" id="openModalBtn"  class="btn btn-primary d-block w-100">Review Invoice</a>
                       
-                      <div class="my-3">
-                          <label class="fw-bold">CGST:</label>
-                          <div class="my-1 flex-nowrap input-group">
-                              <input type="number" name="taxRate" class="bg-white border form-control" placeholder="0.0" min="0.00" step="0.01" max="100.00">
-                              <span class="bg-light fw-bold text-secondary small input-group-text">%</span>
-                          </div>
-                          <label class="fw-bold">SGST:</label>
-                          <div class="my-1 flex-nowrap input-group">
-                              <input type="number" name="taxRate" class="bg-white border form-control" placeholder="0.0" min="0.00" step="0.01" max="100.00">
-                              <span class="bg-light fw-bold text-secondary small input-group-text">%</span>
-                          </div>
-                          <label class="fw-bold">IGST:</label>
-                          <div class="my-1 flex-nowrap input-group">
-                              <input type="number" name="taxRate" class="bg-white border form-control" placeholder="0.0" min="0.00" step="0.01" max="100.00">
-                              <span class="bg-light fw-bold text-secondary small input-group-text">%</span>
-                          </div>
-                      </div>
+                    
                       <div class="my-3">
                           <label class="fw-bold">Report:</label>
                           <br>
@@ -233,12 +228,56 @@
                               <span class="bg-light fw-bold text-secondary small input-group-text">%</span>
                             </div>
                             <label for="">HUSK</label>
-
+                    
                             <div class="my-1 flex-nowrap input-group">
 
                               <input type="number" name="discountRate" class="bg-white border form-control" placeholder="0.0" min="0.00" step="0.01" max="100.00">
                               <span class="bg-light fw-bold text-secondary small input-group-text">%</span>
-                              </div>
+                              </div>     
+                                 <label class="fw-bold text-primary">Grades:</label>
+                            <br>
+                              <label for="">AAA %</label>
+
+                              <div class="my-1 flex-nowrap input-group">
+  
+                                <input type="number" name="discountRate" class="bg-white border form-control" placeholder="0.0" min="0.00" step="0.01" max="100.00">
+                                <span class="bg-light fw-bold text-secondary small input-group-text">%</span>
+                                </div>
+                                <label for="">AA %</label>
+
+                                <div class="my-1 flex-nowrap input-group">
+    
+                                  <input type="number" name="discountRate" class="bg-white border form-control" placeholder="0.0" min="0.00" step="0.01" max="100.00">
+                                  <span class="bg-light fw-bold text-secondary small input-group-text">%</span>
+                                  </div>
+                                  <label for="">A %</label>
+
+                                  <div class="my-1 flex-nowrap input-group">
+      
+                                    <input type="number" name="discountRate" class="bg-white border form-control" placeholder="0.0" min="0.00" step="0.01" max="100.00">
+                                    <span class="bg-light fw-bold text-secondary small input-group-text">%</span>
+                                    </div>
+                                    <label for="">B %</label>
+
+                                    <div class="my-1 flex-nowrap input-group">
+        
+                                      <input type="number" name="discountRate" class="bg-white border form-control" placeholder="0.0" min="0.00" step="0.01" max="100.00">
+                                      <span class="bg-light fw-bold text-secondary small input-group-text">%</span>
+                                      </div>
+                                      <label for="">C %</label>
+
+                                      <div class="my-1 flex-nowrap input-group">
+          
+                                        <input type="number" name="discountRate" class="bg-white border form-control" placeholder="0.0" min="0.00" step="0.01" max="100.00">
+                                        <span class="bg-light fw-bold text-secondary small input-group-text">%</span>
+                                        </div>
+                                        <label for="">P Berry %</label>
+
+                                        <div class="my-1 flex-nowrap input-group">
+            
+                                          <input type="number" name="discountRate" class="bg-white border form-control" placeholder="0.0" min="0.00" step="0.01" max="100.00">
+                                          <span class="bg-light fw-bold text-secondary small input-group-text">%</span>
+                                          </div>
                               <!-- <label for="">OTHER</label>
 
                               <div class="my-1 flex-nowrap input-group">
