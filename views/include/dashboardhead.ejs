@@ -150,35 +150,34 @@
                         <i class="menu-icon tf-icons bx bx-money"></i><div data-i18n="Add Property">Transactions</div>
                     </a>
                 </li>
-                    <li class="menu-header small text-uppercase">
-                        <span class="menu-header-text">Purchase</span>
-                    </li> 
+                    
                     <li class="menu-item <%= route=='purchasedelivered'?'active':'' %>">
                         <a href="/purchasedelivered" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-send"></i><div data-i18n="Add Property">Delivered</div>
+                            <i class="menu-icon tf-icons bx bxs-inbox"></i><div data-i18n="Add Property">Purchase</div>
                         </a>
                     </li>
-                    <li class="menu-item <%= route=='purchasestorage'?'active':'' %>">
+                 
+                            <li class="menu-item <%= route=='salesdelivered'?'active':'' %>">
+                                        <a href="/salesdelivered" class="menu-link">
+                                            <i class="menu-icon tf-icons bx bx-send"></i><div data-i18n="Add Property">Sales</div>
+                                        </a>
+                                    </li>
+                                   
+                               
+               <li class="menu-header small text-uppercase">
+                        <span class="menu-header-text">Storage & Commitment</span>
+                    </li>   
+                     <li class="menu-item <%= route=='purchasestorage'?'active':'' %>">
                         <a href="/purchasestorage" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-box"></i><div data-i18n="Properties">Storage</div>
                         </a>
                     </li>
                    
-                            <li class="menu-header small text-uppercase">
-                                <span class="menu-header-text">Sales</span>
-                            </li> 
-                            <li class="menu-item <%= route=='salesdelivered'?'active':'' %>">
-                                        <a href="/salesdelivered" class="menu-link">
-                                            <i class="menu-icon tf-icons bx bx-send"></i><div data-i18n="Add Property">Delivered</div>
-                                        </a>
-                                    </li>
-                                    <li class="menu-item <%= route=='salesstorage'?'active':'' %>">
+                     <li class="menu-item <%= route=='salesstorage'?'active':'' %>">
                                         <a href="/salesstorage" class="menu-link">
-                                            <i class="menu-icon tf-icons bx bx-box"></i><div data-i18n="Properties">Storage</div>
+                                            <i class="menu-icon tf-icons bx bxs-hand-up"></i><div data-i18n="Properties">Commitment</div>
                                         </a>
                                     </li>
-                               
-               
                             <li class="menu-header small text-uppercase">
                                 <span class="menu-header-text">Loaders management</span>
                             </li> 

@@ -8,7 +8,7 @@
     <!-- Basic Bootstrap Table -->
     <div class="card">
       <div class="card-body">
-        <form onsubmit="openModal(); return false;">
+        <form id="dataform" action="/submit-bill" method="post">
           <div class="row">
               <div class="col-md-8 col-lg-9">
                   <div class="card p-4 p-xl-5 my-3 my-xl-4">
@@ -17,12 +17,12 @@
                               
                               <div class="d-flex flex-row align-items-center">
                                   <span class="fw-bold d-block me-2">Bill Date:</span>
-                                  <input type="date" class="form-control" name="dateOfIssue" style="max-width: 150px;" required>
+                                  <input type="date" class="form-control" name="dateOfIssue" id="dateOfIssue" style="max-width: 150px;" required>
                               </div>
                           </div>
                           <div class="d-flex flex-row align-items-center">
                               <span class="fw-bold me-2">Invoice Number:&nbsp;</span>
-                              <span class="current-date" id="invoicenumber"></span>
+                              <span class="current-date"><input style="width:150px" id="invoicenumber" name="invoicenumber" class="form-control" type="text"/></span>
 
                           </div>
                       </div>
@@ -30,37 +30,29 @@
                       <div class="row mb-5">
                           <div class="col">
                               <label class="fw-bold">Bill to / from:</label>
-                              <input placeholder="Who is this invoice to?" type="text" name="billTo" class="form-control my-2" required>
-                              <input placeholder="GST" type="text" name="gst" class="form-control my-2" required>
-                              <input placeholder="Billing address" type="text" name="billToAddress" class="form-control my-2" required>
-                              <input placeholder="Lorry Number" type="text" name="billToAddress" class="form-control my-2">
+                              <input placeholder="Who is this invoice to?" type="text" name="billTo" id="billto" class="form-control my-2" required>
+                              <input placeholder="GST" type="text" name="gst" id="gst" class="form-control my-2" required>
+                              <input placeholder="Billing address" type="text" name="billToAddress" id="billToAddress" class="form-control my-2" required>
+                              <input placeholder="Lorry Number" type="text" name="lorry" id="lorry" class="form-control my-2">
                           </div>
                           <div class="col">
                               <label class="fw-bold">Bill Details:</label>
                               <br>
-                              <!-- <label for="">Product</label>
-                              <select name="" class="form-control" id="">
-                                <option value="rccherry">RC CHERRY</option>
-                                <option value="ecep">RC EP</option>
-                                <option value="arabicacherry">ARABICA CHERRY</option>
-                                <option value="arabicaep">ARABICA EP</option>
-                                <option value="husk">HUSK</option>
-                                <option value="other">OTHER</option>
-                              </select> -->
+                           
                               <label for="">Bill Type</label>
-                              <select name="" class="form-control" id="">
+                              <select name="type" class="form-control" id="billtype">
                                 <option value="Purchase">RD-Purchase</option>
                                 <option value="Sales">Sales</option>
                                 <option value="Purchase">URD-Purchase</option>
 
                               </select>
+                              
                               <label for="">Commitment</label>
-                              <select name="" class="form-control" id="">
+                              <select name="commitment" class="form-control" id="commitment">
                                 <option value="Delivered">Delivered</option>
                                 <option value="Storage">Storage</option>
                                 <option value="Committed">Committed</option>
                               </select>
-                              <input placeholder="E-Way Bill Number" type="text" name="billToAddress" class="form-control my-2">
                           </div>
                       </div>
                       <div class="row">
@@ -77,7 +69,7 @@
                             <tr>
                               <td style="width: 45%;padding: 5px">
                                   <div class="input-group">
-                                    <select name="" class="form-control" id=""  required
+                                    <select name="item" class="form-control" id="item"  required
                                     style="width: 100%;">
                                       <option value="rccherry">RC CHERRY</option>
                                       <option value="ecep">RC EP</option>
@@ -92,14 +84,7 @@
                                       <option value="acoffy">RC EP C GRADE</option>
 
                                     </select>
-                                      <!-- <input
-                                          type="text"
-                                          name="name"
-                                          placeholder="Item name"
-                                          class="form-control"
-                                          required
-                                          style="width: 100%;"
-                                      /> -->
+                                     
                                       
                                   </div>
                               </td>
@@ -107,10 +92,10 @@
                                 <div class="input-group my-1 flex-nowrap">
                                     <input
                                         type="number"
-                                        name="quantity"
+                                        name="bags"
                                         min="1"
                                         step="1"
-                                  
+                                        id="bags"
                                         class="form-control"
                                         required
                                     />
@@ -123,7 +108,7 @@
                                           name="quantity"
                                           min="1"
                                           step="1"
-                                      
+                                          id="quantity"
                                           class="form-control"
                                           required
                                       />
@@ -138,7 +123,7 @@
                                           min="1"
                                           step="0.01"
                                           precision="2"
-                                         
+                                          id="price"
                                           class="form-control text-end"
                                           required
                                       />
@@ -164,7 +149,7 @@
                                   <span class="fw-bold mt-2">CGST:</span>
                                   <span>
                                     <div class="my-1 flex-nowrap input-group" >
-                                    <input type="number" name="discountRate" class="bg-white border form-control" style="width: 80px;" placeholder="0.0" min="0.0" step="0.1" max="100.0">
+                                    <input type="number" name="cgst" id="cgst" class="bg-white border form-control" style="width: 80px;" placeholder="0.0" min="0.0" step="0.1" max="100.0">
                                     <span class="bg-light fw-bold text-secondary small input-group-text">(%) ₹123422</span>  
                                    
                                   </div>
@@ -174,7 +159,7 @@
                                 <span class="fw-bold mt-2">SGST:</span>
                                 <span>
                                   <div class="my-1 flex-nowrap input-group" >
-                                  <input type="number" name="discountRate" class="bg-white border form-control" style="width: 80px;" placeholder="0.0" min="0.0" step="0.1" max="100.0">
+                                  <input type="number" name="sgst" id="sgst" class="bg-white border form-control" style="width: 80px;" placeholder="0.0" min="0.0" step="0.1" max="100.0">
                                   <span class="bg-light fw-bold text-secondary small input-group-text">(%) ₹123422</span>  
                                  
                                 </div>
@@ -184,7 +169,7 @@
                               <span class="fw-bold mt-2">IGST:</span>
                                   <span>
                                     <div class="my-1 flex-nowrap input-group" >
-                                    <input type="number" name="discountRate" class="bg-white border form-control" style="width: 80px;" placeholder="0.0" min="0.0" step="0.1" max="100.0">
+                                    <input type="number" name="igst" id="igst" class="bg-white border form-control" style="width: 80px;" placeholder="0.0" min="0.0" step="0.1" max="100.0">
                                     <span class="bg-light fw-bold text-secondary small input-group-text">(%) ₹123422</span>  
                                    
                                   </div>
@@ -201,10 +186,10 @@
                       </div>
                       <hr class="my-4">
                       <label class="fw-bold">Notes:</label>
-                      <textarea placeholder="Thanks for your business!" name="notes" class="form-control my-2" rows="1"></textarea>
+                      <textarea placeholder="Thanks for your business!" name="notes" class="form-control my-2" id="notes" rows="1"></textarea>
                   </div>
               </div>
-              <div class="col-md-4 col-lg-3">
+              <div class="col-md-4 col-lg-3" id="reportcol">
                   <div class="sticky-top pt-md-3 pt-xl-4">
                       <a href="#" id="openModalBtn"  class="btn btn-primary d-block w-100">Review Invoice</a>
                       
@@ -215,83 +200,83 @@
                           <label for="">Outern</label>
 
                           <div class="my-1 flex-nowrap input-group">
-                              <input type="number" name="discountRate" class="bg-white border form-control" placeholder="0.0" min="0.00" step="0.01" max="100.00">
+                              <input type="number" name="outern" id="outern" class="bg-white border form-control" placeholder="0.0" min="0.00" step="0.01" max="100.00">
                               <span class="bg-light fw-bold text-secondary small input-group-text">%</span>
                             </div>
                             <label for="">Moisture</label>
 
                           <div class="my-1 flex-nowrap input-group">
-                              <input type="number" name="discountRate" class="bg-white border form-control" placeholder="0.0" min="0.00" step="0.01" max="100.00">
+                              <input type="number" name="moisture" id="moisture" class="bg-white border form-control" placeholder="0.0" min="0.00" step="0.01" max="100.00">
                               <span class="bg-light fw-bold text-secondary small input-group-text">%</span>
                             </div>
-                          <label for="">BB</label>
+                          <label for="">Blacks</label>
 
                           <div class="my-1 flex-nowrap input-group">
-                              <input type="number" name="discountRate" class="bg-white border form-control" placeholder="0.0" min="0.00" step="0.01" max="100.00">
+                              <input type="number" name="blacks" id="blacks" class="bg-white border form-control" placeholder="0.0" min="0.00" step="0.01" max="100.00">
                               <span class="bg-light fw-bold text-secondary small input-group-text">%</span>
                             </div>
-                            <label for="">HUSK</label>
+                            <label for="">Husk</label>
                     
                             <div class="my-1 flex-nowrap input-group">
 
-                              <input type="number" name="discountRate" class="bg-white border form-control" placeholder="0.0" min="0.00" step="0.01" max="100.00">
+                              <input type="number" name="husk" id="husk" class="bg-white border form-control" placeholder="0.0" min="0.00" step="0.01" max="100.00">
                               <span class="bg-light fw-bold text-secondary small input-group-text">%</span>
                               </div>     
+                              
                                  <label class="fw-bold text-primary">Grades:</label>
                             <br>
                               <label for="">AAA %</label>
 
                               <div class="my-1 flex-nowrap input-group">
   
-                                <input type="number" name="discountRate" class="bg-white border form-control" placeholder="0.0" min="0.00" step="0.01" max="100.00">
+                                <input type="number" name="aaa" id="aaa" class="bg-white border form-control" placeholder="0.0" min="0.00" step="0.01" max="100.00">
                                 <span class="bg-light fw-bold text-secondary small input-group-text">%</span>
                                 </div>
                                 <label for="">P BERRY %</label>
 
                                         <div class="my-1 flex-nowrap input-group">
             
-                                          <input type="number" name="discountRate" class="bg-white border form-control" placeholder="0.0" min="0.00" step="0.01" max="100.00">
+                                          <input type="number" name="pberry" id="pberry" class="bg-white border form-control" placeholder="0.0" min="0.00" step="0.01" max="100.00">
                                           <span class="bg-light fw-bold text-secondary small input-group-text">%</span>
                                           </div>
                                 <label for="">AA %</label>
 
                                 <div class="my-1 flex-nowrap input-group">
     
-                                  <input type="number" name="discountRate" class="bg-white border form-control" placeholder="0.0" min="0.00" step="0.01" max="100.00">
+                                  <input type="number" name="aa" id="aa" class="bg-white border form-control" placeholder="0.0" min="0.00" step="0.01" max="100.00">
                                   <span class="bg-light fw-bold text-secondary small input-group-text">%</span>
                                   </div>
                                   <label for="">A %</label>
 
                                   <div class="my-1 flex-nowrap input-group">
       
-                                    <input type="number" name="discountRate" class="bg-white border form-control" placeholder="0.0" min="0.00" step="0.01" max="100.00">
+                                    <input type="number" name="a" id="a" class="bg-white border form-control" placeholder="0.0" min="0.00" step="0.01" max="100.00">
                                     <span class="bg-light fw-bold text-secondary small input-group-text">%</span>
                                     </div>
                                     <label for="">B %</label>
 
                                     <div class="my-1 flex-nowrap input-group">
         
-                                      <input type="number" name="discountRate" class="bg-white border form-control" placeholder="0.0" min="0.00" step="0.01" max="100.00">
+                                      <input type="number" name="b" id="b" class="bg-white border form-control" placeholder="0.0" min="0.00" step="0.01" max="100.00">
                                       <span class="bg-light fw-bold text-secondary small input-group-text">%</span>
                                       </div>
                                       <label for="">C %</label>
 
                                       <div class="my-1 flex-nowrap input-group">
           
-                                        <input type="number" name="discountRate" class="bg-white border form-control" placeholder="0.0" min="0.00" step="0.01" max="100.00">
+                                        <input type="number" name="c" id="c" class="bg-white border form-control" placeholder="0.0" min="0.00" step="0.01" max="100.00">
                                         <span class="bg-light fw-bold text-secondary small input-group-text">%</span>
                                         </div>
-                                        
-                              <!-- <label for="">OTHER</label>
-
-                              <div class="my-1 flex-nowrap input-group">
-
-                              <input type="number" name="discountRate" class="bg-white border form-control" placeholder="0.0" min="0.00" step="0.01" max="100.00">
-                              <span class="bg-light fw-bold text-secondary small input-group-text">%</span>
-                              </div> -->
+                        
                           </div>
                       </div>
                   </div>
+                  <div class="col-md-4 col-lg-3" id="clientscol" style="display: none;">
+                    <div class="sticky-top pt-md-3 pt-xl-4">
+                        <a href="#" id="openModalBtn"  class="btn btn-primary d-block w-100">Review Invoice</a>
+                      
+                        </div>
+                    </div>
               </div>
           </div>
       </form>
@@ -387,12 +372,12 @@
         <div class="pb-4 px-4">
           <div class="row">
             <div class="col-md-6">
-              <button class="btn btn-success d-block w-100" onclick="GenerateInvoice()">
+              <button class="btn btn-success d-block w-100">
                 <i class="me-2" style="width: 15px; height: 15px; margin-top: -3px;"></i>Send Invoice
               </button>
             </div>
             <div class="col-md-6">
-              <button class="btn btn-outline-primary d-block w-100 mt-3 mt-md-0" onclick="GenerateInvoice()">
+              <button class="btn btn-outline-primary d-block w-100 mt-3 mt-md-0" >
                 <i class="me-2" style="width: 16px; height: 16px; margin-top: -3px;"></i>Download Copy
               </button>
             </div>
@@ -400,7 +385,7 @@
           </div> 
           <br>
         <div class="col-12">
-              <button class="btn btn-primary d-block w-100 mt-md-0" onclick="GenerateInvoice()">
+              <button class="btn btn-primary d-block w-100 mt-md-0" id="generateInvoiceBtn" type="submit" form="dataform">
                 <i class="me-2" style="width: 16px; height: 16px; margin-top: -3px;"></i>Generate Invoice
               </button>
             </div>
@@ -442,8 +427,7 @@ const randomNum = Math.floor(Math.random() * 90) + 10;
 const invoiceNumber = `${year}${month}${day}${hour}${minute}`;
 
 // Set the generated invoice number to the element with the id "invoicenumber"
-document.getElementById('invoicenumber').innerText = invoiceNumber;
-document.getElementById('currentdate').innerText = new Date().toLocaleDateString() ;
+document.getElementById('invoicenumber').value = invoiceNumber;
 
 </script>
 
@@ -511,5 +495,158 @@ document.getElementById('currentdate').innerText = new Date().toLocaleDateString
   // Populate the modal with data from the #modalData element
   const modalData = document.getElementById('modalData');
   const invoiceCapture = document.getElementById('invoiceCapture');
-  invoiceCapture.innerHTML = modalData.innerHTML;
-</script>                               <%- include('./include/end.ejs') -%>
+  // invoiceCapture.innerHTML = modalData.innerHTML;
+
+
+
+</script>        
+<!-- Your HTML code -->
+
+<script>
+  // Function to handle focus on the billto input
+  function handleBillToFocus() {
+    const reportCol = document.getElementById('reportcol');
+    const clientsCol = document.getElementById('clientscol');
+
+    // When billto input is focused, hide reportcol and show clientscol
+    reportCol.style.display = 'none';
+    clientsCol.style.display = 'block';
+  }
+
+  // Function to handle blur (out of focus) on the billto input
+  function handleBillToBlur() {
+    const reportCol = document.getElementById('reportcol');
+    const clientsCol = document.getElementById('clientscol');
+
+    // When billto input loses focus, hide clientscol and show reportcol
+    reportCol.style.display = 'block';
+    clientsCol.style.display = 'none';
+  }
+
+  // Add event listeners to the billto input
+  const billToInput = document.getElementById('billto');
+  billToInput.addEventListener('focus', handleBillToFocus);
+  billToInput.addEventListener('blur', handleBillToBlur);
+</script>
+<script>
+  // Function to handle form submission
+// Function to handle form submission
+// async function submitForm() {
+//   // Remove 'const' before 'form' to use the one declared in the outer scope
+//   const invoicenumber = document.getElementById('invoicenumber').value
+//  const billto = document.getElementById('billto').value
+//  const dateOfIssue = document.getElementById('dateOfIssue').value
+//  const gst = document.getElementById('gst').value
+//  const billToAddress = document.getElementById('billToAddress').value
+//  const lorry = document.getElementById('lorry').value
+//  const billtype = document.getElementById('billtype').value
+//  const commitment = document.getElementById('commitment').value
+//  const item = document.getElementById('item').value
+//  const bags = document.getElementById('bags').value
+//  const quantity = document.getElementById('quantity').value
+//  const price = document.getElementById('price').value
+//  const cgst = document.getElementById('cgst').value
+//  const sgst = document.getElementById('sgst').value
+//  const igst = document.getElementById('igst').value
+//  const notes = document.getElementById('notes').value
+//  const outern = document.getElementById('outern').value
+//  const moisture = document.getElementById('moisture').value
+//  const blacks = document.getElementById('blacks').value
+//  const husk = document.getElementById('husk').value
+//  const aaa = document.getElementById('aaa').value
+//  const aa = document.getElementById('a').value
+//  const a = document.getElementById('a').value
+//  const b = document.getElementById('b').value
+//  const c = document.getElementById('c').value
+//  const pberry = document.getElementById('pberry').value
+ 
+
+//   try {
+//     console.log('here')
+//     const response = await fetch('/submit-bill', {
+//       method: 'POST',
+//       body: {
+//         invoicenumber,
+//         billto,
+//         dateOfIssue,
+//         gst,
+//         billToAddress,
+//         lorry,
+//         billtype,
+//         commitment,
+//         item,
+//         bags,
+//         quantity,
+//         price,
+//         cgst,
+//         sgst,
+//         igst,
+//         notes,
+//         outern,
+//         moisture,
+//         blacks,
+//         husk,
+//         aaa,
+//         aa,
+//         a,
+//         b,
+//         c,
+//         pberry
+//       },
+//     });
+
+//     if (response.ok) {
+//       alert('Form submitted successfully');
+//       // You can redirect or perform any other action here
+//     } else {
+//       alert('Error submitting the form');
+//     }
+//   } catch (error) {
+//     console.log('Error:', error);
+//     alert('Error submitting the form');
+//   }
+// }
+
+// // Add an event listener to the "Generate Invoice" button
+
+//  document.getElementById('generateInvoiceBtn').addEventListener('click', () => {
+//     submitForm();
+//   });
+
+async function submitForm() {
+  const form = document.getElementById('dataform');
+  const formData = new FormData(form);
+  console.log(formData)
+
+  try {
+    const response = await fetch('/submit-bill', {
+      method: 'POST',
+      body: formData, // Use the FormData object as the request body
+    });
+
+    if (response.ok) {
+      alert('Form submitted successfully');
+      // You can redirect or perform any other action here
+    } else {
+      alert('Error submitting the form');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    alert('Error submitting the form');
+  }
+}
+
+// // Add an event listener to the "Generate Invoice" button to trigger the form submission
+// document.getElementById('generateInvoiceBtn').addEventListener('click', () => {
+//   submitForm();
+// });
+
+</script>
+
+
+
+
+
+
+<!-- Your HTML code continues... -->
+                       <%- include('./include/end.ejs') -%>
