@@ -8,7 +8,8 @@
     <!-- Basic Bootstrap Table -->
     <div class="card">
       <div class="card-body">
-        <form id="dataform" action="/submit-bill" method="post">
+        <!-- action="/submit-bill" method="post" -->
+        <form id="dataform">
           <div class="row">
               <div class="col-md-8 col-lg-9">
                   <div class="card p-4 p-xl-5 my-3 my-xl-4">
@@ -53,6 +54,10 @@
                                 <option value="Storage">Storage</option>
                                 <option value="Committed">Committed</option>
                               </select>
+                              <label for="">Other Party</label>
+
+                              <input placeholder="Agent?" type="text" name="otherparty" id="otherparty" class="form-control my-2" required>
+
                           </div>
                       </div>
                       <div class="row">
@@ -274,7 +279,8 @@
                   <div class="col-md-4 col-lg-3" id="clientscol" style="display: none;">
                     <div class="sticky-top pt-md-3 pt-xl-4">
                         <a href="#" id="openModalBtn"  class="btn btn-primary d-block w-100">Review Invoice</a>
-                      
+                        <div class="my-3" id="clientslist">
+                          </div>
                         </div>
                     </div>
               </div>
@@ -504,7 +510,59 @@ document.getElementById('invoicenumber').value = invoiceNumber;
 
 <script>
   // Function to handle focus on the billto input
-  function handleBillToFocus() {
+  async function handleBillToFocus() {
+    try {
+  const response = await fetch('/getclients', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (response.ok) {
+    // Check if the response status is in the range 200-299 (indicating success)
+    var div = document.getElementById('clientslist')
+    const data = await response.json(); // Parse the response body as JSON
+    const clientsListDiv = document.getElementById('clientslist');
+
+data.forEach((element) => {
+  // Create a new div for each element
+  const clientDiv = document.createElement('div');
+  clientDiv.classList.add('client');
+
+  // Create and add elements for .billTO, .address, and .gst
+  const billToElement = document.createElement('p');
+  billToElement.classList.add('billTO');
+  billToElement.textContent = `Bill To: ${element.billTo}`;
+
+  const addressElement = document.createElement('p');
+  addressElement.classList.add('address');
+  addressElement.textContent = `Address: ${element.address}`;
+
+  const gstElement = document.createElement('p');
+  gstElement.classList.add('gst');
+  gstElement.textContent = `GST: ${element.gst}`;
+
+  // Append billTo, address, and gst elements to the client div
+  clientDiv.appendChild(billToElement);
+  clientDiv.appendChild(addressElement);
+  clientDiv.appendChild(gstElement);
+
+  // Append the client div to the clientsListDiv
+  clientsListDiv.appendChild(clientDiv);
+});
+// Log the data to the console
+
+    // Now you can handle the 'data' as needed
+  } else {
+    // Handle non-successful responses (e.g., 404, 500, etc.)
+    console.log(`Error: ${response.status} - ${response.statusText}`);
+  }
+} catch (error) {
+  // Handle network errors or other exceptions
+  console.error(error);
+}
+
     const reportCol = document.getElementById('reportcol');
     const clientsCol = document.getElementById('clientscol');
 
@@ -529,100 +587,28 @@ document.getElementById('invoicenumber').value = invoiceNumber;
   billToInput.addEventListener('blur', handleBillToBlur);
 </script>
 <script>
-  // Function to handle form submission
-// Function to handle form submission
-// async function submitForm() {
-//   // Remove 'const' before 'form' to use the one declared in the outer scope
-//   const invoicenumber = document.getElementById('invoicenumber').value
-//  const billto = document.getElementById('billto').value
-//  const dateOfIssue = document.getElementById('dateOfIssue').value
-//  const gst = document.getElementById('gst').value
-//  const billToAddress = document.getElementById('billToAddress').value
-//  const lorry = document.getElementById('lorry').value
-//  const billtype = document.getElementById('billtype').value
-//  const commitment = document.getElementById('commitment').value
-//  const item = document.getElementById('item').value
-//  const bags = document.getElementById('bags').value
-//  const quantity = document.getElementById('quantity').value
-//  const price = document.getElementById('price').value
-//  const cgst = document.getElementById('cgst').value
-//  const sgst = document.getElementById('sgst').value
-//  const igst = document.getElementById('igst').value
-//  const notes = document.getElementById('notes').value
-//  const outern = document.getElementById('outern').value
-//  const moisture = document.getElementById('moisture').value
-//  const blacks = document.getElementById('blacks').value
-//  const husk = document.getElementById('husk').value
-//  const aaa = document.getElementById('aaa').value
-//  const aa = document.getElementById('a').value
-//  const a = document.getElementById('a').value
-//  const b = document.getElementById('b').value
-//  const c = document.getElementById('c').value
-//  const pberry = document.getElementById('pberry').value
- 
 
-//   try {
-//     console.log('here')
-//     const response = await fetch('/submit-bill', {
-//       method: 'POST',
-//       body: {
-//         invoicenumber,
-//         billto,
-//         dateOfIssue,
-//         gst,
-//         billToAddress,
-//         lorry,
-//         billtype,
-//         commitment,
-//         item,
-//         bags,
-//         quantity,
-//         price,
-//         cgst,
-//         sgst,
-//         igst,
-//         notes,
-//         outern,
-//         moisture,
-//         blacks,
-//         husk,
-//         aaa,
-//         aa,
-//         a,
-//         b,
-//         c,
-//         pberry
-//       },
-//     });
-
-//     if (response.ok) {
-//       alert('Form submitted successfully');
-//       // You can redirect or perform any other action here
-//     } else {
-//       alert('Error submitting the form');
-//     }
-//   } catch (error) {
-//     console.log('Error:', error);
-//     alert('Error submitting the form');
-//   }
-// }
-
-// // Add an event listener to the "Generate Invoice" button
-
-//  document.getElementById('generateInvoiceBtn').addEventListener('click', () => {
-//     submitForm();
-//   });
 
 async function submitForm() {
-  const form = document.getElementById('dataform');
-  const formData = new FormData(form);
-  console.log(formData)
+  const form = document.querySelector('form');
+  const formData = await new FormData(form);
+  const formDataObj = {};
+      formData.forEach((value, key) => {
+        if (key !== "file") {
+          formDataObj[key] = value;
+        }else{
+          formDataObj[key] = fileurl;
 
+        }
+      });
   try {
     const response = await fetch('/submit-bill', {
-      method: 'POST',
-      body: formData, // Use the FormData object as the request body
-    });
+        method: "POST", // Replace with the appropriate HTTP method (e.g., POST, PUT, etc.)
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formDataObj),
+      });
 
     if (response.ok) {
       alert('Form submitted successfully');
@@ -635,6 +621,11 @@ async function submitForm() {
     alert('Error submitting the form');
   }
 }
+
+// Add an event listener to the "Generate Invoice" button to trigger the form submission
+document.getElementById('generateInvoiceBtn').addEventListener('click', () => {
+  submitForm();
+});
 
 // // Add an event listener to the "Generate Invoice" button to trigger the form submission
 // document.getElementById('generateInvoiceBtn').addEventListener('click', () => {
