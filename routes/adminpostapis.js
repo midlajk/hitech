@@ -4,6 +4,7 @@ const adminpostapis = require('../controller/postrequest');
 
 /* GET home page. */
 router.post('/submit-bill', adminpostapis.generatebill);
+router.post('/addseller', adminpostapis.addseller);
 
 
 module.exports = router;

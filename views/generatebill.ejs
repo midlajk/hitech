@@ -280,6 +280,8 @@
                     <div class="sticky-top pt-md-3 pt-xl-4">
                         <a href="#" id="openModalBtn"  class="btn btn-primary d-block w-100">Review Invoice</a>
                         <div class="my-3" id="clientslist">
+
+                          
                           </div>
                         </div>
                     </div>
@@ -527,27 +529,15 @@ document.getElementById('invoicenumber').value = invoiceNumber;
 
 data.forEach((element) => {
   // Create a new div for each element
-  const clientDiv = document.createElement('div');
-  clientDiv.classList.add('client');
+  const clientDiv = `<div style="border-radius:10px;padding: 10px;box-shadow: 0px 0px 5px;;">
+                            <span>BILL TO ${element.name}</span><br>
+                            <span>ADDRESS ${element.address}</span><br>
+                            <span>GST IN : ${element.gst}</span><br>
+                            <span>PHONE ${element.phone}</span>
 
-  // Create and add elements for .billTO, .address, and .gst
-  const billToElement = document.createElement('p');
-  billToElement.classList.add('billTO');
-  billToElement.textContent = `Bill To: ${element.billTo}`;
 
-  const addressElement = document.createElement('p');
-  addressElement.classList.add('address');
-  addressElement.textContent = `Address: ${element.address}`;
-
-  const gstElement = document.createElement('p');
-  gstElement.classList.add('gst');
-  gstElement.textContent = `GST: ${element.gst}`;
-
-  // Append billTo, address, and gst elements to the client div
-  clientDiv.appendChild(billToElement);
-  clientDiv.appendChild(addressElement);
-  clientDiv.appendChild(gstElement);
-
+                          </div>`;
+ 
   // Append the client div to the clientsListDiv
   clientsListDiv.appendChild(clientDiv);
 });
