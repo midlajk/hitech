@@ -82,3 +82,24 @@ exports.generatereport = async (req, res) => {
     res.status(500).json({ message: 'Error submitting the form' });
   }
 };
+exports.addseller = async (req, res) => {
+  console.log(req.body)
+
+  const existingClient = await ClientModel.findOne({ name: req.body.billTo });
+  console.log(existingClient)
+  if (existingClient) {
+    res.redirect('/accounts');
+
+  }else{
+    const newClient = new ClientModel({
+      name: req.body.name,
+      gst: req.body.gst,
+      address: req.body.address,
+      phone: req.body.phone,
+    });
+
+    await newClient.save();
+    res.redirect('/accounts');
+
+  }
+}
