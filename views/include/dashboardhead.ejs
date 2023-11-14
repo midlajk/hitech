@@ -134,9 +134,9 @@
                                    <div data-i18n="Enquiries">Dashoard</div>
                                 </a>
                     </li>
-                    <li class="menu-item <%= route=='generatebill'?'active':'' %>">
-                        <a href="/generatebill" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-note"></i><div data-i18n="Add Property">Generate Bill</div>
+                    <li class="menu-item <%= route=='generatereport'?'active':'' %>">
+                        <a href="/generatereport" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-note"></i><div data-i18n="Add Property">Generate Report</div>
                         </a>
                     </li>
                  
@@ -145,6 +145,9 @@
                             <i class="menu-icon tf-icons bx bx-user"></i><div data-i18n="Properties">Accounts</div>
                         </a>
                     </li>
+                    <li class="menu-header small text-uppercase">
+                        <span class="menu-header-text">Daily Report</span>
+                    </li> 
                     <li class="menu-item <%= route=='transactions'?'active':'' %>">
                     <a href="/transactions" class="menu-link">
                         <i class="menu-icon tf-icons bx bx-money"></i><div data-i18n="Add Property">Transactions</div>
@@ -153,17 +156,29 @@
                     
                     <li class="menu-item <%= route=='purchasedelivered'?'active':'' %>">
                         <a href="/purchasedelivered" class="menu-link">
-                            <i class="menu-icon tf-icons bx bxs-inbox"></i><div data-i18n="Add Property">Purchase</div>
+                            <i class="menu-icon tf-icons bx bxs-inbox"></i><div data-i18n="Add Property">Arrivals</div>
                         </a>
                     </li>
                  
                             <li class="menu-item <%= route=='salesdelivered'?'active':'' %>">
                                         <a href="/salesdelivered" class="menu-link">
-                                            <i class="menu-icon tf-icons bx bx-send"></i><div data-i18n="Add Property">Sales</div>
+                                            <i class="menu-icon tf-icons bx bx-send"></i><div data-i18n="Add Property">Dispatch</div>
                                         </a>
                                     </li>
                                    
-                               
+                                    <li class="menu-header small text-uppercase">
+                                        <span class="menu-header-text">Bills</span>
+                                    </li>   
+                                     <li class="menu-item <%= route=='purchaseurd'?'active':'' %>">
+                                        <a href="/purchasestorage" class="menu-link">
+                                            <i class="menu-icon tf-icons bx bx-cart"></i><div data-i18n="Properties">Purchase</div>
+                                        </a>
+                                    </li>     
+                                    <li class="menu-item <%= route=='purchaseurd'?'active':'' %>">
+                                        <a href="/purchasestorage" class="menu-link">
+                                            <i class="menu-icon tf-icons bx bxs-truck"></i><div data-i18n="Properties">Sales</div>
+                                        </a>
+                                    </li>     
                <li class="menu-header small text-uppercase">
                         <span class="menu-header-text">Storage & Commitment</span>
                     </li>   

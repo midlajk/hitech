@@ -12,8 +12,8 @@ router.get('/login', function(req, res, next) {
 router.get('/dashboard', function(req, res, next) {
   res.render('dashboard',{ route: 'dashboard' });
 });
-router.get('/generatebill', function(req, res, next) {
-  res.render('generatebill',{ route: 'generatebill' });
+router.get('/generatereport', function(req, res, next) {
+  res.render('generatereport',{ route: 'generatereport' });
 });
 router.get('/accounts', function(req, res, next) {
   res.render('accounts',{ route: 'accounts' });

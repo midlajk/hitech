@@ -1,7 +1,7 @@
 const ClientModel = require('../model/clientsmodal');
 const mongoose = require('mongoose');
 
-exports.generatebill = async (req, res) => {
+exports.generatereport = async (req, res) => {
   console.log(req.body);
   try {
     const existingClient = await ClientModel.findOne({ name: req.body.billTo });
