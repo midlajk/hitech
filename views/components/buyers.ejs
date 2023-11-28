@@ -1,0 +1,83 @@
+
+
+<div class="card">   
+    <div class="modal fade hidden" id="buyermodel">
+ <div class="modal-dialog modal-dialog-centered" role="document">
+   <div class="modal-content">
+     <div class="modal-header">
+       <h5 class="modal-title" id="modalCenterTitle">Add New Seller</h5>
+     
+     </div>
+     <div class="modal-body">
+         <form action="/addseller" method="post" id="sellerform">
+       <div class="row">
+         <div class="col mb-3">
+           <label for="name" class="form-label">Seller Name</label>
+           <input required type="text" name="name" id="name" class="form-control" placeholder="Enter Name">
+         </div>
+         <div class="col mb-3">
+           <label for="image" class="form-label">Address</label>
+           <input type="text" id="address" name="address" class="form-control" placeholder="Enter Address">
+         </div>
+         </div>
+
+         <div class="row">
+         <div class="col mb-3">
+           <label for="description" class="form-label">Phone</label>
+           <input  type="text" id="phone" name="phone" class="form-control" placeholder="Enter Phone">
+         </div>
+         <div class="col mb-3">
+           <label for="highlighted" class="form-label">GSIN</label>
+           <input type="text" id="gst" name="gst" class="form-control" placeholder="Enter GSTIN">
+
+         </div>
+       </div>
+       
+     </div>
+     <div class="modal-footer">
+       <button type="button" class="btn btn-outline-secondary" id="closeModalBtn" data-bs-dismiss="modal">
+         Close
+       </button>
+       <button type="submit" form="sellerform" id="submitbutton" class="btn btn-primary">Add Seller</button>
+     </div>
+ </form>
+   </div>
+ </div>
+</div>
+   <div class="card-body">
+    <a class="btn btn-primary text-white" href="#" onclick="openbuyerbuyermodel()" data-bs-toggle="modal" data-bs-target="#buyermodel">Add Buyer</a>
+
+     <div class="table-responsive text-nowrap p-4">
+         <table class="table" id="example">
+             <thead>
+                 <tr>
+                     <th>Name</th>
+                     <th>Number</th>
+                     <th>Storage</th>
+                     <th>Pending</th>
+                     <th>Actions</th>
+                    
+                 </tr>
+             </thead>
+             <tbody class="table-border-bottom-0" id="table-body">
+               <!-- Data will be populated here -->
+           </tbody>
+</table>
+
+</div>
+</div>
+<script>
+
+function openbuyerbuyermodel() {
+// Clear the modal fields
+document.getElementById('name').value = '';
+document.getElementById('address').value = '';
+document.getElementById('gst').value = '';
+
+// Set the onclick function and text for the modal button
+//   document.getElementById('submitbutton').onclick = addseller;
+document.getElementById('submitbutton').innerText = 'Add Place';
+document.getElementById('modalCenterTitle').innerText = 'Add New Place';
+}
+</script>
+</div>

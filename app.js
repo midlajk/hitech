@@ -13,6 +13,7 @@ var usersRouter = require('./routes/users');
 var adminpostapis = require('./routes/adminpostapis');
 var adminapis = require('./routes/adminapis');
 var getapis = require('./routes/getapis');
+var getdetails = require('./routes/getdetailedview');
 
 /////front end //
 
@@ -56,7 +57,7 @@ app.use('/', usersRouter);
 app.use('/', adminpostapis);
 app.use('/', adminapis);
 app.use('/', getapis);
-
+app.use('/',getdetails)
 /////Front end routes ///
 
 

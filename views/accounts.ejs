@@ -1,49 +1,7 @@
 <%- include('./include/dashboardhead.ejs') -%>
 
     <div class="content-wrapper">
-        <div class="modal fade hidden" id="modalCenter">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="modalCenterTitle">Add New Seller</h5>
-                
-                </div>
-                <div class="modal-body">
-                    <form action="/addseller" method="post" id="sellerform">
-                  <div class="row">
-                    <div class="col mb-3">
-                      <label for="name" class="form-label">Seller Name</label>
-                      <input required type="text" name="name" id="name" class="form-control" placeholder="Enter Name">
-                    </div>
-                    <div class="col mb-3">
-                      <label for="image" class="form-label">Address</label>
-                      <input type="text" id="address" name="address" class="form-control" placeholder="Enter Address">
-                    </div>
-                    </div>
-          
-                    <div class="row">
-                    <div class="col mb-3">
-                      <label for="description" class="form-label">Phone</label>
-                      <input  type="text" id="phone" name="phone" class="form-control" placeholder="Enter Phone">
-                    </div>
-                    <div class="col mb-3">
-                      <label for="highlighted" class="form-label">GSIN</label>
-                      <input type="text" id="gst" name="gst" class="form-control" placeholder="Enter GSTIN">
-
-                    </div>
-                  </div>
-                  
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-outline-secondary" id="closeModalBtn" data-bs-dismiss="modal">
-                    Close
-                  </button>
-                  <button type="submit" form="sellerform" id="submitbutton" class="btn btn-primary">Add Seller</button>
-                </div>
-            </form>
-              </div>
-            </div>
-          </div>
+    
         <!-- Content -->
 <div> </div>
         <div class="container-xxl flex-grow-1 container-p-y">
@@ -52,19 +10,17 @@
             <div class="col-4 mb-4">
                 <div class="card">
                   <div class="card-body">
-                    <div class="d-flex justify-content-between flex-sm-row flex-column gap-3">
+                    <div class="d-flex justify-content-between flex-sm-row flex-column gap-1">
                       <div class="d-flex flex-sm-column flex-row align-items-start justify-content-between">
                         <div class="card-title">
                             <span class="badge bg-label-warning rounded-pill">Arrived 2021</span> <br>
-                            <span class="badge bg-label-success rounded-pill">Storage </span>
-                          <h5 class="text-nowrap mb-1">Committed</h5>
+                            <span class="badge bg-label-info rounded-pill">Storage : 2300 kg </span><br>
+                            <span class="badge bg-label-danger rounded-pill">committed : 1000 kg </span><br>
+                            <span class="badge bg-label-success rounded-pill">Value : 100000S </span>
+
                           
                         </div>
-                        <div class="mt-sm-auto">
-                            
-
-                          <h5 class="mb-0">Value</h5>
-                        </div>
+                     
                       </div>
                     </div>
                   </div>
@@ -76,14 +32,12 @@
                     <div class="d-flex justify-content-between flex-sm-row flex-column gap-2">
                       <div class="d-flex flex-sm-column flex-row align-items-start justify-content-between">
                         <div class="card-title">
-                            <span class="badge bg-label-warning rounded-pill">Dispatched 2021</span> <br>
-                            <span class="badge bg-label-success rounded-pill">Storage </span>
-                          <h5 class="text-nowrap mb-1">Committed</h5>
-                          
+                          <span class="badge bg-label-warning rounded-pill">Dispatched 2021</span> <br>
+                          <span class="badge bg-label-info rounded-pill">Storage : 2300 kg </span><br>
+                          <span class="badge bg-label-danger rounded-pill">committed : 1000 kg </span><br>
+                          <span class="badge bg-label-success rounded-pill">Value : 100000S </span>
                         </div>
-                        <div class="mt-sm-auto">
-                          <h5 class="mb-0">Value</h5>
-                        </div>
+                     
                       </div>
                     </div>
                   </div>
@@ -95,48 +49,37 @@
                     <div class="d-flex justify-content-between flex-sm-row flex-column gap-3">
                       <div class="d-flex flex-sm-column flex-row align-items-start justify-content-between">
                         <div class="card-title">
-                            <span class="badge bg-label-warning rounded-pill">Paid 2021</span>
-                          <h5 class="text-nowrap mb-1">Remaining</h5>
+                       
+                          <span class="badge bg-label-warning rounded-pill">Paid 2021</span> <br>
+                          <span class="badge bg-label-info rounded-pill">Remaining : 2300 kg </span><br>
+                          <span class="badge bg-label-danger rounded-pill">Recieved : 1000 kg </span><br>
+                          <span class="badge bg-label-success rounded-pill">Remaining : 100000S </span>
                         </div>
-                        <div class="mt-sm-auto">
-                            <span class="badge bg-label-success rounded-pill">Recieved 2021</span>
-
-                          <h5 class="mb-0">Remaining</h5>
-                        </div>
+                       
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+            <div class="row justify-content-between"> 
+              <div class="col-6" id="heading"><h3>Sellers Accounts</h3> </div>
+              <div class="col-3">  <button id="tooglebutton" class="btn btn-secondary text-white"  onclick="showBuyers()">Buyers Accounts</button>
 
-   <h3>Sellers Accounts</h3>
+</div>
+             
+            </div>
+            
+
             <!-- Basic Bootstrap Table -->
-            <div class="card">
-              <div class="card-body">
-               <a class="btn btn-primary text-white" href="#" onclick="openAddModal()" data-bs-toggle="modal" data-bs-target="#modalCenter">Add Seller</a>
-               <a class="btn btn-secondary text-white">Buyers Accounts</a>
-
-                <div class="table-responsive text-nowrap p-4">
-                    <table class="table" id="example">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Number</th>
-                                <th>Storage</th>
-                                <th>Pending</th>
-                                <th>Actions</th>
-                               
-                            </tr>
-                        </thead>
-                        <tbody class="table-border-bottom-0" id="table-body">
-                          <!-- Data will be populated here -->
-                      </tbody>
-  </table>
-
-</div>
-</div>
-</div>
+            <div id="sellerscontainer">
+              <%- include("./components/sellers") -%>
+              <!-- Content will be loaded here based on userType -->
+            </div>
+            <div id="buyerscontainer" class="d-none">
+              <%- include("./components/buyers") -%>
+              <!-- Content will be loaded here based on userType -->
+            </div>
 <!--/ Basic Bootstrap Table -->
 
 </div>
@@ -157,147 +100,38 @@
 <div class="layout-overlay layout-menu-toggle"></div>
 </div>
 <!-- / Layout wrapper -->
-
-
-<script src="../assets/vendor/libs/jquery/jquery.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-
 <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap4.min.js"></script>
-
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 <script>
-  $(document).ready(function () {
 
-    var dataTable = $('#example').DataTable({
-      processing: true,
-      serverSide: true,
-      ajax: {
-        url: 'http://localhost:3000/getclients', 
-        dataSrc: 'data', // Key that holds the array of data in the API response
-        data: function (d) {
-          // Add any additional parameters you want to send to the server here
-        },
-      },
-      columns: [
-        {data: 'name'},
-        { data: 'phone' },
-        { data: 'address' },
-        { data: 'gst' },
-        {data:0}
+    var button = document.getElementById('tooglebutton');
+    var heading = document.getElementById('heading');
+    const sellerscontainer = $('#sellerscontainer');
+    const buyerscontainer = $('#buyerscontainer');
 
-       
-      ],
-    });
+    function showBuyers() {
+      button.innerHTML = 'Show Sellers';
+      button.onclick = showSellers;
+      heading.innerHTML = '<h3>Buyers Accounts</h3>';
+      sellerscontainer.addClass('d-none')
+      buyerscontainer.removeClass('d-none')
 
-//     // Delete Button Click Event
-//     function deleteData(id) {
-//     $.ajax({
-//       url: `https://www.safehomes.ae/backend/deleteproperty/${id}`,
-//       type: 'DELETE',
-//       success: function (response) {
-//         dataTable.ajax.reload();
-//       },
-//       error: function (error) {
-//         console.error('Error deleting data:', error);
-//       },
-//     });
-//   }
+    }
 
-//   function toggleFeatured(id, isFeatured) {
-//     var formDataObj = { id: id, status: isFeatured ? 'notfeatured' : 'featured' };
+    function showSellers() {
+      button.innerHTML = 'Show Buyers';
+      button.onclick = showBuyers;
+      heading.innerHTML = '<h3>Sellers Accounts</h3>';
+      sellerscontainer.removeClass('d-none')
+      buyerscontainer.addClass('d-none')
 
-//     $.ajax({
-//       url: `https://www.safehomes.ae/backend/addfeatured`,
-//       type: 'POST',
-//       data: JSON.stringify(formDataObj),
-//       contentType: 'application/json',
-//       success: function (response) {
-//         dataTable.ajax.reload();
-//       },
-//       error: function (error) {
-//         console.error('Error updating data:', error);
-//       },
-//     });
-//   }
+    }
 
-//   $('#example').on('click', '.delete-btn', function () {
-//     var data = dataTable.row($(this).closest('tr')).data();
-//     var id = data._id;
-//     deleteData(id);
-//   });
+    // Log a message when the document is ready
+    console.log('Document is ready');
 
-//   $('#example').on('click', '.featured-button', function () {
-//     var data = dataTable.row($(this).closest('tr')).data();
-//     var id = data._id;
-    
-//     if (routeName === 'featured') {
-//       toggleFeatured(id, true); // Remove from Featured
-//     } else if (routeName === 'properties') {
-//       toggleFeatured(id, false); // Add to Featured
-//     }
-//   });
- });
 </script>
-
-        
-
-        <script>
-            
-            const closeModalButton = document.getElementById('closeModalBtn');
-
-// Function to add a new place
-// function addseller() {
-//     console.log('here is adding')
-//   const formData = new FormData();
-//   console.log(document.getElementById('name').value)
-//   formData.append('name', document.getElementById('name').value);
-//   formData.append('address', document.getElementById('address').value);
-//   formData.append('phone', document.getElementById('phone').value);
-//   formData.append('gst', document.getElementById('gst').value);
-// console.log(formData)
-//   makeAPIRequest(
-//     'http://localhost:3000/addseller',
-//     formData,
-//     'POST',
-//     addPlaceToTable,
-//   );
-// }
-
-// function makeAPIRequest(url, data, method, callback) {
-//   axios({
-//     method: method,
-//     url: url,
-//     data: data,
-//   })
-//     .then((response) => {
-//         console.log(response);
-//       // Handle the response from the server
-//       const placeDetails = response.data;
-//       callback(placeDetails);
-//       closeModalButton.click();
-//     })
-//     .catch((error) => {
-//       console.log(error)
-//     });
-// }
-
-// function addPlaceToTable(place) {
-// console.log('here')
-// closeModalButton.click();
-
-// }
-
-function openAddModal() {
-  // Clear the modal fields
-  document.getElementById('name').value = '';
-  document.getElementById('address').value = '';
-  document.getElementById('gst').value = '';
-
-  // Set the onclick function and text for the modal button
-//   document.getElementById('submitbutton').onclick = addseller;
-  document.getElementById('submitbutton').innerText = 'Add Place';
-  document.getElementById('modalCenterTitle').innerText = 'Add New Place';
-}
-        </script>
-                                        <%- include('./include/end.ejs') -%>
+    <%- include('./include/end.ejs') -%>
