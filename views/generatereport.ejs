@@ -31,14 +31,20 @@
                       <div class="row mb-5">
                           <div class="col">
                               <label class="fw-bold">Party Name:</label>
-                              <input placeholder="Who is this invoice to?" type="text" name="billTo" id="billto" class="form-control my-2" required>
-          
+                              
+                        <div class="my-1 flex-nowrap input-group">
+                          <select class="js-data-example-ajax" name="billTo" id="billto" required></select>
+
+                          <a class="bg-light fw-bold text-secondary small input-group-text" ><i class="menu-icon tf-icons bx bx-user-plus"></i></a>
+                        </div>
+                              <!-- <input placeholder="Who is this invoice to?" type="text" name="billTo" id="billto" class="form-control my-2" required> -->
+                           
                                <input placeholder="Lorry Number" type="text" name="lorry" id="lorry" class="form-control my-2">
                             
                               </div>
                           <div class="col">
                             
-                            <label class="fw-bold">Party Name:</label>
+                            <label class="fw-bold">Status:</label>
                             <select name="type" class="form-control my-2" id="billtype">
                                 <option value="Purchase">Purchase</option>
                                 <option value="Sales">Sales</option>
@@ -55,7 +61,6 @@
                                   <th>ITEM</th>
                                   <th>NO.OF BAGS</th>
                                   <th>QTY</th>
-                                  <th>PRICE/RATE</th>
                               </tr>
                           </thead>
                           <tbody>
@@ -90,6 +95,7 @@
                                         step="1"
                                         id="bags"
                                         class="form-control"
+                                        oninput="updateNetWeight()"
                                         required
                                     />
                                 </div>
@@ -103,25 +109,12 @@
                                           step="1"
                                           id="quantity"
                                           class="form-control"
+                                          oninput="updateNetWeight()"
                                           required
                                       />
                                   </div>
                               </td>
-                              <td style="min-width: 130px;padding: 5px;">
-                                  <div class="input-group my-1 flex-nowrap">
-                                      
-                                      <input
-                                          type="number"
-                                          name="price"
-                                          min="1"
-                                          step="0.01"
-                                          precision="2"
-                                          id="price"
-                                          class="form-control text-end"
-                                          required
-                                      />
-                                  </div>
-                              </td>
+                  
                              
                           </tr>
                               <!-- ItemRows will be added here -->
@@ -139,21 +132,21 @@
                             </div> -->
                           
                             <div class="d-flex flex-row align-items-start justify-content-between mt-2">
-                                <span class="fw-bold mt-2">Bag Weight:</span>
+                                <span class="fw-bold mt-2">Bag Weight (One):</span>
                                 <span>
                                   <div class="my-1 flex-nowrap input-group" >
-                                  <input type="number" name="cgst" id="cgst" class="bg-white border form-control" style="width: 80px;" placeholder="0.0" min="0.0" step="0.1" max="100.0">
-                                  <span class="bg-light fw-bold text-secondary small input-group-text">(%) ₹123422</span>  
+                                  <input type="number" name="bagweight"  oninput="updateNetWeight()" id="bagweight" class="bg-white border form-control" style="width: 80px;" placeholder="0.2" min="0.00" step="0.01" max="100.0">
+                                  <span class="bg-light fw-bold text-secondary small input-group-text"><span id="bagweightDisplay"></span> Kg</span>  
                                  
                                 </div>
                               </span>
                             </div>
                             <div class="d-flex flex-row align-items-start justify-content-between mt-2">
-                              <span class="fw-bold mt-2">Forign Object:</span>
+                              <span class="fw-bold mt-2">Forign Object (%):</span>
                               <span>
                                 <div class="my-1 flex-nowrap input-group" >
-                                <input type="number" name="sgst" id="sgst" class="bg-white border form-control" style="width: 80px;" placeholder="0.0" min="0.0" step="0.1" max="100.0">
-                                <span class="bg-light fw-bold text-secondary small input-group-text">(%) ₹123422</span>  
+                                <input type="number" name="forignobject" id="forignobject" class="bg-white border form-control"  oninput="updateNetWeight()" style="width: 80px;" placeholder="0.2" min="0.0" step="0.1" max="100.0">
+                                <span class="bg-light fw-bold text-secondary small input-group-text"> <span id="forignobjectDisplay"></span> Kg</span>  
                                
                               </div>
                             </span>
@@ -162,17 +155,11 @@
                      
                     <hr>
                     <div style="font-size: 1.125rem;" class="d-flex flex-row align-items-start justify-content-between">
-                      <span class="fw-bold">Actual Weight:</span>
-                      <span class="fw-bold">0.00 Kg</span>
+                      <span class="fw-bold">Net Weight:</span>
+                      <span class="fw-bold" id="netWeightDisplay"></span>Kg
                   </div>
-                    <div style="font-size: 1.125rem;" class="d-flex flex-row align-items-start justify-content-between">
-                      <span class="fw-bold">Net EP Weight:</span>
-                      <span class="fw-bold">0.00 Kg</span>
-                  </div>
-                            <div style="font-size: 1.125rem;" class="d-flex flex-row align-items-start justify-content-between">
-                                <span class="fw-bold">Total:</span>
-                                <span class="fw-bold">₹0.00</span>
-                            </div>
+                   
+                           
                         </div>
                     </div>    
          
@@ -180,17 +167,80 @@
               </div>
               <div class="col-md-4 col-lg-3" id="reportcol">
                   <div class="sticky-top pt-md-3 pt-xl-4">
-                      <a href="#" id="openModalBtn"  class="btn btn-primary d-block w-100">Review Report</a>
-                    
+                      <a href="#" id="openModalBtn" onclick="modalclicked()"  class="btn btn-primary d-block w-100">Review Report</a>
+                      <!-- <div class="my-3" id="clientslist" style="max-height: 700px;overflow-y: scroll;padding:10px">
+                      </div> -->
+                      <div class="my-3">
+                        <label class="fw-bold">Report:</label>
+                        <br>
+                        <label for="">Outern</label>
+
+                        <div class="my-1 flex-nowrap input-group">
+                            <input type="number" name="outern" oninput="updateNetWeight()"  id="outern" class="bg-white border form-control" placeholder="100" min="0.00" step="0.01" max="100.00">
+                            <span class="bg-light fw-bold text-secondary small input-group-text" onclick="multiply()">%</span>
+                          </div>
+                            <label for="">Husk</label>
+                  
+                          <div class="my-1 flex-nowrap input-group">
+
+                            <input type="number" name="huskpercentage" oninput="updateNetWeight()" id="huskpercentage" class="bg-white border form-control" placeholder="0.0" min="0.00" step="0.01" max="100.00">
+                            <span class="bg-light fw-bold text-secondary small input-group-text">%</span>
+                            <input type="number" oninput="updatcutting()" name="huskcutting" id="huskcutting" class="bg-white border form-control" placeholder="0.0" min="0.00" step="0.01" max="100.00">
+
+                            <span class="bg-light fw-bold text-secondary small input-group-text">Kg</span>
+                            </div>   
+                          <label for="">Moisture</label>
+
+                        <div class="my-1 flex-nowrap input-group">
+                
+                          <input type="number" name="moisturepercentage" oninput="updateNetWeight()" id="moisturepercentage" class="bg-white border form-control" placeholder="0.0" min="0.00" step="0.01" max="100.00">
+                          <span class="bg-light fw-bold text-secondary small input-group-text">%</span>
+                          <input type="number" name="moisturecutting" oninput="updatcutting()" id="moisturecutting" class="bg-white border form-control" placeholder="0.0" min="0.00" step="0.01" max="100.00">
+
+                          <span class="bg-light fw-bold text-secondary small input-group-text">Kg</span>
+                          </div>
+                        <label for="">BB</label>
+
+                        <div class="my-1 flex-nowrap input-group">
+                          <input type="number" name="bbpercentage" oninput="updateNetWeight()" id="bbpercentage" class="bg-white border form-control" placeholder="0.0" min="0.00" step="0.01" max="100.00">
+                          <span class="bg-light fw-bold text-secondary small input-group-text">%</span>
+                          <input type="number" name="bbcutting" oninput="updatcutting()" id="bbcutting" class="bg-white border form-control" placeholder="0.0" min="0.00" step="0.01" max="100.00">
+
+                          <span class="bg-light fw-bold text-secondary small input-group-text">Kg</span>
+                          </div>
+                          <label for="">Berry Bore</label>
+
+                          <div class="my-1 flex-nowrap input-group">
+                            <input type="number" name="berryborepercentage" oninput="updateNetWeight()" id="berryborepercentage" class="bg-white border form-control" placeholder="0.0" min="0.00" step="0.01" max="100.00">
+                            <span class="bg-light fw-bold text-secondary small input-group-text">%</span>
+                            <input type="number" name="berryborecutting" oninput="updatcutting()" id="berryborecutting" class="bg-white border form-control" placeholder="0.0" min="0.00" step="0.01" max="100.00">
+  
+                            <span class="bg-light fw-bold text-secondary small input-group-text">Kg</span>
+                            </div>
+                            <label for="">Other</label>
+
+                            <div class="my-1 flex-nowrap input-group">
+                                <input type="number" name="other" id="other" oninput="updateNetWeight()" class="bg-white border form-control" placeholder="0.0" min="0.00" step="0.01" max="100.00">
+                                <span class="bg-light fw-bold text-secondary small input-group-text">Kg</span>
+                              </div>
+                              <label for="">Allowance</label>
+
+                              <div class="my-1 flex-nowrap input-group">
+                                  <input type="number" name="allowance" oninput="updateNetWeight()" id="allowance" class="bg-white border form-control" placeholder="0.0" min="0.00" step="0.01" max="100.00">
+                                  <span class="bg-light fw-bold text-secondary small input-group-text">Kg</span>
+                                </div>
+                          <br>
+                          <hr>
+                          <div style="font-size: 1.125rem;" class="d-flex flex-row align-items-start justify-content-between">
+                            <span class="fw-bold">Final EP Weight:</span>
+                            <span class="fw-bold" id="epWeightDisplay"></span>
+                        </div>
+                         
+                      
+                        </div>
                       </div>
                   </div>
-                  <div class="col-md-4 col-lg-3" id="clientscol" style="display: none;">
-                    <div class="sticky-top pt-md-3 pt-xl-4">
-                        <a href="#" id="openModalBtn"  class="btn btn-primary d-block w-100">Review Invoice</a>
-                        <div class="my-3" id="clientslist">
-                          </div>
-                        </div>
-                    </div>
+          
               </div>
           </div>
       </form>
@@ -224,29 +274,32 @@
           <div class="d-flex flex-row justify-content-between align-items-start bg-light w-100 p-4">
             <div class="w-100">
               <h4 class="fw-bold my-2">John Uberbacher</h4>
-              <h6 class="fw-bold text-secondary mb-1">Invoice #: </h6>
+              <h6 class="fw-bold text-secondary mb-1">Lot No #: </h6>
             </div>
             <div class="text-end ms-4">
-              <h6 class="fw-bold mt-1 mb-2">Amount&nbsp;Due:</h6>
-              <h5 class="fw-bold text-secondary"> ₹0.00 </h5>
+              <h6 class="fw-bold mt-1 mb-2">Actual&nbsp;Weight:</h6>
+              <h5 class="fw-bold text-secondary" id="actualweightdisplay"> </h5>
+              <h6 class="fw-bold mt-1 mb-2">EP&nbsp;Weight:</h6>
+              <h5 class="fw-bold text-secondary" id="epweightdisplay"> </h5>
+              
             </div>
           </div>
           <div class="p-4">
             <div class="row mb-4">
               <div class="col-md-4">
-                <div class="fw-bold">Billed to:</div>
+                <div class="fw-bold">Date:</div>
                 <div> </div>
                 <div> </div>
                 <div> </div>
               </div>
               <div class="col-md-4">
-                <div class="fw-bold">Billed From:</div>
+                <div class="fw-bold">Vehicle:</div>
                 <div> </div>
                 <div> </div>
                 <div> </div>
               </div>
               <div class="col-md-4">
-                <div class="fw-bold mt-2">Date Of Issue:</div>
+                <div class="fw-bold mt-2">Delivery:</div>
                 <div> </div>
               </div>
             </div>
@@ -272,9 +325,11 @@
                 </tr>
                 <tr class="text-end">
                   <td></td>
-                  <td class="fw-bold">SUBTOTAL</td>
-                  <td class="text-end">₹0.00</td>
+                  <td class="fw-bold">SUB TOTAL<br>STORAGE&nbsp;&nbsp;&nbsp;</td>
+                  <td class="text-end">₹0.00 <br> 566Kg</td>
+                  
                 </tr>
+           
                 <!-- Additional rows for TAX, DISCOUNT, and TOTAL go here -->
               </tbody>
             </table>
@@ -287,12 +342,12 @@
           <div class="row">
             <div class="col-md-6">
               <button class="btn btn-success d-block w-100">
-                <i class="me-2" style="width: 15px; height: 15px; margin-top: -3px;"></i>Send Invoice
+                <i class="me-2" style="width: 15px; height: 15px; margin-top: -3px;"></i>Add Commitments
               </button>
             </div>
             <div class="col-md-6">
               <button class="btn btn-outline-primary d-block w-100 mt-3 mt-md-0" >
-                <i class="me-2" style="width: 16px; height: 16px; margin-top: -3px;"></i>Download Copy
+                <i class="me-2" style="width: 16px; height: 16px; margin-top: -3px;"></i>Print Details
               </button>
             </div>
            
@@ -300,7 +355,7 @@
           <br>
         <div class="col-12">
               <button class="btn btn-primary d-block w-100 mt-md-0" id="generateInvoiceBtn" type="submit" form="dataform">
-                <i class="me-2" style="width: 16px; height: 16px; margin-top: -3px;"></i>Generate Invoice
+                <i class="me-2" style="width: 16px; height: 16px; margin-top: -3px;"></i>Save Details
               </button>
             </div>
       </div>
@@ -318,6 +373,7 @@
 
 <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap4.min.js"></script>
 <script src="https://unpkg.com/easyinvoice/dist/easyinvoice.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 
 <script>
@@ -413,21 +469,10 @@
     // Check if the response status is in the range 200-299 (indicating success)
     var div = document.getElementById('clientslist')
     const data = await response.json();
-    console.log(data) // Parse the response body as JSON
     const clientsListDiv = document.getElementById('clientslist');
     clientsListDiv.innerHTML = ''
 
-data.forEach((element) => {
-  // Create a new div for each element
-  const div = document.createElement('div');
-  div.style = "width: 100%;height: 100px;border-radius: 10px;background-color: aliceblue;box-shadow: 2px 2px 5px;";
-  div.className = "mt-2 p-3 overflow-hidden";
-  // Set the inner HTML of the div
-  div.innerHTML = `<a href="#" ><h6>${element.name}<br>${element.address}<br>${element.gst}</h6></a>`;
- 
-  // Append the div to the clientsListDiv
-  clientsListDiv.appendChild(div);
-});
+
 
 // Log the data to the console
 
@@ -441,24 +486,11 @@ data.forEach((element) => {
   console.error(error);
 }
 
-    const reportCol = document.getElementById('reportcol');
-    const clientsCol = document.getElementById('clientscol');
-
-    // When billto input is focused, hide reportcol and show clientscol
-    reportCol.style.display = 'none';
-    clientsCol.style.display = 'block';
+ 
   }
 
   // Function to handle blur (out of focus) on the billto input
-  function handleBillToBlur() {
-    const reportCol = document.getElementById('reportcol');
-    const clientsCol = document.getElementById('clientscol');
-
-    // When billto input loses focus, hide clientscol and show reportcol
-    reportCol.style.display = 'block';
-    clientsCol.style.display = 'none';
-  }
-
+ 
   // Add event listeners to the billto input
   const billToInput = document.getElementById('billto');
   billToInput.addEventListener('focus', handleBillToFocus);
@@ -517,8 +549,107 @@ document.getElementById('generateInvoiceBtn').addEventListener('click', () => {
 
 </script>
 
+<script>
+  function handleChange(selectedValue) {
+    // Do something with the selected value
+    console.log('Selected value:', selectedValue);
+  }
+
+  document.getElementById('dynamic-select').addEventListener('input', function (event) {
+    // This event listener will be triggered as the user types
+    const inputValue = event.target.value.toLowerCase();
+
+    // Example: Update options dynamically based on input
+    const options = document.getElementById('dynamic-select').options;
+    for (let i = 0; i < options.length; i++) {
+      const optionText = options[i].text.toLowerCase();
+      if (optionText.includes(inputValue)) {
+        options[i].style.display = 'block';
+      } else {
+        options[i].style.display = 'none';
+      }
+    }
+  });
+</script>
+
+<script>
+  var netWeight = 0 
+  var netepweight = 0
+  var epweight = 0
+  function updateNetWeight() {
+    // Get values from input fields
+    const bags = parseFloat(document.getElementById('bags').value) || 0;
+    const quantity = parseFloat(document.getElementById('quantity').value) || 0;
+    const bagweight = parseFloat(document.getElementById('bagweight').value) || 0;
+    const forignobject = parseFloat(document.getElementById('forignobject').value) || 0;
+    var bgweight = Math.round(bags * bagweight);
+    var forgnweight=Math.round(quantity*(forignobject/100))
+    console.log(forgnweight)
+
+    // Calculate Net Weight
+    netWeight = quantity-bgweight - forgnweight;
+    
+    // Update display
+    document.getElementById('bagweightDisplay').textContent = bgweight.toFixed(2);
+    document.getElementById('forignobjectDisplay').textContent = forgnweight.toFixed(2);
+    document.getElementById('netWeightDisplay').textContent = netWeight.toFixed(2) + " Kg";
+        const outturn = parseFloat(document.getElementById('outern').value) || 0;
+    epweight =  (netWeight/100)*outturn
+    const huskpercentage = parseFloat(document.getElementById('huskpercentage').value) || 0;
+    hcutting =  huskpercentage > 0.5 ? Math.round(((huskpercentage-0.5)/100)*epweight):0
+    const moisturepercentage = parseFloat(document.getElementById('moisturepercentage').value) || 0;
+    mcutting =  moisturepercentage > 13 ? Math.round(((moisturepercentage-13)/100)*epweight):0
+    const bbpercentage = parseFloat(document.getElementById('bbpercentage').value) || 0;
+    bbcutting =  bbpercentage > 15 ? Math.round(((bbpercentage-15)/100)*epweight):0
+    const berryborepercentage = parseFloat(document.getElementById('berryborepercentage').value) || 0;
+    berrycutting =  berryborepercentage > 3 ? Math.round(((berryborepercentage-3)/100)*epweight):0
+    const other = parseFloat(document.getElementById('other').value) || 0;
+    const allowance = parseFloat(document.getElementById('allowance').value) || 0;
+
+    netepweight =  Math.round(epweight-hcutting-mcutting-bbcutting-berrycutting-other+allowance)
 
 
+
+
+    document.getElementById('huskcutting').value = hcutting;
+    document.getElementById('moisturecutting').value = mcutting;
+    document.getElementById('bbcutting').value = bbcutting;
+    document.getElementById('berryborecutting').value = berrycutting;
+
+    document.getElementById('epWeightDisplay').textContent = netepweight.toFixed(2) + " Kg";
+
+  }
+
+  function updatcutting() {
+    const hcutting = parseFloat(document.getElementById('huskcutting').value) || 0;
+    const mcutting = parseFloat(document.getElementById('moisturecutting').value) || 0;
+    const bbcutting = parseFloat(document.getElementById('bbcutting').value) || 0;
+    const berrycutting = parseFloat(document.getElementById('berryborecutting').value) || 0;
+    const other = parseFloat(document.getElementById('other').value) || 0;
+    const allowance = parseFloat(document.getElementById('allowance').value) || 0;
+
+    netepweight =  Math.round(epweight-hcutting-mcutting-bbcutting-berrycutting-other+allowance)
+    document.getElementById('epWeightDisplay').textContent = netepweight.toFixed(2) + " Kg";
+  }
+  function multiply(){
+    const outturn = parseFloat(document.getElementById('outern').value) || 0;
+    document.getElementById('outern').value = outturn*2
+    updateNetWeight()
+
+  }
+  function modalclicked(){
+    document.getElementById('epweightdisplay').innerText = netepweight
+    document.getElementById('actualweightdisplay').innerText = netWeight
+
+  }
+  $('.js-data-example-ajax').select2({
+  ajax: {
+    url: 'https://api.github.com/search/repositories',
+    dataType: 'json'
+    // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
+  }
+});
+</script>
 
 
 
