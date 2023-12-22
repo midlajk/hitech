@@ -5,11 +5,84 @@
 
         <div class="container-xxl flex-grow-1 container-p-y">
 
+          <div class="row">
 
+            <div class="col-4 mb-4">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between flex-sm-row flex-column gap-1">
+                      <div class="d-flex flex-sm-column flex-row align-items-start justify-content-between">
+                        <div class="card-title">
+                            <span class="badge bg-label-warning rounded-pill">Arrived 2021</span> <br>
+                            <span class="badge bg-label-info rounded-pill">Storage : 2300 kg </span><br>
+                            <span class="badge bg-label-danger rounded-pill">Billed : 1000 kg </span><br>
+                            <span class="badge bg-label-success rounded-pill"> Commitment: 100000S </span>
+
+                          
+                        </div>
+                     
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-4 mb-4">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between flex-sm-row flex-column gap-3">
+                      <div class="d-flex flex-sm-column flex-row align-items-start justify-content-between">
+                        <div class="card-title">
+                       
+                          <span class="badge bg-label-warning rounded-pill">Dispatched 2021</span> <br>
+                          <span class="badge bg-label-info rounded-pill">Storage : 2300 kg </span><br>
+                          <span class="badge bg-label-danger rounded-pill">Billed : 1000 kg </span><br>
+                          <span class="badge bg-label-success rounded-pill">Commitment : 100000S </span>
+                        </div>
+                       
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-4 mb-4">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between flex-sm-row flex-column gap-2">
+                      <div class="d-flex flex-sm-column flex-row align-items-start justify-content-between">
+                        <div class="card-title">
+                          <span class="badge bg-label-warning rounded-pill">Recievable : 2021 </span> <br>
+                          <span class="badge bg-label-info rounded-pill">Payable : 2300 kg </span><br>
+                          <span class="badge bg-label-danger rounded-pill">Credit : 1000 kg </span><br>
+                          <span class="badge bg-label-success rounded-pill">Debit : 100000S </span> <br>
+
+                        </div>
+                     
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>  
+          
+            </div>
+            <div class="row justify-content-between"> 
+              <div class="col-6" id="heading"><h3>midlaj</h3> </div>
+              <div class="col-3"> <h3 style="color: black;font-weight: bold;">Balance RS : 300000</h3></button>
+
+</div>
+             
+            </div>
             <!-- Basic Bootstrap Table -->
             <div class="card">
               <div class="card-body">
-               
+                <a class="btn btn-primary text-white" href="#" onclick="openAddModal()" data-bs-toggle="modal" data-bs-target="#modalCenter">Purchase Bills</a>
+                <a class="btn btn-primary text-white" href="#" onclick="openAddModal()" data-bs-toggle="modal" data-bs-target="#modalCenter">Sales Bills</a>
+                <a class="btn btn-primary text-white" href="#" onclick="openAddModal()" data-bs-toggle="modal" data-bs-target="#modalCenter">Arrival</a>
+                <a class="btn btn-primary text-white" href="#" onclick="openAddModal()" data-bs-toggle="modal" data-bs-target="#modalCenter">Despatch</a>
+                <a class="btn btn-primary text-white" href="#" onclick="openAddModal()" data-bs-toggle="modal" data-bs-target="#modalCenter">Store-In</a>
+                <a class="btn btn-primary text-white" href="#" onclick="openAddModal()" data-bs-toggle="modal" data-bs-target="#modalCenter">Store-Out</a>
+                <a class="btn btn-primary text-white" href="#" onclick="openAddModal()" data-bs-toggle="modal" data-bs-target="#modalCenter">Purchase Commitments</a>
+                <a class="btn btn-primary text-white" href="#" onclick="openAddModal()" data-bs-toggle="modal" data-bs-target="#modalCenter">Sales Commitments</a>
+
                 <div class="table-responsive text-nowrap p-4">
                     <table class="table" id="example">
                         <thead>

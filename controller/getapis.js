@@ -25,14 +25,39 @@ exports.getclients = async (req, res) => {
     }
   };
   exports.getnames = async (req, res) => {
-  
     try {
+      const searchTerm = req.query.term;
+  console.log(searchTerm)
+  if(!searchTerm){
+    const clients = await ClientModel.aggregate([{ $sample: { size: 20 } }]);
 
-      const docs = await ClientModel.find()
-      console.log(docs)// 'i' flag for case-insensitive search
-      res.json(docs);
+    const names = clients.map(client => client.name);  
+      res.json({ results: names })
+  }else{
+    const escapedSearchTerm = searchTerm.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+
+      const clients = await ClientModel.find({ name: { $regex: escapedSearchTerm, $options: 'i' } }, 'name');
+  
+      const names = clients.map(client => client.name);
+  
+      res.json({ results: names });
+      
+  }
+      
+        
+  
+    
     } catch (error) {
       console.error(error);
-      res.status(500).send('An error occurred while fetching clients');
+      res.status(500).json({ error: 'Internal Server Error' });
     }
+//     try {
+
+//       const docs = await ClientModel.find()
+// // 'i' flag for case-insensitive search
+//       res.json(docs);
+//     } catch (error) {
+//       console.error(error);
+//       res.status(500).send('An error occurred while fetching clients');
+//     }
   };

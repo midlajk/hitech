@@ -35,7 +35,7 @@
                         <div class="my-1 flex-nowrap input-group">
                           <select class="js-data-example-ajax" name="billTo" id="billto" required></select>
 
-                          <a class="bg-light fw-bold text-secondary small input-group-text" ><i class="menu-icon tf-icons bx bx-user-plus"></i></a>
+                          <a class="bg-light fw-bold text-secondary small input-group-text" href="#" onclick="openAddModal()" data-bs-toggle="modal" data-bs-target="#modalCenter"><i class="menu-icon tf-icons bx bx-user-plus"></i></a>
                         </div>
                               <!-- <input placeholder="Who is this invoice to?" type="text" name="billTo" id="billto" class="form-control my-2" required> -->
                            
@@ -367,9 +367,51 @@
     
   </div>
 </div>
-
-<script src="../assets/vendor/libs/jquery/jquery.js"></script>
-<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<div class="modal fade hidden" id="modalCenter">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalCenterTitle">Add New Party</h5>
+      
+      </div>
+      <div class="modal-body">
+          <form action="/addseller" method="post" id="sellerform">
+        <div class="row">
+          <div class="col mb-3">
+            <label for="name" class="form-label">Party Name</label>
+            <input required type="text" name="name" id="name" class="form-control" placeholder="Enter Name">
+          </div>
+          <div class="col mb-3">
+            <label for="image" class="form-label">Address</label>
+            <input type="text" id="address" name="address" class="form-control" placeholder="Enter Address">
+          </div>
+          </div>
+ 
+          <div class="row">
+          <div class="col mb-3">
+            <label for="description" class="form-label">Phone</label>
+            <input  type="text" id="phone" name="phone" class="form-control" placeholder="Enter Phone">
+          </div>
+          <div class="col mb-3">
+            <label for="highlighted" class="form-label">GStIN</label>
+            <input type="text" id="gst" name="gst" class="form-control" placeholder="Enter GSTIN">
+ 
+          </div>
+        </div>
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" id="closeModalBtn" data-bs-dismiss="modal">
+          Close
+        </button>
+        <button type="submit" form="sellerform" id="submitbutton" class="btn btn-primary">Add Party</button>
+      </div>
+  </form>
+    </div>
+  </div>
+ </div>
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+ <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 
 <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap4.min.js"></script>
 <script src="https://unpkg.com/easyinvoice/dist/easyinvoice.min.js"></script>
@@ -455,53 +497,6 @@
 <!-- Your HTML code -->
 
 <script>
-  // Function to handle focus on the billto input
-  async function handleBillToFocus() {
-    try {
-  const response = await fetch('/getnames', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-
-  if (response.ok) {
-    // Check if the response status is in the range 200-299 (indicating success)
-    var div = document.getElementById('clientslist')
-    const data = await response.json();
-    const clientsListDiv = document.getElementById('clientslist');
-    clientsListDiv.innerHTML = ''
-
-
-
-// Log the data to the console
-
-    // Now you can handle the 'data' as needed
-  } else {
-    // Handle non-successful responses (e.g., 404, 500, etc.)
-    console.log(`Error: ${response.status} - ${response.statusText}`);
-  }
-} catch (error) {
-  // Handle network errors or other exceptions
-  console.error(error);
-}
-
- 
-  }
-
-  // Function to handle blur (out of focus) on the billto input
- 
-  // Add event listeners to the billto input
-  const billToInput = document.getElementById('billto');
-  billToInput.addEventListener('focus', handleBillToFocus);
-  billToInput.addEventListener('blur', handleBillToBlur);
-  function handleDivClick(element) {
-  // Your logic here using the 'element' parameter
-  console.log("Div clicked with element:", element);
-  // Add your custom logic here
-}
-</script>
-<script>
 
 
 async function submitForm() {
@@ -555,21 +550,7 @@ document.getElementById('generateInvoiceBtn').addEventListener('click', () => {
     console.log('Selected value:', selectedValue);
   }
 
-  document.getElementById('dynamic-select').addEventListener('input', function (event) {
-    // This event listener will be triggered as the user types
-    const inputValue = event.target.value.toLowerCase();
 
-    // Example: Update options dynamically based on input
-    const options = document.getElementById('dynamic-select').options;
-    for (let i = 0; i < options.length; i++) {
-      const optionText = options[i].text.toLowerCase();
-      if (optionText.includes(inputValue)) {
-        options[i].style.display = 'block';
-      } else {
-        options[i].style.display = 'none';
-      }
-    }
-  });
 </script>
 
 <script>
@@ -602,7 +583,7 @@ document.getElementById('generateInvoiceBtn').addEventListener('click', () => {
     const bbpercentage = parseFloat(document.getElementById('bbpercentage').value) || 0;
     bbcutting =  bbpercentage > 15 ? Math.round(((bbpercentage-15)/100)*epweight):0
     const berryborepercentage = parseFloat(document.getElementById('berryborepercentage').value) || 0;
-    berrycutting =  berryborepercentage > 3 ? Math.round(((berryborepercentage-3)/100)*epweight):0
+    berrycutting =  berryborepercentage > 2 ? Math.round(((berryborepercentage-2)/100)*epweight):0
     const other = parseFloat(document.getElementById('other').value) || 0;
     const allowance = parseFloat(document.getElementById('allowance').value) || 0;
 
@@ -643,11 +624,19 @@ document.getElementById('generateInvoiceBtn').addEventListener('click', () => {
 
   }
   $('.js-data-example-ajax').select2({
-  ajax: {
-    url: 'https://api.github.com/search/repositories',
-    dataType: 'json'
-    // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
+
+    ajax: {
+    url: 'http://localhost:3000/getnames',
+    dataType: 'json',
+    delay: 250, // Delay in milliseconds before making the request
+    processResults: function (data) {
+      return {
+        results: data.results.map(name => ({ id: name, text: name }))
+      };
+    },
+    cache: true // Enable caching to reduce server requests
   }
+
 });
 </script>
 
