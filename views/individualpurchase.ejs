@@ -74,34 +74,25 @@
             <!-- Basic Bootstrap Table -->
             <div class="card">
               <div class="card-body">
-                <a class="btn btn-primary text-white" href="#" onclick="openAddModal()" data-bs-toggle="modal" data-bs-target="#modalCenter">Purchase Bills</a>
-                <a class="btn btn-primary text-white" href="#" onclick="openAddModal()" data-bs-toggle="modal" data-bs-target="#modalCenter">Sales Bills</a>
-                <a class="btn btn-primary text-white" href="#" onclick="openAddModal()" data-bs-toggle="modal" data-bs-target="#modalCenter">Arrival</a>
-                <a class="btn btn-primary text-white" href="#" onclick="openAddModal()" data-bs-toggle="modal" data-bs-target="#modalCenter">Despatch</a>
-                <a class="btn btn-primary text-white" href="#" onclick="openAddModal()" data-bs-toggle="modal" data-bs-target="#modalCenter">Store-In</a>
-                <a class="btn btn-primary text-white" href="#" onclick="openAddModal()" data-bs-toggle="modal" data-bs-target="#modalCenter">Store-Out</a>
-                <a class="btn btn-primary text-white" href="#" onclick="openAddModal()" data-bs-toggle="modal" data-bs-target="#modalCenter">Purchase Commitments</a>
-                <a class="btn btn-primary text-white" href="#" onclick="openAddModal()" data-bs-toggle="modal" data-bs-target="#modalCenter">Sales Commitments</a>
+                <a class="btn btn-primary text-white" href="#" onclick="showpurchasebill()" id="purchasebill">Purchase Bills</a>
+                <a class="btn btn-primary text-white" href="#" onclick="showslesbill()" id="salesbill">Sales Bills</a>
+                <a class="btn btn-primary text-white" href="#" onclick="showarrival()" id="arrival">Arrival</a>
+                <a class="btn btn-primary text-white" href="#" onclick="showdespatch()" id="despatch">Despatch</a>
+                <a class="btn btn-primary text-white" href="#" onclick="showstorein()" id="storein">Store-In</a>
+                <a class="btn btn-primary text-white" href="#" onclick="showstoreout()" id="storeout">Store-Out</a>
+                <a class="btn btn-primary text-white" href="#"  onclick="showpcommitments()" id="purchasecommitment">Purchase Commitments</a>
+                <a class="btn btn-primary text-white" href="#" onclick="showscommitments()" id="salescommitment">Sales Commitments</a>
+                <a class="btn btn-primary text-white" onclick="showtransactions()" href="#" id="transaction">Transactions</a>
+                <div id="purchasecommitmentdiv">
+                  <!-- Content will be loaded here based on userType -->
+                  <%- include("./components/purchasecommitment.ejs") -%>
 
-                <div class="table-responsive text-nowrap p-4">
-                    <table class="table" id="example">
-                        <thead>
-                            <tr>
-                              <th>Property Id</th>
-                                <th>Property Name</th>
-                                <th>Property</th>
-                                <th>Listed for</th>
-                                <th>Location</th>
-                                <th>Price</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody class="table-border-bottom-0" id="table-body">
-                          <!-- Data will be populated here -->
-                      </tbody>
-  </table>
+                </div>
+                <div id="salescommitmentsdiv" class="d-none">
+                  <!-- Content will be loaded here based on userType -->
+                  <%- include("./components/salescommitment.ejs") -%>
 
-</div>
+                </div>   
 </div>
 </div>
 <!--/ Basic Bootstrap Table -->
@@ -132,97 +123,30 @@
 <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap4.min.js"></script>
 
 
+
 <script>
-  $(document).ready(function () {
-    var routeName = '<%= route %>';
-    var geturl =  routeName=='featured' ?'featuredpropertieslist':'propertieslist'  // Assuming you're passing this variable from EJS
-    var buttonname =  routeName=='featured' ?'Remove From Featured':'Add To Featured'  // Assuming you're passing this variable from EJS
+////tabs
 
-    var dataTable = $('#example').DataTable({
-      processing: true,
-      serverSide: true,
-      ajax: {
-        url: 'https://www.safehomes.ae/backend/'+geturl, // Replace with your API endpoint
-        dataSrc: 'data', // Key that holds the array of data in the API response
-        data: function (d) {
-          // Add any additional parameters you want to send to the server here
-        },
-      },
-      columns: [
-        {data: 'uniqueId'},
-        { data: 'plName' },
-        { data: 'plPropertyType' },
-        { data: 'plPropertySaleRent' },
-        { data: 'plCountry' },
-        { data: 'plExpeactedPrice' },
-        {
-          data: null,
-          render: function (data, type, row) {
-            return `<div class="dropdown">
-              <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                <i class="bx bx-dots-vertical-rounded"></i>
-              </button>
-              <div class="dropdown-menu">
-                <a class="dropdown-item featured-button" href="javascript:void(0);"><i class="bx bx-star me-1"></i>${buttonname} </a>
-                <a class="dropdown-item" href="/backend/editproperties?id=${row._id}"><i class="bx bx-edit me-1"></i> Edit /View </a>
-                <a class="dropdown-item delete-btn" href="javascript:void(0);"><i class="bx bx-trash me-1"></i> Delete</a>
-              </div>
-            </div>`;
-          },
-        },
-      ],
-    });
+    const purchasecommitmentdiv = $('#purchasecommitmentdiv');
+    const salescommitmentsdiv = $('#salescommitmentsdiv');
 
-    // Delete Button Click Event
-    function deleteData(id) {
-    $.ajax({
-      url: `https://www.safehomes.ae/backend/deleteproperty/${id}`,
-      type: 'DELETE',
-      success: function (response) {
-        dataTable.ajax.reload();
-      },
-      error: function (error) {
-        console.error('Error deleting data:', error);
-      },
-    });
-  }
+    function showpcommitments() {
+      salescommitmentsdiv.addClass('d-none')
+      purchasecommitmentdiv.removeClass('d-none')
+      hellos()
 
-  function toggleFeatured(id, isFeatured) {
-    var formDataObj = { id: id, status: isFeatured ? 'notfeatured' : 'featured' };
-
-    $.ajax({
-      url: `https://www.safehomes.ae/backend/addfeatured`,
-      type: 'POST',
-      data: JSON.stringify(formDataObj),
-      contentType: 'application/json',
-      success: function (response) {
-        dataTable.ajax.reload();
-      },
-      error: function (error) {
-        console.error('Error updating data:', error);
-      },
-    });
-  }
-
-  $('#example').on('click', '.delete-btn', function () {
-    var data = dataTable.row($(this).closest('tr')).data();
-    var id = data._id;
-    deleteData(id);
-  });
-
-  $('#example').on('click', '.featured-button', function () {
-    var data = dataTable.row($(this).closest('tr')).data();
-    var id = data._id;
-    
-    if (routeName === 'featured') {
-      toggleFeatured(id, true); // Remove from Featured
-    } else if (routeName === 'properties') {
-      toggleFeatured(id, false); // Add to Featured
     }
-  });
- });
-</script>
 
+    function showscommitments() {
+      salescommitmentsdiv.removeClass('d-none')
+      purchasecommitmentdiv.addClass('d-none')
+
+    }
+
+
+
+
+</script>
 
                                     
                                         <%- include('./include/end.ejs') -%>
