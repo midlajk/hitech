@@ -1,5 +1,8 @@
+const { ConnectionCheckOutFailedEvent } = require('mongodb');
 const ClientModel = require('../model/clientsmodal');
 const mongoose = require('mongoose');
+const { v4: uuidv4 } = require('uuid');
+const { nanoid } = require('nanoid');
 
 exports.generatereport = async (req, res) => {
   console.log(req.body);
@@ -28,6 +31,7 @@ exports.generatereport = async (req, res) => {
         blacks: req.body.blacks,
         husk: req.body.husk,
         aaa: req.body.aaa,
+
         aa: req.body.aa,
         a: req.body.a,
         b: req.body.b,
@@ -103,3 +107,39 @@ exports.addseller = async (req, res) => {
 
   }
 }
+exports.addpurchasecommitment = async (req, res) => {
+  try {
+
+      // Find the client by name
+      const client = await ClientModel.findOne({ name: 'Dubai' });
+
+      if (!client) {
+          return res.status(404).json({ error: 'Client not found' });
+      }
+ const reference = req.body.pcreference || '';
+ 
+ const currentDate = new Date().getTime();
+    
+  // Generate a unique ID using uuidv4 and include the reference
+  const uniqueId = `pc-${reference}-${currentDate}`;
+      // Add the new purchase commitment to the purchasecommitments array
+      client.purchasecommitments.push({
+        item:req.body.pcitem,
+        date:req.body.pcdate,
+        referance:req.body.reference,
+        id:uniqueId,
+        weight:req.body.pcweight,
+        eppercentage:req.body.pcep,
+        balance:req.body.pcweight,
+        rate:req.body.pcrate
+      });
+   
+      // Save the updated client to the database
+      await client.save();
+
+      res.status(200).json({ message: 'Purchase commitment added successfully!' });
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+};

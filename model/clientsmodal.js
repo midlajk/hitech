@@ -27,13 +27,25 @@ const coffeeSchema = new Schema({
     pberry: Number
      // Price/Rate
 });
-
+const purchasecommitmentsschema = new Schema({
+    item:String,
+    date:Date,
+    referance:String,
+    id:String,
+    weight:Number,
+    eppercentage:Number,
+    delivered:Number,
+    balance:Number,
+    rate:Number,
+     // Price/Rate
+});
 const clientSchema = new Schema({
     name: String,
     gst: String,
     address: String,
     phone: String,
-    coffee: [coffeeSchema]
+    coffee: [coffeeSchema],
+    purchasecommitments:[purchasecommitmentsschema]
 });
 
 const ClientModel = mongoose.model('Client', clientSchema); // Use a different variable name here

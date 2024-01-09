@@ -76,13 +76,14 @@
               <div class="card-body">
                 <a class="btn btn-primary text-white" href="#" onclick="showpurchasebill()" id="purchasebill">Purchase Bills</a>
                 <a class="btn btn-primary text-white" href="#" onclick="showslesbill()" id="salesbill">Sales Bills</a>
+                <a class="btn btn-primary text-white" onclick="showtransactions()" href="#" id="transaction">Transactions</a>
                 <a class="btn btn-primary text-white" href="#" onclick="showarrival()" id="arrival">Arrival</a>
                 <a class="btn btn-primary text-white" href="#" onclick="showdespatch()" id="despatch">Despatch</a>
                 <a class="btn btn-primary text-white" href="#" onclick="showstorein()" id="storein">Store-In</a>
                 <a class="btn btn-primary text-white" href="#" onclick="showstoreout()" id="storeout">Store-Out</a>
                 <a class="btn btn-primary text-white" href="#"  onclick="showpcommitments()" id="purchasecommitment">Purchase Commitments</a>
                 <a class="btn btn-primary text-white" href="#" onclick="showscommitments()" id="salescommitment">Sales Commitments</a>
-                <a class="btn btn-primary text-white" onclick="showtransactions()" href="#" id="transaction">Transactions</a>
+               
                 <div id="purchasecommitmentdiv">
                   <!-- Content will be loaded here based on userType -->
                   <%- include("./components/purchasecommitment.ejs") -%>
@@ -142,7 +143,6 @@
       purchasecommitmentdiv.addClass('d-none')
 
     }
-
 
 
 

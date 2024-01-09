@@ -1,5 +1,6 @@
 <div class="table-responsive text-nowrap p-4">
-  <h3>Sales commitments</h3>
+  <h3>Sale commitments</h3>
+   <a class="btn btn-success text-white" href="#" onclick="openModal()" >Add New</a>
     <table class="table" id="example">
         <thead>
             <tr>
@@ -21,3 +22,62 @@
 </table>
 
 </div>
+<div id="addsalescommitment" class="modal" style="display: none; justify-content: center; align-items: center; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5);">
+  <div class="modal-content" style="background-color: white; padding: 20px; border-radius: 5px; width: 50%;  max-width: 500px; position: relative;">
+    <div class="modal-header">
+      <h5 class="modal-title" id="modalCenterTitle">Add New Commitment</h5>
+    
+    </div>
+    <div class="modal-body">
+      <form action="" method="post" id="sellerform">
+    <div class="row">
+      <div class="col mb-3">
+        <label for="name" class="form-label">Item</label>
+      </div>
+      <div class="col mb-3">
+        <label for="image" class="form-label">Reference</label>
+        <input type="text" id="address" name="address" class="form-control" placeholder="Enter Address">
+      </div>
+      </div>
+
+      <div class="row">
+      <div class="col mb-3">
+        <label for="description" class="form-label">Weight</label>
+        <input  type="text" id="phone" name="phone" class="form-control" placeholder="Enter Phone">
+      </div>
+      <div class="col mb-3">
+        <label for="highlighted" class="form-label">Expected EP %</label>
+        <input type="text" id="gst" name="gst" class="form-control" placeholder="Enter GSTIN">
+
+      </div>
+      </div>
+      <div class="row">
+      <div class="col mb-3">
+        <label for="highlighted" class="form-label">Rate</label>
+        <input type="text" id="gst" name="gst" class="form-control" placeholder="Enter GSTIN">
+
+      </div>
+    </div>
+    
+  </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-secondary"  onclick="closeModal()" data-bs-dismiss="modal">
+        Close
+      </button>
+      <button type="submit" form="sellerform" id="submitbutton" class="btn btn-primary">Add Party</button>
+    </div>
+  </div>
+</div>
+<script>
+   function openModal() {
+    const modal = document.getElementById('addsalescommitment');
+    modal.style.display = 'flex';
+  }
+
+  // Function to close the modal
+  function closeModal() {
+    const modal = document.getElementById('addsalescommitment');
+    modal.style.display = 'none';
+  }
+
+</script>
