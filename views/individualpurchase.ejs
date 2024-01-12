@@ -127,6 +127,8 @@
 
 <script>
 ////tabs
+    let dataTable;
+    let scTable;
 
     const purchasecommitmentdiv = $('#purchasecommitmentdiv');
     const salescommitmentsdiv = $('#salescommitmentsdiv');
@@ -134,13 +136,23 @@
     function showpcommitments() {
       salescommitmentsdiv.addClass('d-none')
       purchasecommitmentdiv.removeClass('d-none')
-      hellos()
+      if (dataTable instanceof $.fn.dataTable.Api) {
+        console.log('here')
+  // The variable is a DataTable instance
+  dataTable.destroy()
+} 
+      purchasecommitments()
 
     }
 
     function showscommitments() {
       salescommitmentsdiv.removeClass('d-none')
       purchasecommitmentdiv.addClass('d-none')
+      if (scTable instanceof $.fn.dataTable.Api) {
+  // The variable is a DataTable instance
+  scTable.destroy()
+} 
+      salescommitments()
 
     }
 

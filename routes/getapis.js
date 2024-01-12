@@ -7,6 +7,7 @@ router.get('/getclients', adminpostapis.getclients);
 router.get('/getnames', adminpostapis.getnames);
 router.get('/purchasecommitments', adminpostapis.purchasecommitment);
 
+router.get('/salescommitments', adminpostapis.salescommitments);
 
 
 module.exports = router;

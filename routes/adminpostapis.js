@@ -7,6 +7,7 @@ const adminpostapis = require('../controller/postrequest');
 router.post('/submit-bill', adminpostapis.generatereport);
 router.post('/addseller', adminpostapis.addseller);
 router.post('/addpurchasecommitment', adminpostapis.addpurchasecommitment);
+router.post('/addsalecommitment', adminpostapis.addsalecommitment);
 
 
 module.exports = router;

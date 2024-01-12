@@ -39,13 +39,26 @@ const purchasecommitmentsschema = new Schema({
     rate:Number,
      // Price/Rate
 });
+const salescommitmentsschema = new Schema({
+    item:String,
+    date:Date,
+    referance:String,
+    id:String,
+    weight:Number,
+    eppercentage:Number,
+    delivered:Number,
+    balance:Number,
+    rate:Number,
+     // Price/Rate
+});
 const clientSchema = new Schema({
     name: String,
     gst: String,
     address: String,
     phone: String,
     coffee: [coffeeSchema],
-    purchasecommitments:[purchasecommitmentsschema]
+    purchasecommitments:[purchasecommitmentsschema],
+    salescommitmentsschema:[salescommitmentsschema]
 });
 
 const ClientModel = mongoose.model('Client', clientSchema); // Use a different variable name here

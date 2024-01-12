@@ -1,83 +1,242 @@
 <div class="table-responsive text-nowrap p-4">
   <h3>Sale commitments</h3>
-   <a class="btn btn-success text-white" href="#" onclick="openModal()" >Add New</a>
-    <table class="table" id="example">
-        <thead>
-            <tr>
-              <th>Date</th>
-                <th>Commitment id</th>
-                <th>Item</th>
-                <th>Weight</th>
-                <th>Expected Ep</th>
-                <th>Price</th>
-                <th>Remaining</th>
-                <th>Expected Ep</th>
-                <th>Action</th>
+  <a class="btn btn-success text-white" href="#" onclick="openpcModal()">Add New</a>
+  <table class="table" id="salescommitmenttable">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Commitment id</th>
+        <th>Item</th>
+        <th>Weight</th>
+        <th>Expected Ep</th>
+        <th>Price</th>
+        <th>Remaining</th>
+        <th>Expected Ep</th>
+        <th>Action</th>
 
-            </tr>
-        </thead>
-        <tbody class="table-border-bottom-0" id="table-body">
-          <!-- Data will be populated here -->
-      </tbody>
-</table>
+      </tr>
+    </thead>
+    <tbody class="table-border-bottom-0" id="table-body">
+      <!-- Data will be populated here -->
+    </tbody>
+  </table>
 
 </div>
-<div id="addsalescommitment" class="modal" style="display: none; justify-content: center; align-items: center; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5);">
-  <div class="modal-content" style="background-color: white; padding: 20px; border-radius: 5px; width: 50%;  max-width: 500px; position: relative;">
+<div id="addsalescommitment" class="modal"
+  style="display: none; justify-content: center; align-items: center; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5);">
+  <div class="modal-content"
+    style="background-color: white; padding: 20px; border-radius: 5px; width: 50%;  max-width: 500px; position: relative;">
     <div class="modal-header">
       <h5 class="modal-title" id="modalCenterTitle">Add New Commitment</h5>
-    
+
     </div>
     <div class="modal-body">
-      <form action="" method="post" id="sellerform">
-    <div class="row">
-      <div class="col mb-3">
-        <label for="name" class="form-label">Item</label>
-      </div>
-      <div class="col mb-3">
-        <label for="image" class="form-label">Reference</label>
-        <input type="text" id="address" name="address" class="form-control" placeholder="Enter Address">
-      </div>
+      <div class="row">
+        <div class="col mb-3">
+          <label for="date" class="form-label">Date</label>
+          <input type="date" id="scdate" name="scdate" class="form-control" placeholder="Enter Address">
+
+        </div>
+        <div class="col mb-3">
+          <label for="name" class="form-label">Item</label>
+          <input type="text" id="scitem" name="scitem" class="form-control" placeholder="Enter Address">
+
+        </div>
+
       </div>
 
       <div class="row">
-      <div class="col mb-3">
-        <label for="description" class="form-label">Weight</label>
-        <input  type="text" id="phone" name="phone" class="form-control" placeholder="Enter Phone">
-      </div>
-      <div class="col mb-3">
-        <label for="highlighted" class="form-label">Expected EP %</label>
-        <input type="text" id="gst" name="gst" class="form-control" placeholder="Enter GSTIN">
+        <div class="col mb-3">
+          <label for="image" class="form-label">Reference</label>
+          <input type="text" id="screference" name="screference" class="form-control" placeholder="Enter Address">
+        </div>
+        <div class="col mb-3">
+          <label for="description" class="form-label">Weight</label>
+          <input type="text" id="scweight" name="scweight" class="form-control" placeholder="Enter Phone">
+        </div>
 
-      </div>
       </div>
       <div class="row">
-      <div class="col mb-3">
-        <label for="highlighted" class="form-label">Rate</label>
-        <input type="text" id="gst" name="gst" class="form-control" placeholder="Enter GSTIN">
+        <div class="col mb-3">
+          <label for="highlighted" class="form-label">Expected EP %</label>
+          <input type="text" id="scep" name="scep" class="form-control" placeholder="Enter GSTIN">
 
+        </div>
+        <div class="col mb-3">
+          <label for="highlighted" class="form-label">Rate</label>
+          <input type="text" id="scrate" name="scrate" class="form-control" placeholder="Enter GSTIN">
+
+        </div>
       </div>
+
     </div>
-    
-  </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-outline-secondary"  onclick="closeModal()" data-bs-dismiss="modal">
+      <button type="button" class="btn btn-outline-secondary" onclick="closeModal()" data-bs-dismiss="modal">
         Close
       </button>
-      <button type="submit" form="sellerform" id="submitbutton" class="btn btn-primary">Add Party</button>
+      <button onclick="submitsalescommitment()" id="submitbutton" class="btn btn-primary">Add Party</button>
     </div>
   </div>
 </div>
 <script>
-   function openModal() {
+  function openpcModal() {
     const modal = document.getElementById('addsalescommitment');
     modal.style.display = 'flex';
   }
 
   // Function to close the modal
-  function closeModal() {
+  function closepcModal() {
     const modal = document.getElementById('addsalescommitment');
     modal.style.display = 'none';
   }
 
+</script>
+
+<script>
+  window.salescommitments = function () {
+    var routeName = '<%= route %>';
+    var geturl = routeName == 'featured' ? 'featuredpropertieslist' : 'propertieslist'  // Assuming you're passing this variable from EJS
+    var buttonname = routeName == 'featured' ? 'Remove From Featured' : 'Add To Featured'  // Assuming you're passing this variable from EJS
+
+    scTable = $('#salescommitmenttable').DataTable({
+      processing: true,
+      serverSide: true,
+      ajax: {
+        url: 'http://localhost:3000/salescommitments', // Replace with your API endpoint
+        dataSrc: 'data', // Key that holds the array of data in the API response
+        data: function (d) {
+          // Add any additional parameters you want to send to the server here
+        },
+      },
+      columns: [
+      {
+        data: 'date',
+        render: function (data, type, row) {
+          // Format the date using moment.js
+          return moment(data).format('DD/MM/YYYY');
+        }
+      },
+        { data: 'id' },
+        { data: 'item' },
+        { data: 'weight' },
+        {
+          data: null,
+          render: function (data, type, row) {
+            console.log('eppercentage:', row.eppercentage);
+            console.log('weight:', row.weight);
+
+            var epercentage = row.eppercentage || 0.2; // Default to 0.2 if 'eppercentage' is not present
+            var adjustedWeight = Math.round(row.weight * (epercentage / 100));
+            return adjustedWeight;
+          }
+        },
+        { data: 'rate' },
+        { data: 'weight' },
+        { data: 'weight' },
+        {
+          data: null,
+          render: function (data, type, row) {
+            return `<div class="dropdown">
+                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                  <i class="bx bx-dots-vertical-rounded"></i>
+                </button>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item featured-button" href="javascript:void(0);"><i class="bx bx-star me-1"></i>${buttonname} </a>
+                  <a class="dropdown-item" href="/backend/editproperties?id=${row._id}"><i class="bx bx-edit me-1"></i> Edit /View </a>
+                  <a class="dropdown-item delete-btn" href="javascript:void(0);"><i class="bx bx-trash me-1"></i> Delete</a>
+                </div>
+              </div>`;
+          },
+        },
+      ],
+    });
+
+    // Delete Button Click Event
+    function deleteData(id) {
+      $.ajax({
+        url: `https://www.safehomes.ae/backend/deleteproperty/${id}`,
+        type: 'DELETE',
+        success: function (response) {
+          dataTable.ajax.reload();
+        },
+        error: function (error) {
+          console.error('Error deleting data:', error);
+        },
+      });
+    }
+
+    function toggleFeatured(id, isFeatured) {
+      var formDataObj = { id: id, status: isFeatured ? 'notfeatured' : 'featured' };
+
+      $.ajax({
+        url: `https://www.safehomes.ae/backend/addfeatured`,
+        type: 'POST',
+        data: JSON.stringify(formDataObj),
+        contentType: 'application/json',
+        success: function (response) {
+          dataTable.ajax.reload();
+        },
+        error: function (error) {
+          console.error('Error updating data:', error);
+        },
+      });
+    }
+
+    $('#example').on('click', '.delete-btn', function () {
+      var data = dataTable.row($(this).closest('tr')).data();
+      var id = data._id;
+      deleteData(id);
+    });
+
+    $('#example').on('click', '.featured-button', function () {
+      var data = dataTable.row($(this).closest('tr')).data();
+      var id = data._id;
+
+      if (routeName === 'featured') {
+        toggleFeatured(id, true); // Remove from Featured
+      } else if (routeName === 'properties') {
+        toggleFeatured(id, false); // Add to Featured
+      }
+    });
+
+  }
+
+
+
+  async function submitsalescommitment() {
+    const scdate = document.getElementById('scdate').value;
+    const scitem = document.getElementById('scitem').value;
+    const screference = document.getElementById('screference').value;
+    const scweight = document.getElementById('scweight').value;
+    const scep = document.getElementById('scep').value;
+    const scrate = document.getElementById('scrate').value;
+
+    const payload = {
+      scdate: scdate,
+      scitem: scitem,
+      screference: screference,
+      scweight: scweight,
+      scep: scep,
+      scrate: scrate
+    };
+
+    try {
+      // Use Axios to make the POST request
+      const response = await axios.post('http://localhost:3000/addsalecommitment', payload, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      // Handle the response (you can add your own logic here)
+
+      // Close the modal after server response
+      closepcModal();
+      scTable.ajax.reload();
+
+    } catch (error) {
+      // Handle errors, such as network issues or server errors
+      console.log('Error:', error);
+    }
+  }
 </script>

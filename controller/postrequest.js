@@ -143,3 +143,37 @@ exports.addpurchasecommitment = async (req, res) => {
       res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+exports.addsalecommitment = async (req, res) => {
+  try {
+console.log(req.body)
+      const client = await ClientModel.findOne({ name: 'Dubai' });
+
+      if (!client) {
+          return res.status(404).json({ error: 'Client not found' });
+      }
+ const reference = req.body.screference || '';
+ 
+ const currentDate = new Date().getTime();
+    
+  // Generate a unique ID using uuidv4 and include the reference
+  const uniqueId = `sc-${reference}-${currentDate}`;
+      // Add the new purchase commitment to the purchasecommitments array
+      client.salescommitmentsschema.push({
+        item:req.body.scitem,
+        date:req.body.scdate,
+        referance:req.body.reference,
+        id:uniqueId,
+        weight:req.body.scweight,
+        eppercentage:req.body.scep,
+        balance:req.body.scweight,
+        rate:req.body.scrate
+      });
+   
+      // Save the updated client to the database
+      await client.save();
+      res.status(200).json({ message: 'Purchase commitment added successfully!' });
+  } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
