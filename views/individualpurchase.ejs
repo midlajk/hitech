@@ -65,7 +65,7 @@
           
             </div>
             <div class="row justify-content-between"> 
-              <div class="col-6" id="heading"><h3>midlaj</h3> </div>
+              <div class="col-6" id="heading"><h3><%=name%></h3> </div>
               <div class="col-3"> <h3 style="color: black;font-weight: bold;">Balance RS : 300000</h3></button>
 
 </div>
@@ -84,14 +84,24 @@
                 <a class="btn btn-primary text-white" href="#"  onclick="showpcommitments()" id="purchasecommitment">Purchase Commitments</a>
                 <a class="btn btn-primary text-white" href="#" onclick="showscommitments()" id="salescommitment">Sales Commitments</a>
                
-                <div id="purchasecommitmentdiv">
+                <div id="purchasecommitmentdiv" class="tab-content">
                   <!-- Content will be loaded here based on userType -->
                   <%- include("./components/purchasecommitment.ejs") -%>
 
                 </div>
-                <div id="salescommitmentsdiv" class="d-none">
+                <div id="salescommitmentsdiv" class="tab-content d-none">
                   <!-- Content will be loaded here based on userType -->
                   <%- include("./components/salescommitment.ejs") -%>
+
+                </div>   
+                <div id="arrivalssdiv" class="tab-content d-none">
+                  <!-- Content will be loaded here based on userType -->
+                  <%- include("./components/arrival.ejs") -%>
+
+                </div>   
+                <div id="despatcsdiv" class="tab-content d-none">
+                  <!-- Content will be loaded here based on userType -->
+                  <%- include("./components/despatch.ejs") -%>
 
                 </div>   
 </div>
@@ -127,37 +137,94 @@
 
 <script>
 ////tabs
+var name = '<%= name %>';
     let dataTable;
     let scTable;
+    let alTable;
+    let dpTable;
 
     const purchasecommitmentdiv = $('#purchasecommitmentdiv');
     const salescommitmentsdiv = $('#salescommitmentsdiv');
+    const arrivalssdiv = $('#arrivalssdiv');
+    const despatcsdiv = $('#despatcsdiv');
 
-    function showpcommitments() {
-      salescommitmentsdiv.addClass('d-none')
-      purchasecommitmentdiv.removeClass('d-none')
-      if (dataTable instanceof $.fn.dataTable.Api) {
-        console.log('here')
-  // The variable is a DataTable instance
-  dataTable.destroy()
-} 
-      purchasecommitments()
+//     function showpcommitments() {
+//       salescommitmentsdiv.addClass('d-none')
+//       purchasecommitmentdiv.removeClass('d-none')
+//       arrivalssdiv.addClass('d-none')
 
-    }
+//       if (dataTable instanceof $.fn.dataTable.Api) {
+//         console.log('here')
+//   // The variable is a DataTable instance
+//   dataTable.destroy()
+// } 
+//       purchasecommitments()
 
-    function showscommitments() {
-      salescommitmentsdiv.removeClass('d-none')
-      purchasecommitmentdiv.addClass('d-none')
-      if (scTable instanceof $.fn.dataTable.Api) {
-  // The variable is a DataTable instance
-  scTable.destroy()
-} 
-      salescommitments()
+//     }
 
-    }
+//     function showscommitments() {
+//       salescommitmentsdiv.removeClass('d-none')
+//       purchasecommitmentdiv.addClass('d-none')
+//       arrivalssdiv.addClass('d-none')
 
+//       if (scTable instanceof $.fn.dataTable.Api) {
+//   // The variable is a DataTable instance
+//   scTable.destroy()
+// } 
+//       salescommitments()
 
+//     }
+//     function showarrival() {
+//       salescommitmentsdiv.addClass('d-none')
+//       purchasecommitmentdiv.addClass('d-none')
+//       arrivalssdiv.removeClass('d-none')
 
+//       if (alTable instanceof $.fn.dataTable.Api) {
+//   // The variable is a DataTable instance
+//   alTable.destroy()
+// } 
+// individualarrivals()
+
+//     }
+
+    const tabContents = $('.tab-content');
+
+function showContent(contentDiv, tableInstance) {
+  tabContents.addClass('d-none');
+  contentDiv.removeClass('d-none');
+
+  // if (tableInstance instanceof $.fn.dataTable.Api) {
+  //   // The variable is a DataTable instance
+  //   tableInstance.destroy();
+  // }
+  
+}
+
+function initializeDataTable(tableInstance, dataFunction) {
+  if (tableInstance instanceof $.fn.dataTable.Api) {
+    tableInstance.destroy();
+  }
+  dataFunction();
+}
+
+function showpcommitments() {
+  showContent(purchasecommitmentdiv, dataTable);
+  initializeDataTable(dataTable, purchasecommitments);
+}
+
+function showscommitments() {
+  showContent(salescommitmentsdiv, scTable);
+  initializeDataTable(scTable, salescommitments);
+}
+
+function showarrival() {
+  showContent(arrivalssdiv, alTable);
+  initializeDataTable(alTable, individualarrivals);
+}
+function showdespatch() {
+  showContent(despatcsdiv, dpTable);
+  initializeDataTable(dpTable, individualdespatch);
+}
 </script>
 
                                     

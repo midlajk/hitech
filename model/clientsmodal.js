@@ -27,6 +27,32 @@ const coffeeSchema = new Schema({
     pberry: Number
      // Price/Rate
 });
+const despatch = new Schema({
+    invoice: String,
+    item: String,      // Item name
+    bags: Number,      // Number of bags
+    qty: Number,       // Quantity
+    priceRate: Number,
+    lorry: String,
+    billtype: String,
+    Commitment: String,
+    igst: String,
+    sgst: String,
+    cgst: String,
+    total: String,
+    aftercutting: Number,
+    outern: Number,
+    Moisture: Number,
+    blacks: Number,
+    husk: Number,
+    aaa: Number,
+    aa: Number,
+    a: Number,
+    b: Number,
+    c: Number,
+    pberry: Number
+     // Price/Rate
+});
 const purchasecommitmentsschema = new Schema({
     item:String,
     date:Date,
@@ -58,7 +84,8 @@ const clientSchema = new Schema({
     phone: String,
     coffee: [coffeeSchema],
     purchasecommitments:[purchasecommitmentsschema],
-    salescommitmentsschema:[salescommitmentsschema]
+    salescommitmentsschema:[salescommitmentsschema],
+    despatch:[despatch]
 });
 
 const ClientModel = mongoose.model('Client', clientSchema); // Use a different variable name here

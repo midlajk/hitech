@@ -45,7 +45,7 @@
                           <div class="col">
                             
                             <label class="fw-bold">Status:</label>
-                            <select name="type" class="form-control my-2" id="billtype">
+                            <select name="billtype" class="form-control my-2" id="billtype">
                                 <option value="Purchase">Purchase</option>
                                 <option value="Sales">Sales</option>
                               </select>
@@ -273,7 +273,7 @@
         <div id="invoiceCapture">
           <div class="d-flex flex-row justify-content-between align-items-start bg-light w-100 p-4">
             <div class="w-100">
-              <h4 class="fw-bold my-2">John Uberbacher</h4>
+              <h4 class="fw-bold my-2" id="partyname"></h4>
               <h6 class="fw-bold text-secondary mb-1">Lot No #: </h6>
             </div>
             <div class="text-end ms-4">
@@ -636,11 +636,23 @@ document.getElementById('generateInvoiceBtn').addEventListener('click', () => {
     },
     cache: true // Enable caching to reduce server requests
   }
-
+ 
 });
+var party
+ $('.js-data-example-ajax').on('change', function () {
+  // Get the selected value
+  party = $(this).val();
+  $('#partyname').text(party);
+
+  // You can use the selected value as needed, for example, set it to a variable
+  // var myVariable = selectedValue;
+});
+
 </script>
 
-
+<script>
+  
+</script>
 
 <!-- Your HTML code continues... -->
                        <%- include('./include/end.ejs') -%>

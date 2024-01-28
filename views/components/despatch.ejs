@@ -1,12 +1,12 @@
 <div class="table-responsive text-nowrap p-4">
   <h3>Purchase commitments</h3>
   <a class="btn btn-success text-white" href="#" onclick="addpurchasecommitmentModal()">Add New</a>
-  <table class="table" id="example">
+  <table class="table" id="despatchtable">
     <thead>
       <tr>
         <th>Date</th>
-        <th>Commitment id</th>
-        <th>Item</th>
+        <th>ID</th>
+        <th>Reference</th>
         <th>Weight</th>
         <th>Expected Ep</th>
         <th>Price</th>
@@ -100,16 +100,16 @@
 <!-- Your existing HTML code -->
 
 <script>
-  window.purchasecommitments = function () {
+  window.individualdespatch = function () {
      
     // var geturl = routeName == 'featured' ? 'featuredpropertieslist' : 'propertieslist'  // Assuming you're passing this variable from EJS
     // var buttonname = routeName == 'featured' ? 'Remove From Featured' : 'Add To Featured'  // Assuming you're passing this variable from EJS
 
-    dataTable = $('#example').DataTable({
+    dpTable = $('#despatchtable').DataTable({
       processing: true,
       serverSide: true,
       ajax: {
-        url: 'http://localhost:3000/purchasecommitments', // Replace with your API endpoint
+        url: 'http://localhost:3000/individualdespatch', // Replace with your API endpoint
         dataSrc: 'data', // Key that holds the array of data in the API response
         data: function (d) {
              d.name = name; // Add the 'name' parameter to the data object
@@ -125,13 +125,13 @@
           return moment(data).format('DD/MM/YYYY');
         }
       },
-        { data: 'id' },
         { data: 'item' },
-        { data: 'weight' },
-        { data: 'weight' },
-        { data: 'rate' },
-        { data: 'weight' },
-        { data: 'weight' },
+        { data: 'bags' },
+        { data: 'qty' },
+        { data: 'qty' },
+        { data: 'qty' },
+        { data: 'qty' },
+        { data: 'qty' },
         {
           data: null,
           render: function (data, type, row) {
@@ -232,7 +232,7 @@
 
       // Close the modal after server response
       closepurchasecommitmentModal();
-      dataTable.ajax.reload();
+      alTable.ajax.reload();
 
     } catch (error) {
       // Handle errors, such as network issues or server errors

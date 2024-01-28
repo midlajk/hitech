@@ -9,5 +9,7 @@ router.get('/purchasecommitments', adminpostapis.purchasecommitment);
 
 router.get('/salescommitments', adminpostapis.salescommitments);
 
+router.get('/individualarrivals', adminpostapis.individualarrivals);
+router.get('/individualdespatch', adminpostapis.individualdespatch);
 
 module.exports = router;

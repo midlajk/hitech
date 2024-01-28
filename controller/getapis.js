@@ -72,7 +72,9 @@ exports.purchasecommitment  = (async (req, res) => {
       const start = parseInt(req.query.start) || 0; // Get the starting index of the data to fetch
       const length = parseInt(req.query.length) || 10; // Get the number of records per page
       // Fetch data from the database with pagination
-      const client = await ClientModel.findOne({ name: 'Dubai' });
+      const name = req.query.name; // Assuming 'name' is sent as a query parameter
+
+      const client = await ClientModel.findOne({ name: name});
 
       if (!client) {
         // Handle case where client with the specified name is not found
@@ -95,6 +97,7 @@ exports.purchasecommitment  = (async (req, res) => {
   
   });
   exports.salescommitments  = (async (req, res) => {
+    console.log('here')
     // Assuming you have already imported required modules and set up your Express app
     
     // API endpoint for paginated data
@@ -103,7 +106,7 @@ exports.purchasecommitment  = (async (req, res) => {
         const start = parseInt(req.query.start) || 0; // Get the starting index of the data to fetch
         const length = parseInt(req.query.length) || 10; // Get the number of records per page
         // Fetch data from the database with pagination
-        const client = await ClientModel.findOne({ name: 'Dubai' });
+        const client = await ClientModel.findOne({ name: req.query.name });
   
         if (!client) {
           // Handle case where client with the specified name is not found
@@ -125,3 +128,64 @@ exports.purchasecommitment  = (async (req, res) => {
     
     
     });
+    exports.individualarrivals  = (async (req, res) => {
+      // Assuming you have already imported required modules and set up your Express app
+      
+      // API endpoint for paginated data
+        try {
+          const draw = parseInt(req.query.draw) || 1; // Get the draw count (used by DataTables)
+          const start = parseInt(req.query.start) || 0; // Get the starting index of the data to fetch
+          const length = parseInt(req.query.length) || 10; // Get the number of records per page
+          // Fetch data from the database with pagination
+          const client = await ClientModel.findOne({ name: req.query.name });
+    
+          if (!client) {
+            // Handle case where client with the specified name is not found
+            res.status(404).json({ error: 'Client not found' });
+            return;
+          }
+          const coffee = client.coffee.slice(start, start + length);
+    console.log(coffee)
+          res.json({
+            draw,
+          recordsTotal: client.coffee.length,
+          recordsFiltered: client.coffee.length,
+          data: coffee,
+          });
+        } catch (error) {
+          console.error('Error fetching data:', error);
+          res.status(500).json({ error: 'Server error' });
+        }
+      
+      
+      });
+      exports.individualdespatch  = (async (req, res) => {
+        // Assuming you have already imported required modules and set up your Express app
+        
+        // API endpoint for paginated data
+          try {
+            const draw = parseInt(req.query.draw) || 1; // Get the draw count (used by DataTables)
+            const start = parseInt(req.query.start) || 0; // Get the starting index of the data to fetch
+            const length = parseInt(req.query.length) || 10; // Get the number of records per page
+            // Fetch data from the database with pagination
+            const client = await ClientModel.findOne({ name: req.query.name });
+      
+            if (!client) {
+              // Handle case where client with the specified name is not found
+              res.status(404).json({ error: 'Client not found' });
+              return;
+            }
+            const coffee = client.despatch.slice(start, start + length);
+            res.json({
+              draw,
+            recordsTotal: client.despatch.length,
+            recordsFiltered: client.despatch.length,
+            data: coffee,
+            });
+          } catch (error) {
+            console.error('Error fetching data:', error);
+            res.status(500).json({ error: 'Server error' });
+          }
+        
+        
+        });
