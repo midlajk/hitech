@@ -66,6 +66,7 @@ exports.getclients = async (req, res) => {
 
   ////
 exports.purchasecommitment  = (async (req, res) => {
+  console.log('here')
   // Assuming you have already imported required modules and set up your Express app
   
   // API endpoint for paginated data
@@ -77,6 +78,7 @@ exports.purchasecommitment  = (async (req, res) => {
       const name = req.query.name; // Assuming 'name' is sent as a query parameter
 
       const client = await ClientModel.findOne({ name: name});
+   
 
       if (!client) {
         // Handle case where client with the specified name is not found
@@ -84,9 +86,9 @@ exports.purchasecommitment  = (async (req, res) => {
         return;
       }
       const purchaseCommitments = client.purchasecommitments.slice(start, start + length);
-
+      console.log(purchaseCommitments)
       res.json({
-        draw,
+      draw,
       recordsTotal: client.purchasecommitments.length,
       recordsFiltered: client.purchasecommitments.length,
       data: purchaseCommitments,

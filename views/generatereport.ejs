@@ -22,7 +22,7 @@
                               </div>
                           </div>
                           <div class="d-flex flex-row align-items-center">
-                              <span class="fw-bold me-2">Lot Number:&nbsp;</span>
+                              <span class="fw-bold me-2">Refference:&nbsp;</span>
                               <span class="current-date"><input style="width:150px" id="invoicenumber" name="invoicenumber" class="form-control" type="text"/></span>
 
                           </div>
@@ -34,6 +34,13 @@
                               
                         <div class="my-1 flex-nowrap input-group">
                           <select class="js-data-example-ajax" name="billTo" id="billto" required></select>
+
+                          <a class="bg-light fw-bold text-secondary small input-group-text" href="#" onclick="openAddModal()" data-bs-toggle="modal" data-bs-target="#modalCenter"><i class="menu-icon tf-icons bx bx-user-plus"></i></a>
+                        </div>
+                        <label class="fw-bold">Transportation Agnet:</label>
+
+                        <div class="my-1 flex-nowrap input-group">
+                          <select class="js-data-example-ajax" name="deliveryagent" id="deliveryagent" required></select>
 
                           <a class="bg-light fw-bold text-secondary small input-group-text" href="#" onclick="openAddModal()" data-bs-toggle="modal" data-bs-target="#modalCenter"><i class="menu-icon tf-icons bx bx-user-plus"></i></a>
                         </div>
@@ -49,7 +56,9 @@
                                 <option value="Purchase">Purchase</option>
                                 <option value="Sales">Sales</option>
                               </select>
+                              <label class="fw-bold">Delivery:</label>
                                <input placeholder="Delivery From or To" type="text" name="delivery" id="delivery" class="form-control my-2">
+                               <input placeholder="Remarks" type="text" name="remarks" id="remarks" class="form-control my-2">
 
                         
                           </div>
@@ -217,7 +226,7 @@
 
                           <span class="bg-light fw-bold text-secondary small input-group-text">Kg</span>
                           </div>
-                          <label for="">Berry Bore</label>
+                          <label for="">IDB</label>
 
                           <div class="my-1 flex-nowrap input-group">
                             <input type="number" name="berryborepercentage" oninput="updateNetWeight()" id="berryborepercentage" class="bg-white border form-control" placeholder="0.0" min="0.00" step="0.01" max="100.00">
@@ -241,10 +250,13 @@
                           <br>
                           <hr>
                           <div style="font-size: 1.125rem;" class="d-flex flex-row align-items-start justify-content-between">
-                            <span class="fw-bold">Final EP Weight:</span>
+                            <span class="fw-bold">Net EP Weight:</span>
                             <span class="fw-bold" id="epWeightDisplay"></span>
                         </div>
-                         
+                        <div style="font-size: 1.125rem;" class="d-flex flex-row align-items-start justify-content-between">
+                          <span class="fw-bold">Ep Percentage:</span>
+                          <span class="fw-bold" id="eppercenagedisplay"></span>
+                      </div>
                       
                         </div>
                       </div>
@@ -273,7 +285,7 @@
 </div>
 <!-- / Layout wrapper -->
 <div id="invoiceModal" class="modal" style="display: none; justify-content: center; align-items: center; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5);">
-  <div class="modal-content" style="background-color: white; padding: 20px; border-radius: 5px; width: 60%; height: 80%; max-width: 800px; max-height: 90%; overflow: auto; position: relative;">
+  <div class="modal-content" style="background-color: white; padding: 20px; border-radius: 5px; width: 60%; height: 80%; max-width: 850px; max-height: 90%; overflow: auto; position: relative;">
     <span class="close" id="closeModalBtn" style="position: absolute; top: 10px; right: 15px; font-size: 24px; cursor: pointer;">&times;</span>
     <div id="invoiceCapture" class="modal-content-wrapper" style="padding: 10px;">
       <!-- Invoice content goes here -->
@@ -315,32 +327,48 @@
             <table class="table table-bordered">
               <thead>
                 <tr>
+                  
+                  <th>COMMITMENT</th>
                   <th>QTY</th>
-                  <th>DESCRIPTION</th>
                   <th class="text-end">PRICE</th>
                   <th class="text-end">AMOUNT</th>
+                  <th class="text-end">ACTION</th>
                 </tr>
               </thead>
               <tbody>
+                <tr><td>        <div class="my-1 flex-nowrap input-group">
+                    <input id="newcommitid" class="form-control" disabled/>
+
+                    <a class="bg-light fw-bold text-secondary small input-group-text" href="#" onclick="openCommitments()" data-bs-toggle="modal" data-bs-target="#commitmentmodal"><i class="menu-icon tf-icons bx bx-notepad"></i></a>
+                  </div></td>
+                  <td><input class="form-control" id="newcommitqty"/></td>
+                  
+                  <td>
+                      <input id="newcommitrate" class="form-control"/>
+
+                      
+                 </td>
+                  <td id="newcommittotal"></td>
+                  <td><button class="btn btn-success" onclick="onButtonClick()">Add</td>
+                </tr>
                 <!-- Item rows go here -->
               </tbody>
             </table>
-            <table class="table">
-              <tbody>
-                <tr>
-                  <td>&nbsp;</td>
-                  <td>&nbsp;</td>
-                  <td>&nbsp;</td>
-                </tr>
-                <tr class="text-end">
-                  <td></td>
-                  <td class="fw-bold">SUB TOTAL<br>STORAGE&nbsp;&nbsp;&nbsp;</td>
-                  <td class="text-end">₹0.00 <br> 566Kg</td>
-                  
-                </tr>
-           
+            <table class="table" style="width: 100%;" id="billtable">
+              <tbody id="billtablebody">
+                
+               
                 <!-- Additional rows for TAX, DISCOUNT, and TOTAL go here -->
               </tbody>
+              
+               <tr class="text-end">
+                <td></td>
+                <td></td>
+                  <td></td>
+                  <td class="fw-bold">SUB TOTAL<br>CONSIGNMENT</td>
+                  <td class="text-end"><span id="totalbillamount"></span><br><span id="consignmentdisplay"></span></td>
+                  
+                </tr>
             </table>
             <div class="bg-light py-3 px-4 rounded">
               <!-- Notes go here -->
@@ -350,13 +378,13 @@
         <div class="pb-4 px-4">
           <div class="row">
             <div class="col-md-6">
-              <button class="btn btn-success d-block w-100">
-                <i class="me-2" style="width: 15px; height: 15px; margin-top: -3px;"></i>Add Commitments
+              <button class="btn btn-secondary d-block w-100">
+                <i class="me-2" style="width: 15px; height: 15px; margin-top: -3px;"></i>Print Detailed Report
               </button>
             </div>
             <div class="col-md-6">
               <button class="btn btn-outline-primary d-block w-100 mt-3 mt-md-0" >
-                <i class="me-2" style="width: 16px; height: 16px; margin-top: -3px;"></i>Print Details
+                <i class="me-2" style="width: 16px; height: 16px; margin-top: -3px;"></i>Print Bill
               </button>
             </div>
            
@@ -376,6 +404,107 @@
     
   </div>
 </div>
+<script>
+  var netepweight = 0
+
+var bill = []
+  function onButtonClick() {
+      // Extract data from HTML elements
+      var commitId = document.getElementById('newcommitid').value;
+      var commitQty = document.getElementById('newcommitqty').value;
+      var commitRate = document.getElementById('newcommitrate').value;
+      var commitTotal = document.getElementById('newcommittotal').innerText;
+      var billData = {
+        id: commitId,
+        quantity: commitQty,
+        rate: commitRate,
+        total: commitTotal
+    };
+
+    // Push the object into the bill array
+    bill.push(billData);
+    console.log(bill)
+
+    displayBill();
+
+      // Call addbill function with the extracted data
+  }
+  var consignment = 0
+  function displayBill() {
+    var tableBody = document.getElementById("billtablebody");
+    // Clear previous content
+    tableBody.innerHTML = "";
+    var totalbill = 0;
+    var totalQty = 0;
+
+    // Iterate over the bill array and create rows for each object
+    bill.forEach(function(billData, index) {
+        var row = tableBody.insertRow();
+        var cellId = row.insertCell(0);
+        var cellQty = row.insertCell(1);
+        var cellRate = row.insertCell(2);
+        var cellTotal = row.insertCell(3);
+        var cellDelete = row.insertCell(4);
+        var totalQuantity = 0; // Initialize total quantity
+
+        // Set cell content with data from the billData object
+        cellId.textContent = billData.id;
+        cellQty.textContent = billData.quantity;
+        cellRate.textContent = billData.rate;
+        cellTotal.textContent = billData.total;
+        totalbill += parseFloat(billData.total);
+        totalQty += parseFloat(billData.quantity);
+        consignment = netepweight-totalQty
+        // Create a delete button/icon
+        var deleteButton = document.createElement("button");
+        deleteButton.innerHTML = "&times;"; // The 'times' symbol (×) for delete
+        deleteButton.className = "btn btn-danger btn-sm";
+        // Add event listener to delete the row and remove data from the bill array
+        deleteButton.addEventListener("click", function() {
+            // Remove the row from the table
+            // Remove the corresponding data from the bill array 
+            row.remove();
+            if(bill.length==1){
+              bill=[]
+            }else{
+            bill.splice(index,1);
+            }
+            updatetotalbillamount()
+        });
+        document.getElementById('totalbillamount').innerText = "₹"+ totalbill  
+        document.getElementById('consignmentdisplay').innerText = consignment+" Kg"  
+
+        // Append the delete button to the delete cell
+        cellDelete.appendChild(deleteButton);
+    });
+}
+function updatetotalbillamount() {
+    var total = 0;
+    var totalQty= 0
+    bill.forEach(function(billData) {
+      total += parseFloat(billData.total);
+      totalQty += parseFloat(billData.quantity);
+
+    });
+    consignment = netepweight-totalQty
+    // Update the total quantity cell in the table
+    document.getElementById('totalbillamount').innerText = "₹"+total  
+    document.getElementById('consignmentdisplay').innerText = consignment+" Kg"  
+
+}
+</script>
+<style>
+#commitments-table {
+  width: 100%;
+}
+
+/* #commitments-table tbody tr td {
+  text-align: center;
+} */
+/* #commitments-table thead tr th {
+  text-align: center;
+} */
+</style>
 <div class="modal fade hidden" id="modalCenter">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
@@ -414,6 +543,66 @@
           Close
         </button>
         <button type="submit" form="sellerform" id="submitbutton" class="btn btn-primary">Add Party</button>
+      </div>
+  </form>
+    </div>
+  </div>
+ </div>
+ <div class="modal fade hidden" id="commitmentmodal">
+  <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 700px;"> 
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalCenterTitle">Midlaj PB Purchase Commitments</h5>
+      
+      </div>
+      <div class="modal-body">
+          <form action="/addseller" method="post" id="sellerform">
+        <div class="row">
+          <div class="col  mb-3">
+            <!-- <label for="name" class="form-label">Actual Weight</label> -->
+            <div class="my-1 flex-nowrap input-group">
+              <div class="bg-light text-secondary small input-group-text no-pointer-events" href="#" > Weight</div>
+              <input required type="text" name="name" id="name" class="form-control" placeholder="Actual Weight">
+              <div class="bg-light fw-bold text-secondary small input-group-text no-pointer-events" href="#" >   <input type="radio" name="commitmentweightype" id="commitmentweightype"></div>
+            </div>
+           <!-- <label for="image" class="form-label">Ep Weight</label> -->
+            <div class="lex-nowrap input-group">
+              <div class="bg-light text-secondary small input-group-text no-pointer-events" href="#" >Ep wgt.</div>
+              <input required type="text" name="name" id="name" class="form-control" placeholder="Ep Weight">
+              <div class="bg-light fw-bold text-secondary small input-group-text no-pointer-events" >   <input type="radio" name="commitmentweightype" id="commitmentweightype"></div>
+            </div>
+          </div>
+          <div class="col mb-3">
+            <label for="name" class="form-label">Billable Weight</label>
+            <h2></h2>
+           <label for="image" class="form-label">Billable Ep</label>
+            <h2></h2>
+                    </div>
+          </div>
+ 
+          <div class="row">
+          <table lass="table" class="table" id="commitments-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Commitment</th>
+              <th>Weight</th>
+              <th>Balance Ep</th>
+              <th>Rate</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody class="table-border-bottom-0" id="commitment-table-body">
+            <!-- Data will be populated here -->
+          </tbody>
+          </table>
+        </div>
+        
+      </div>
+      <div class="modal-footer">
+        <!-- <button type="button" class="btn btn-outline-secondary" id="closeModalBtn" data-bs-dismiss="modal">
+          Close
+        </button> -->
       </div>
   </form>
     </div>
@@ -468,11 +657,75 @@
 
                
 <script>
+  var dataTable;
   // Function to open the modal
   function openModal() {
     const modal = document.getElementById('invoiceModal');
     modal.style.display = 'flex';
   }
+  function openCommitments() {
+    const modal = document.getElementById('commitmentmodal');
+    modal.style.display = 'flex';
+    if (dataTable) {
+        dataTable.destroy();
+    }
+    // Reinitialize the DataTable with new data fetched via AJAX
+    dataTable = $('#commitments-table').DataTable({
+        processing: true,
+        serverSide: true,
+        searching: false, // Disable search option
+        lengthChange: false,
+        ajax: {
+            url: 'http://localhost:3000/purchasecommitments',
+            dataSrc: 'data', // Key that holds the array of data in the API response
+            data: function (d) {
+              d.name = 'midlaj';
+                // Add any additional parameters you want to send to the server here
+            },
+        },
+        columns: [
+        {
+        data: 'date',
+        render: function (data, type, row) {
+          // Format the date using moment.js
+          return moment(data).format('DD/MM/YYYY');
+        }
+      },
+            { data: 'id' },
+            { data: 'weight' },
+            { data: 'balance' },
+            { data: 'rate' },
+            {
+          data: null,
+          render: function (data, type, row) {
+            return `<div class="dropdown">
+                <button type="button" class="btn p-0 dropdown-toggle hide-arrow assign-commitment-btn" 
+                         data-id="${row.id}"
+                        data-weight="${row.weight}"
+                        data-rate="${row.rate}"
+                        >
+                  <i class="bx bx-plus-circle text-primary"></i>
+                </button>
+              </div>`;
+          },
+        }, // Assuming coffee is an array property
+        ],
+    "autoWidth": false
+    });
+  }
+  $('#commitments-table').on('click', '.assign-commitment-btn', function() {
+    var id = $(this).data('id');
+    var weight = $(this).data('weight');
+    var rate = $(this).data('rate');
+    $('#newcommitid').val(id)
+    $('#newcommitqty').val(weight)
+    $('#newcommitrate ').val(rate)
+    $('#commitmentmodal').modal('hide');
+    $('#newcommittotal').text(rate*weight)
+
+
+    // Call the assignCommitment function with the retrieved arguments
+});
 
   // Function to close the modal
   function closeModal() {
@@ -564,8 +817,8 @@ document.getElementById('generateInvoiceBtn').addEventListener('click', () => {
 
 <script>
   var netWeight = 0 
-  var netepweight = 0
   var epweight = 0
+  var eppercentage = 0
   function updateNetWeight() {
     // Get values from input fields
     const bags = parseFloat(document.getElementById('bags').value) || 0;
@@ -576,8 +829,7 @@ document.getElementById('generateInvoiceBtn').addEventListener('click', () => {
 
     var bgweight = Math.round(bags * bagweight);
     var forgnweight=Math.round(quantity*(forignobject/100))
-    console.log(forgnweight)
-
+   
     // Calculate Net Weight
     netWeight = quantity-bgweight - forgnweight+weightallowance;
     
@@ -586,15 +838,15 @@ document.getElementById('generateInvoiceBtn').addEventListener('click', () => {
     document.getElementById('forignobjectDisplay').textContent = forgnweight.toFixed(2);
     document.getElementById('netWeightDisplay').textContent = netWeight.toFixed(2) + " Kg";
         const outturn = parseFloat(document.getElementById('outern').value) || 0;
-    epweight =  (netWeight/100)*outturn
+    epweight =  (netWeight/50)*outturn
     const huskpercentage = parseFloat(document.getElementById('huskpercentage').value) || 0;
     hcutting =  huskpercentage > 0.5 ? Math.round(((huskpercentage-0.5)/100)*epweight):0
     const moisturepercentage = parseFloat(document.getElementById('moisturepercentage').value) || 0;
     mcutting =  moisturepercentage > 13 ? Math.round(((moisturepercentage-13)/100)*epweight):0
     const bbpercentage = parseFloat(document.getElementById('bbpercentage').value) || 0;
-    bbcutting =  bbpercentage > 15 ? Math.round(((bbpercentage-15)/100)*epweight):0
+    bbcutting =  bbpercentage > 15 ? Math.round((((bbpercentage-15)*0.15)/100)*epweight):0
     const berryborepercentage = parseFloat(document.getElementById('berryborepercentage').value) || 0;
-    berrycutting =  berryborepercentage > 2 ? Math.round(((berryborepercentage-2)/100)*epweight):0
+    berrycutting =  berryborepercentage > 2 ? Math.round((((berryborepercentage-2)*0.2)/100)*epweight):0
     const other = parseFloat(document.getElementById('other').value) || 0;
     const allowance = parseFloat(document.getElementById('allowance').value) || 0;
 
@@ -607,8 +859,10 @@ document.getElementById('generateInvoiceBtn').addEventListener('click', () => {
     document.getElementById('moisturecutting').value = mcutting;
     document.getElementById('bbcutting').value = bbcutting;
     document.getElementById('berryborecutting').value = berrycutting;
-
+    eppercentage =((netepweight/netWeight)*100)/2
     document.getElementById('epWeightDisplay').textContent = netepweight.toFixed(2) + " Kg";
+    document.getElementById('eppercenagedisplay').textContent = eppercentage.toFixed(2) + " %";
+
 
   }
 
@@ -621,7 +875,9 @@ document.getElementById('generateInvoiceBtn').addEventListener('click', () => {
     const allowance = parseFloat(document.getElementById('allowance').value) || 0;
 
     netepweight =  Math.round(epweight-hcutting-mcutting-bbcutting-berrycutting-other+allowance)
+    eppercentage =((netepweight/netWeight)*100)/2
     document.getElementById('epWeightDisplay').textContent = netepweight.toFixed(2) + " Kg";
+    document.getElementById('eppercenagedisplay').textContent = eppercentage.toFixed(2) + " %";
   }
   function multiply(){
     const outturn = parseFloat(document.getElementById('outern').value) || 0;
@@ -630,9 +886,15 @@ document.getElementById('generateInvoiceBtn').addEventListener('click', () => {
 
   }
   function modalclicked(){
+    consignment = netepweight || 0
     document.getElementById('epweightdisplay').innerText = netepweight
+    document.getElementById('consignmentdisplay').innerText = consignment + " Kg"
     document.getElementById('actualweightdisplay').innerText = netWeight
-
+    bill=[]
+    document.getElementById('totalbillamount').innerText = "₹"+ 0  
+    var tableBody = document.getElementById("billtablebody");
+  // Clear previous content
+      tableBody.innerHTML = "";
   }
   $('.js-data-example-ajax').select2({
 
