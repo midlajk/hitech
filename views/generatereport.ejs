@@ -22,7 +22,7 @@
                               </div>
                           </div>
                           <div class="d-flex flex-row align-items-center">
-                              <span class="fw-bold me-2">Lot Number:&nbsp;</span>
+                              <span class="fw-bold me-2">Refference:&nbsp;</span>
                               <span class="current-date"><input style="width:150px" id="invoicenumber" name="invoicenumber" class="form-control" type="text"/></span>
 
                           </div>
@@ -34,6 +34,13 @@
                               
                         <div class="my-1 flex-nowrap input-group">
                           <select class="js-data-example-ajax" name="billTo" id="billto" required></select>
+
+                          <a class="bg-light fw-bold text-secondary small input-group-text" href="#" onclick="openAddModal()" data-bs-toggle="modal" data-bs-target="#modalCenter"><i class="menu-icon tf-icons bx bx-user-plus"></i></a>
+                        </div>
+                        <label class="fw-bold">Transportation Agnet:</label>
+
+                        <div class="my-1 flex-nowrap input-group">
+                          <select class="js-data-example-ajax" name="deliveryagent" id="deliveryagent" required></select>
 
                           <a class="bg-light fw-bold text-secondary small input-group-text" href="#" onclick="openAddModal()" data-bs-toggle="modal" data-bs-target="#modalCenter"><i class="menu-icon tf-icons bx bx-user-plus"></i></a>
                         </div>
@@ -49,7 +56,9 @@
                                 <option value="Purchase">Purchase</option>
                                 <option value="Sales">Sales</option>
                               </select>
+                              <label class="fw-bold">Delivery:</label>
                                <input placeholder="Delivery From or To" type="text" name="delivery" id="delivery" class="form-control my-2">
+                               <input placeholder="Remarks" type="text" name="remarks" id="remarks" class="form-control my-2">
 
                         
                           </div>
