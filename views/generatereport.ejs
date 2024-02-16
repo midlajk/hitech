@@ -208,7 +208,7 @@
 
                           <span class="bg-light fw-bold text-secondary small input-group-text">Kg</span>
                           </div>
-                          <label for="">Berry Bore</label>
+                          <label for="">IDB</label>
 
                           <div class="my-1 flex-nowrap input-group">
                             <input type="number" name="berryborepercentage" oninput="updateNetWeight()" id="berryborepercentage" class="bg-white border form-control" placeholder="0.0" min="0.00" step="0.01" max="100.00">
@@ -331,22 +331,15 @@
                       
                  </td>
                   <td id="newcommittotal"></td>
-                  <td><button class="btn btn-success">Add</td>
+                  <td><button class="btn btn-success" onclick="onButtonClick()">Add</td>
                 </tr>
                 <!-- Item rows go here -->
               </tbody>
             </table>
-            <table class="table" style="width: 100%;">
-              <tbody>
+            <table class="table" style="width: 100%;" id="billtable">
+              <tbody id="billtablebody">
                 
-                <tr>
-                  <td>COMM</td>
-                  <td>3444</td>
-                  <td>Rate</td>
-                  <td>677</td>
-                    <td></td>
-                </tr>
-           
+               
                 <!-- Additional rows for TAX, DISCOUNT, and TOTAL go here -->
               </tbody>
               
@@ -354,8 +347,8 @@
                 <td></td>
                 <td></td>
                   <td></td>
-                  <td class="fw-bold">SUB TOTAL<br>STORAGE&nbsp;&nbsp;&nbsp;</td>
-                  <td class="text-end">₹0.00 <br> 566Kg</td>
+                  <td class="fw-bold">SUB TOTAL<br>CONSIGNMENT</td>
+                  <td class="text-end"><span id="totalbillamount"></span><br><span id="consignmentdisplay"></span></td>
                   
                 </tr>
             </table>
@@ -393,6 +386,95 @@
     
   </div>
 </div>
+<script>
+  var netepweight = 0
+
+var bill = []
+  function onButtonClick() {
+      // Extract data from HTML elements
+      var commitId = document.getElementById('newcommitid').value;
+      var commitQty = document.getElementById('newcommitqty').value;
+      var commitRate = document.getElementById('newcommitrate').value;
+      var commitTotal = document.getElementById('newcommittotal').innerText;
+      var billData = {
+        id: commitId,
+        quantity: commitQty,
+        rate: commitRate,
+        total: commitTotal
+    };
+
+    // Push the object into the bill array
+    bill.push(billData);
+    console.log(bill)
+
+    displayBill();
+
+      // Call addbill function with the extracted data
+  }
+  var consignment = 0
+  function displayBill() {
+    var tableBody = document.getElementById("billtablebody");
+    // Clear previous content
+    tableBody.innerHTML = "";
+    var totalbill = 0;
+    var totalQty = 0;
+
+    // Iterate over the bill array and create rows for each object
+    bill.forEach(function(billData, index) {
+        var row = tableBody.insertRow();
+        var cellId = row.insertCell(0);
+        var cellQty = row.insertCell(1);
+        var cellRate = row.insertCell(2);
+        var cellTotal = row.insertCell(3);
+        var cellDelete = row.insertCell(4);
+        var totalQuantity = 0; // Initialize total quantity
+
+        // Set cell content with data from the billData object
+        cellId.textContent = billData.id;
+        cellQty.textContent = billData.quantity;
+        cellRate.textContent = billData.rate;
+        cellTotal.textContent = billData.total;
+        totalbill += parseFloat(billData.total);
+        totalQty += parseFloat(billData.quantity);
+        consignment = netepweight-totalQty
+        // Create a delete button/icon
+        var deleteButton = document.createElement("button");
+        deleteButton.innerHTML = "&times;"; // The 'times' symbol (×) for delete
+        deleteButton.className = "btn btn-danger btn-sm";
+        // Add event listener to delete the row and remove data from the bill array
+        deleteButton.addEventListener("click", function() {
+            // Remove the row from the table
+            // Remove the corresponding data from the bill array 
+            row.remove();
+            if(bill.length==1){
+              bill=[]
+            }else{
+            bill.splice(index,1);
+            }
+            updatetotalbillamount()
+        });
+        document.getElementById('totalbillamount').innerText = "₹"+ totalbill  
+        document.getElementById('consignmentdisplay').innerText = consignment+" Kg"  
+
+        // Append the delete button to the delete cell
+        cellDelete.appendChild(deleteButton);
+    });
+}
+function updatetotalbillamount() {
+    var total = 0;
+    var totalQty= 0
+    bill.forEach(function(billData) {
+      total += parseFloat(billData.total);
+      totalQty += parseFloat(billData.quantity);
+
+    });
+    consignment = netepweight-totalQty
+    // Update the total quantity cell in the table
+    document.getElementById('totalbillamount').innerText = "₹"+total  
+    document.getElementById('consignmentdisplay').innerText = consignment+" Kg"  
+
+}
+</script>
 <style>
 #commitments-table {
   width: 100%;
@@ -717,7 +799,6 @@ document.getElementById('generateInvoiceBtn').addEventListener('click', () => {
 
 <script>
   var netWeight = 0 
-  var netepweight = 0
   var epweight = 0
   var eppercentage = 0
   function updateNetWeight() {
@@ -737,15 +818,15 @@ document.getElementById('generateInvoiceBtn').addEventListener('click', () => {
     document.getElementById('forignobjectDisplay').textContent = forgnweight.toFixed(2);
     document.getElementById('netWeightDisplay').textContent = netWeight.toFixed(2) + " Kg";
         const outturn = parseFloat(document.getElementById('outern').value) || 0;
-    epweight =  (netWeight/100)*outturn
+    epweight =  (netWeight/50)*outturn
     const huskpercentage = parseFloat(document.getElementById('huskpercentage').value) || 0;
     hcutting =  huskpercentage > 0.5 ? Math.round(((huskpercentage-0.5)/100)*epweight):0
     const moisturepercentage = parseFloat(document.getElementById('moisturepercentage').value) || 0;
     mcutting =  moisturepercentage > 13 ? Math.round(((moisturepercentage-13)/100)*epweight):0
     const bbpercentage = parseFloat(document.getElementById('bbpercentage').value) || 0;
-    bbcutting =  bbpercentage > 15 ? Math.round(((bbpercentage-15)/100)*epweight):0
+    bbcutting =  bbpercentage > 15 ? Math.round((((bbpercentage-15)*0.15)/100)*epweight):0
     const berryborepercentage = parseFloat(document.getElementById('berryborepercentage').value) || 0;
-    berrycutting =  berryborepercentage > 2 ? Math.round(((berryborepercentage-2)/100)*epweight):0
+    berrycutting =  berryborepercentage > 2 ? Math.round((((berryborepercentage-2)*0.2)/100)*epweight):0
     const other = parseFloat(document.getElementById('other').value) || 0;
     const allowance = parseFloat(document.getElementById('allowance').value) || 0;
 
@@ -758,7 +839,7 @@ document.getElementById('generateInvoiceBtn').addEventListener('click', () => {
     document.getElementById('moisturecutting').value = mcutting;
     document.getElementById('bbcutting').value = bbcutting;
     document.getElementById('berryborecutting').value = berrycutting;
-    eppercentage =((netepweight/netWeight)*100)
+    eppercentage =((netepweight/netWeight)*100)/2
     document.getElementById('epWeightDisplay').textContent = netepweight.toFixed(2) + " Kg";
     document.getElementById('eppercenagedisplay').textContent = eppercentage.toFixed(2) + " %";
 
@@ -774,7 +855,7 @@ document.getElementById('generateInvoiceBtn').addEventListener('click', () => {
     const allowance = parseFloat(document.getElementById('allowance').value) || 0;
 
     netepweight =  Math.round(epweight-hcutting-mcutting-bbcutting-berrycutting-other+allowance)
-    eppercentage =((netepweight/netWeight)*100)
+    eppercentage =((netepweight/netWeight)*100)/2
     document.getElementById('epWeightDisplay').textContent = netepweight.toFixed(2) + " Kg";
     document.getElementById('eppercenagedisplay').textContent = eppercentage.toFixed(2) + " %";
   }
@@ -785,9 +866,15 @@ document.getElementById('generateInvoiceBtn').addEventListener('click', () => {
 
   }
   function modalclicked(){
+    consignment = netepweight || 0
     document.getElementById('epweightdisplay').innerText = netepweight
+    document.getElementById('consignmentdisplay').innerText = consignment + " Kg"
     document.getElementById('actualweightdisplay').innerText = netWeight
-
+    bill=[]
+    document.getElementById('totalbillamount').innerText = "₹"+ 0  
+    var tableBody = document.getElementById("billtablebody");
+  // Clear previous content
+      tableBody.innerHTML = "";
   }
   $('.js-data-example-ajax').select2({
 
