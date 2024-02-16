@@ -8,6 +8,8 @@ router.get('/getnames', adminpostapis.getnames);
 router.get('/purchasecommitments', adminpostapis.purchasecommitment);
 
 router.get('/salescommitments', adminpostapis.salescommitments);
+router.get('/arrivals', adminpostapis.arrivals);
+router.get('/despatch', adminpostapis.despatch);
 
 router.get('/individualarrivals', adminpostapis.individualarrivals);
 router.get('/individualdespatch', adminpostapis.individualdespatch);

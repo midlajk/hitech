@@ -14,13 +14,17 @@
                     <table class="table" id="example">
                         <thead>
                             <tr>
-                              <th>Property Id</th>
-                                <th>Property Name</th>
-                                <th>Property</th>
-                                <th>Listed for</th>
-                                <th>Location</th>
-                                <th>Price</th>
-                                <th>Actions</th>
+                              <th>Date</th>
+                                <th>UID</th>
+                                <th>ITEM</th>
+                                <th>Vehicle</th>
+                                <th>Party</th>
+                                <th>Bags</th>
+                                <th>Quantity</th>                           
+                                <th>EP</th>
+                                <th>Referance</th>
+                                <th>Action</th>
+
                             </tr>
                         </thead>
                         <tbody class="table-border-bottom-0" id="table-body">
@@ -69,19 +73,23 @@
       processing: true,
       serverSide: true,
       ajax: {
-        url: 'https://www.safehomes.ae/backend/'+geturl, // Replace with your API endpoint
+        url: 'http://localhost:3000/arrivals', // Replace with your API endpoint
         dataSrc: 'data', // Key that holds the array of data in the API response
         data: function (d) {
           // Add any additional parameters you want to send to the server here
         },
       },
       columns: [
-        {data: 'uniqueId'},
-        { data: 'plName' },
-        { data: 'plPropertyType' },
-        { data: 'plPropertySaleRent' },
-        { data: 'plCountry' },
-        { data: 'plExpeactedPrice' },
+      { "data": "coffee.date" },
+            { "data": "coffee.id"},
+            { "data": "coffee.item" },
+            { "data": "coffee.item" },
+            { "data": "name" },
+            { "data": "coffee.bags" },
+            { "data": "coffee.qty" },
+            { "data": "coffee.qty" },
+            { "data": "coffee.qty" },
+
         {
           data: null,
           render: function (data, type, row) {

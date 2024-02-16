@@ -151,7 +151,16 @@
                               </div>
                             </span>
                           </div>
-                         
+                          <div class="d-flex flex-row align-items-start justify-content-between mt-2">
+                            <span class="fw-bold mt-2">Weight Allowance (Kg):</span>
+                            <span>
+                              <div class="my-1 flex-nowrap input-group" >
+                              <input type="number" name="weightallowance" id="weightallowance" class="bg-white border form-control"  oninput="updateNetWeight()" style="width: 80px;" placeholder="0.2" min="0.0" step="0.1" max="100.0">
+                              <span class="bg-light fw-bold text-secondary small input-group-text">  Kg</span>  
+                             
+                            </div>
+                          </span>
+                        </div>
                      
                     <hr>
                     <div style="font-size: 1.125rem;" class="d-flex flex-row align-items-start justify-content-between">
@@ -223,7 +232,7 @@
                                 <input type="number" name="other" id="other" oninput="updateNetWeight()" class="bg-white border form-control" placeholder="0.0" min="0.00" step="0.01" max="100.00">
                                 <span class="bg-light fw-bold text-secondary small input-group-text">Kg</span>
                               </div>
-                              <label for="">Allowance</label>
+                              <label for="">Ep Allowance</label>
 
                               <div class="my-1 flex-nowrap input-group">
                                   <input type="number" name="allowance" oninput="updateNetWeight()" id="allowance" class="bg-white border form-control" placeholder="0.0" min="0.00" step="0.01" max="100.00">
@@ -563,12 +572,14 @@ document.getElementById('generateInvoiceBtn').addEventListener('click', () => {
     const quantity = parseFloat(document.getElementById('quantity').value) || 0;
     const bagweight = parseFloat(document.getElementById('bagweight').value) || 0;
     const forignobject = parseFloat(document.getElementById('forignobject').value) || 0;
+    const weightallowance = parseFloat(document.getElementById('weightallowance').value) || 0;
+
     var bgweight = Math.round(bags * bagweight);
     var forgnweight=Math.round(quantity*(forignobject/100))
     console.log(forgnweight)
 
     // Calculate Net Weight
-    netWeight = quantity-bgweight - forgnweight;
+    netWeight = quantity-bgweight - forgnweight+weightallowance;
     
     // Update display
     document.getElementById('bagweightDisplay').textContent = bgweight.toFixed(2);

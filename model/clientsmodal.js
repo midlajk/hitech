@@ -27,6 +27,7 @@ const coffeeSchema = new Schema({
     pberry: Number
      // Price/Rate
 });
+
 const despatch = new Schema({
     invoice: String,
     item: String,      // Item name
@@ -89,5 +90,6 @@ const clientSchema = new Schema({
 });
 
 const ClientModel = mongoose.model('Client', clientSchema); // Use a different variable name here
+const CoffeeSchema = mongoose.model('CoffeeSchema', coffeeSchema); // Use a different variable name here
 
 module.exports = ClientModel;

@@ -1,4 +1,6 @@
 const ClientModel = require('../model/clientsmodal');
+const CoffeeSchema = require('../model/clientsmodal');
+
 const mongoose = require('mongoose');
 
 exports.getclients = async (req, res) => {
@@ -128,6 +130,106 @@ exports.purchasecommitment  = (async (req, res) => {
     
     
     });
+    //////arrivals   ////////////
+    exports.arrivals  = (async (req, res) => {
+      // Assuming you have already imported required modules and set up your Express app
+      
+      // API endpoint for paginated data
+        try {
+          const draw = parseInt(req.query.draw) || 1; // Get the draw count (used by DataTables)
+          const start = parseInt(req.query.start) || 0; // Get the starting index of the data to fetch
+          const length = parseInt(req.query.length) || 10; // Get the number of records per page
+          // Fetch data from the database with pagination
+          const client = await ClientModel.aggregate([
+            {
+                $unwind: "$coffee"
+            },
+            {
+                $skip: start
+            },
+            {
+                $limit: start+length
+            },
+            // {
+            //     $project: {
+            //         draw: { $literal: draw }, // Include the draw value in the result
+            //         coffee: "$coffee"
+            //     }
+            // }
+          ])
+          if (!client || client.length === 0) {
+            // Handle case where no client or coffee data is found
+            res.status(404).json({ error: 'No client or coffee data found' });
+            return;
+        }
+        const totalclients = await ClientModel.aggregate([
+          {
+              $unwind: "$coffee"
+          }])
+          console.log(client)
+        res.json({
+            draw,
+            recordsTotal: totalclients.length,
+            recordsFiltered: totalclients.length,
+            data: client,
+        });
+        } catch (error) {
+          console.error('Error fetching data:', error);
+          res.status(500).json({ error: 'Server error' });
+        }
+      
+      
+      });
+      exports.despatch  = (async (req, res) => {
+        // Assuming you have already imported required modules and set up your Express app
+        
+        // API endpoint for paginated data
+          try {
+            const draw = parseInt(req.query.draw) || 1; // Get the draw count (used by DataTables)
+            const start = parseInt(req.query.start) || 0; // Get the starting index of the data to fetch
+            const length = parseInt(req.query.length) || 10; // Get the number of records per page
+            // Fetch data from the database with pagination
+            const client = await ClientModel.aggregate([
+              {
+                  $unwind: "$despatch"
+              },
+              {
+                  $skip: start
+              },
+              {
+                  $limit: start+length
+              },
+              // {
+              //     $project: {
+              //         draw: { $literal: draw }, // Include the draw value in the result
+              //         coffee: "$coffee"
+              //     }
+              // }
+            ])
+            console.log(client)
+            if (!client || client.length === 0) {
+              // Handle case where no client or coffee data is found
+              res.status(404).json({ error: 'No client or coffee data found' });
+              return;
+          }
+          const totalclients = await ClientModel.aggregate([
+            {
+                $unwind: "$despatch"
+            }])
+          res.json({
+              draw,
+              recordsTotal: totalclients.length,
+              recordsFiltered: totalclients.length,
+              data: client,
+          });
+          } catch (error) {
+            console.error('Error fetching data:', error);
+            res.status(500).json({ error: 'Server error' });
+          }
+        
+        
+        });
+      ////////////////////////////////////////////////////////////////
     exports.individualarrivals  = (async (req, res) => {
       // Assuming you have already imported required modules and set up your Express app
       
