@@ -74,8 +74,9 @@
                               <div class="my-1 flex-nowrap input-group">
                                 <select class="js-data-example-ajax" name="delivery" id="delivery" required></select>
       
-                                <a class="bg-light fw-bold text-secondary small input-group-text" href="#" onclick="openAddModal()" data-bs-toggle="modal" data-bs-target="#modalCenter"><i class="menu-icon tf-icons bx bx-user-plus"></i></a>
-                              </div>                              <input placeholder="Remarks" type="text" name="remarks" id="remarks" class="form-control my-2">
+                                <a class="bg-light fw-bold text-secondary small input-group-text" href="#" data-bs-toggle="modal" data-bs-target="#modalCenter"><i class="menu-icon tf-icons bx bx-user-plus"></i></a>
+                              </div>                       
+                                     <input placeholder="Remarks" type="text" name="remarks" id="remarks" class="form-control my-2">
 
                         
                           </div>
@@ -93,22 +94,11 @@
                             <tr>
                               <td style="width: 45%;padding: 5px">
                                   <div class="input-group">
-                                    <select name="item" class="form-control" id="item"  required
-                                    style="width: 100%;">
-                                      <option value="rccherry">RC CHERRY</option>
-                                      <option value="ecep">RC EP</option>
-                                      <option value="arabicacherry">ARABICA CHERRY</option>
-                                      <option value="arabicaep">ARABICA EP</option>
-                                      <option value="husk">HUSK</option>
-                                      <option value="aaacoffy">RC EP AAA GRADE</option>
-                                      <option value="aaacoffy">RC EP P BERRY GRADE</option>
-                                      <option value="aacoffy">RC EP AA GRADE</option>
-                                      <option value="acoffy">RC EP A GRADE</option>
-                                      <option value="acoffy">RC EP B GRADE</option>
-                                      <option value="acoffy">RC EP C GRADE</option>
-
-                                    </select>
-                                     
+                                    <div class="my-1 flex-nowrap input-group">
+                                      <select class="js-data-example-ajax" name="item" id="item" required></select>
+            
+                                      <a class="bg-light fw-bold text-secondary small input-group-text" href="#" data-bs-toggle="modal" data-bs-target="#newitem"><i class="menu-icon tf-icons bx bx-user-plus"></i></a>
+                                    </div>    
                                       
                                   </div>
                               </td>
@@ -655,6 +645,55 @@ function updatetotalbillamount() {
     </div>
   </div>
  </div>
+ <div class="modal fade hidden" id="newitem">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalCenterTitle">New Item</h5>
+      
+      </div>
+
+      <div class="modal-body">
+          <form id="referanceform">
+        <div class="row">
+          <div class="col mb-3">
+            <label for="name" class="form-label">New Item</label>
+            <div class="my-1 flex-nowrap input-group">
+              <input required type="text" name="productname" id="productname" class="form-control" placeholder="Enter Name">
+              <a class="bg-light fw-bold small input-group-text" href="#" id="addByProduct">Add By-Product</a>
+            </div>   
+            <div id="byproducts">
+
+            <div class="row"> 
+           
+              <div class="col mb-3">
+                <label for="name" class="form-label">By-Product name</label>
+              </div>
+              <div class="col mb-3">
+                <label for="name" class="form-label">Percentage</label>
+              </div>
+              <div class="col mb-3">
+                <label for="name" class="form-label">Action</label>
+              </div>
+             
+            </div>
+          </div>
+        </div>
+          </div>
+ 
+       
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" id="closeReferenceModalBtn" data-bs-dismiss="modal" >
+          Close
+        </button>
+        <a onclick="addrefferance()" class="btn btn-primary text-white">Add Product</a>
+      </div>
+  
+    </div>
+  </div>
+ </div>
  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
  <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 
@@ -667,6 +706,53 @@ function updatetotalbillamount() {
 // Get the current date and time
 
 
+</script>
+<script>
+  $(document).ready(function () {
+
+      // Function to add a new by-product row
+      function addByProductRow() {
+          var newRowHtml = '<div class="row byproduct-row"> \
+                                <div class="col mb-3"> \
+                                  <select class="js-data-example-ajax" name="item" required></select> \
+                                </div> \
+                                <div class="col mb-3"> \
+                                    <input type="text" class="form-control" name="product_percentage[]" placeholder="Enter Percentage"> \
+                                </div> \
+                                <div class="col mb-3"> \
+                                    <button type="button" class="btn btn-danger delete-row">Delete</button> \
+                                </div> \
+                            </div>';
+
+          $("#byproducts").append(newRowHtml);
+
+          // Initialize select2 for the newly added select element
+          $('.js-data-example-ajax').select2({
+              ajax: {
+                  url: 'http://localhost:3000/getnames',
+                  dataType: 'json',
+                  delay: 250, // Delay in milliseconds before making the request
+                  processResults: function (data) {
+                      return {
+                          results: data.results.map(name => ({ id: name, text: name }))
+                      };
+                  },
+                  cache: true // Enable caching to reduce server requests
+              }
+          });
+      }
+
+      // Event listener for adding by-product
+      $("#addByProduct").click(function (e) {
+          e.preventDefault();
+          addByProductRow();
+      });
+
+      // Event listener for deleting row
+      $(document).on('click', '.delete-row', function () {
+          $(this).closest('.byproduct-row').remove();
+      });
+  });
 </script>
 
 <script>

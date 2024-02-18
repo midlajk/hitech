@@ -3,7 +3,7 @@ const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
 
 // Connect to the database
-const url = `mongodb://127.0.0.1:27017/hitech`;
+const url = `mongodb://127.0.0.1:27017/hitec`;
 
 // Connect to the database using Mongoose
 mongoose.connect(url, {  useNewUrlParser: true,

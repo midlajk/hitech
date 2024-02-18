@@ -30,18 +30,22 @@ exports.getclients = async (req, res) => {
   exports.getnames = async (req, res) => {
     try {
       const searchTerm = req.query.term;
-  console.log(searchTerm)
   if(!searchTerm){
+    ClientModel.find(docs=>{
+      console.log(docs)
+    })
     const clients = await ClientModel.aggregate([{ $sample: { size: 20 } }]);
 
     const names = clients.map(client => client.name);  
       res.json({ results: names })
   }else{
+
     const escapedSearchTerm = searchTerm.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
 
       const clients = await ClientModel.find({ name: { $regex: escapedSearchTerm, $options: 'i' } }, 'name');
   
       const names = clients.map(client => client.name);
+      console.log(clients,'hhhh')
   
       res.json({ results: names });
       
@@ -51,7 +55,7 @@ exports.getclients = async (req, res) => {
   
     
     } catch (error) {
-      console.error(error);
+      console.log(error);
       res.status(500).json({ error: 'Internal Server Error' });
     }
 //     try {
