@@ -34,7 +34,9 @@ router.get('/salesstorage', function(req, res, next) {
   res.render('salesstorage',{ route: 'salesstorage' });
 });
 router.get('/purchaseaccount', function(req, res, next) {
-  console.log(req.query)
   res.render('salesstorage',{ route: 'salesstorage' });
+});
+router.get('/settings', function(req, res, next) {
+  res.render('settings',{ route: 'settings' });
 });
 module.exports = router;

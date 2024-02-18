@@ -13,7 +13,7 @@
           <div class="row">
               <div class="col-md-8 col-lg-9">
                   <div class="card p-4 p-xl-5 my-3 my-xl-4">
-                      <div class="d-flex flex-row align-items-start justify-content-between mb-3">
+                      <!-- <div class="d-flex flex-row align-items-start justify-content-between mb-3">
                           <div class="d-flex flex-column">
                               
                               <div class="d-flex flex-row align-items-center">
@@ -21,18 +21,26 @@
                                   <input type="date" class="form-control" name="dateOfIssue" id="dateOfIssue" style="max-width: 150px;" required>
                               </div>
                           </div>
+                         
+                      </div> -->
+                      <div class="row">
+                        <div class="d-flex flex-column col-6">
+                              
                           <div class="d-flex flex-row align-items-center">
-                              <span class="fw-bold me-2">Refference:&nbsp;</span>
-                              <span >
-                                <div class="my-1 flex-nowrap input-group">
-                                  <select class="js-data-example-ajax" style="min-width: 150px;" name="invoicenumber" id="invoicenumber"></select>
-        
-                                  <a class="bg-light fw-bold text-secondary small input-group-text" href="#" onclick="openAddModal()" data-bs-toggle="modal" data-bs-target="#modalCenter"><i class="menu-icon tf-icons bx bx-user-plus"></i></a>
-                                </div>
-                                </span>
-
+                              <span class="fw-bold d-block me-2">Bill Date:</span>
+                              <input type="date" class="form-control" name="dateOfIssue" id="dateOfIssue" style="max-width: 150px;" required>
                           </div>
                       </div>
+                        <div class="d-flex flex-row align-items-center col-6">
+                        <span class="fw-bold me-2">Refference:&nbsp;</span>
+                          <div class="my-1 flex-nowrap input-group">
+                            <select class="" name="reference" id="reference" ></select>
+  
+                            <a class="bg-light fw-bold text-secondary small input-group-text" href="#" data-bs-toggle="modal" data-bs-target="#referanceAdd"><i class="menu-icon tf-icons bx bx-user-plus"></i></a>
+                          </div>
+
+                    </div></div>
+                      
                       <hr class="my-4">
                       <div class="row mb-5">
                           <div class="col">
@@ -63,8 +71,11 @@
                                 <option value="Sales">Sales</option>
                               </select>
                               <label class="fw-bold">Delivery:</label>
-                               <input placeholder="Delivery From or To" type="text" name="delivery" id="delivery" class="form-control my-2">
-                               <input placeholder="Remarks" type="text" name="remarks" id="remarks" class="form-control my-2">
+                              <div class="my-1 flex-nowrap input-group">
+                                <select class="js-data-example-ajax" name="delivery" id="delivery" required></select>
+      
+                                <a class="bg-light fw-bold text-secondary small input-group-text" href="#" onclick="openAddModal()" data-bs-toggle="modal" data-bs-target="#modalCenter"><i class="menu-icon tf-icons bx bx-user-plus"></i></a>
+                              </div>                              <input placeholder="Remarks" type="text" name="remarks" id="remarks" class="form-control my-2">
 
                         
                           </div>
@@ -197,7 +208,7 @@
                       <div class="my-3">
                         <label class="fw-bold">Report:</label>
                         <br>
-                        <label for="">Outern</label>
+                        <label for="">Outern in 50kg</label>
 
                         <div class="my-1 flex-nowrap input-group">
                             <input type="number" name="outern" oninput="updateNetWeight()"  id="outern" class="bg-white border form-control" placeholder="100" min="0.00" step="0.01" max="100.00">
@@ -260,7 +271,7 @@
                             <span class="fw-bold" id="epWeightDisplay"></span>
                         </div>
                         <div style="font-size: 1.125rem;" class="d-flex flex-row align-items-start justify-content-between">
-                          <span class="fw-bold">Ep Percentage:</span>
+                          <span class="fw-bold">Ep % in 50kg:</span>
                           <span class="fw-bold" id="eppercenagedisplay"></span>
                       </div>
                       
@@ -614,11 +625,40 @@ function updatetotalbillamount() {
     </div>
   </div>
  </div>
+ <div class="modal fade hidden" id="referanceAdd">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalCenterTitle">New Refference</h5>
+      
+      </div>
+      <div class="modal-body">
+          <form id="referanceform">
+        <div class="row">
+          <div class="col mb-3">
+            <label for="name" class="form-label">New Refference</label>
+            <input required type="text" name="referance" id="referance" class="form-control" placeholder="Enter Name">
+          </div>
+        
+          </div>
+ 
+       
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" id="closeReferenceModalBtn" data-bs-dismiss="modal" >
+          Close
+        </button>
+        <a onclick="addrefferance()" class="btn btn-primary text-white">Add Referance</a>
+      </div>
+  </form>
+    </div>
+  </div>
+ </div>
  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
  <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 
 <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap4.min.js"></script>
-<script src="https://unpkg.com/easyinvoice/dist/easyinvoice.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 
@@ -917,6 +957,21 @@ document.getElementById('generateInvoiceBtn').addEventListener('click', () => {
   }
  
 });
+$('#reference').select2({
+
+ajax: {
+url: 'http://localhost:3000/getrefferance',
+dataType: 'json',
+delay: 250, // Delay in milliseconds before making the request
+processResults: function (data) {
+  return {
+    results: data.results.map(name => ({ id: name, text: name }))
+  };
+},
+cache: true // Enable caching to reduce server requests
+}
+
+});
 var party
  $('.js-data-example-ajax').on('change', function () {
   // Get the selected value
@@ -928,9 +983,42 @@ var party
 });
 
 </script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 <script>
+
+  function addrefferance(){
+
+    var referance = document.getElementById("referance").value;
+    console.log(referance)
+    var data = {
+    newRouteName: reference
+  };
+  var data = {
+      newRouteName: referance
+    };
+
+    // Send a POST request to the server using Axios
+    axios.post('http://localhost:3000/addreference', data)
+      .then(response => {
+        // Handle the server response here
+        console.log(response.data);
+
+        // Close the modal on successful response
+        if (response.data.success) {
+        var closeButton = document.getElementById('closeReferenceModalBtn');
+
+// Trigger the click event on the button
+closeButton.click();
+        }
+      })
+      .catch(error => {
+        // Handle errors here
+        console.error('Error:', error);
+      });
   
+
+  }
 </script>
 
 <!-- Your HTML code continues... -->

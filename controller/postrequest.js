@@ -1,5 +1,7 @@
 const { ConnectionCheckOutFailedEvent } = require('mongodb');
 const ClientModel = require('../model/clientsmodal');
+const Reference = require('../model/clientsmodal');
+
 const mongoose = require('mongoose');
 const { v4: uuidv4 } = require('uuid');
 const { nanoid } = require('nanoid');
@@ -180,5 +182,26 @@ console.log(req.body)
   } catch (error) {
       console.log(error);
       res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+
+exports.addrefference = async (req, res) => {
+  console.log('herre')
+  try {
+    // Create a new reference document based on the request body
+    const newReference = new Reference({
+      newRouteName: req.body.newRouteName
+    });
+
+    // Save the reference document to MongoDB
+    await newReference.save();
+
+    // Send a success response to the client
+    res.json({ success: true, message: 'Reference added successfully' });
+  } catch (error) {
+    // Handle errors and send an error response
+    console.error('Error:', error);
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
 };

@@ -1,5 +1,6 @@
 const ClientModel = require('../model/clientsmodal');
 const CoffeeSchema = require('../model/clientsmodal');
+const Reference = require('../model/clientsmodal');
 
 const mongoose = require('mongoose');
 
@@ -293,3 +294,35 @@ exports.purchasecommitment  = (async (req, res) => {
         
         
         });
+
+
+
+        exports.getrefference = async (req, res) => {
+          try {
+            const searchTerm = req.query.term;
+        if(!searchTerm){
+          const clients = await Reference.aggregate([{ $sample: { size: 20 } }]);
+      
+          const names = clients.map(client => client.newRouteName);  
+            res.json({ results: names })
+        }else{
+          const escapedSearchTerm = searchTerm.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+
+            const clients = await Reference.find({ newRouteName: { $regex: escapedSearchTerm, $options: 'i' } }, 'newRouteName');
+        
+            const names = clients.map(client => client.newRouteName);
+        
+            res.json({ results: names });
+            
+        }
+            
+              
+        
+          
+          } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal Server Error' });
+          }
+    
+        };
+      

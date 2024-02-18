@@ -13,5 +13,6 @@ router.get('/despatch', adminpostapis.despatch);
 
 router.get('/individualarrivals', adminpostapis.individualarrivals);
 router.get('/individualdespatch', adminpostapis.individualdespatch);
+router.get('/getrefferance', adminpostapis.getrefference);
 
 module.exports = router;

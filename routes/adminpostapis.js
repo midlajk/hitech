@@ -20,6 +20,7 @@ router.post('/submit-bill', (req, res, next) => {
 router.post('/addseller', adminpostapis.addseller);
 router.post('/addpurchasecommitment', adminpostapis.addpurchasecommitment);
 router.post('/addsalecommitment', adminpostapis.addsalecommitment);
+router.post('/addreference', adminpostapis.addrefference);
 
 
 module.exports = router;
