@@ -1,8 +1,10 @@
-const ClientModel = require('../model/clientsmodal');
+
+require('../model/clientsmodal')
+const mongoose = require('mongoose');
+const ClientModel = mongoose.model('Client')
 const CoffeeSchema = require('../model/clientsmodal');
 const Reference = require('../model/clientsmodal');
 
-const mongoose = require('mongoose');
 
 exports.getclients = async (req, res) => {
   
@@ -17,7 +19,7 @@ exports.getclients = async (req, res) => {
           { name: regex },
         ]
       }).sort({ _id: -1 }).skip(start).limit(length); 
-      console.log(docs)// 'i' flag for case-insensitive search
+      // 'i' flag for case-insensitive search
       res.json({draw,
         recordsTotal: 10,
       recordsFiltered: 10,
@@ -31,9 +33,7 @@ exports.getclients = async (req, res) => {
     try {
       const searchTerm = req.query.term;
   if(!searchTerm){
-    ClientModel.find(docs=>{
-      console.log(docs)
-    })
+
     const clients = await ClientModel.aggregate([{ $sample: { size: 20 } }]);
 
     const names = clients.map(client => client.name);  
@@ -307,14 +307,14 @@ exports.purchasecommitment  = (async (req, res) => {
         if(!searchTerm){
           const clients = await Reference.aggregate([{ $sample: { size: 20 } }]);
       
-          const names = clients.map(client => client.newRouteName);  
+          const names = clients.map(client => client.name);  
             res.json({ results: names })
         }else{
           const escapedSearchTerm = searchTerm.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
 
-            const clients = await Reference.find({ newRouteName: { $regex: escapedSearchTerm, $options: 'i' } }, 'newRouteName');
+            const clients = await Reference.find({ name: { $regex: escapedSearchTerm, $options: 'i' } }, 'newRouteName');
         
-            const names = clients.map(client => client.newRouteName);
+            const names = clients.map(client => client.name);
         
             res.json({ results: names });
             

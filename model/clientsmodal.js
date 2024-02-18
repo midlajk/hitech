@@ -89,15 +89,15 @@ const clientSchema = new Schema({
     despatch:[despatch]
 });
 
-
+const referenceSchema = new mongoose.Schema({
+    name: String
+  });
 const ClientModel = mongoose.model('Client', clientSchema); // Use a different variable name here
 const CoffeeSchema = mongoose.model('CoffeeSchema', coffeeSchema); // Use a different variable name here
-const referenceSchema = new mongoose.Schema({
-    newRouteName: String
-  });
+
   
   // Create a model based on the schema
-  const Reference = mongoose.model('Reference', referenceSchema);
+const Reference = mongoose.model('Reference', referenceSchema);
   
 module.exports = ClientModel;
 module.exports = Reference;

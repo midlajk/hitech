@@ -1,8 +1,9 @@
 const { ConnectionCheckOutFailedEvent } = require('mongodb');
-const ClientModel = require('../model/clientsmodal');
-const Reference = require('../model/clientsmodal');
-
 const mongoose = require('mongoose');
+
+const ClientModel = mongoose.model('Client')
+const Reference = mongoose.model('Reference')
+
 const { v4: uuidv4 } = require('uuid');
 const { nanoid } = require('nanoid');
 
@@ -94,10 +95,8 @@ exports.generatesalesreport = async (req, res) => {
   }
 };
 exports.addseller = async (req, res) => {
-  console.log(req.body)
 
   const existingClient = await ClientModel.findOne({ name: req.body.billTo });
-  console.log(existingClient)
   if (existingClient) {
     res.redirect('/accounts');
 
@@ -187,11 +186,11 @@ console.log(req.body)
 
 
 exports.addrefference = async (req, res) => {
-  console.log('herre')
+  console.log(req.body)
   try {
     // Create a new reference document based on the request body
     const newReference = new Reference({
-      newRouteName: req.body.newRouteName
+      name: req.body.newRouteName
     });
 
     // Save the reference document to MongoDB

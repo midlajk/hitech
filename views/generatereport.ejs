@@ -711,10 +711,22 @@ function updatetotalbillamount() {
   $(document).ready(function () {
 
       // Function to add a new by-product row
-      function addByProductRow() {
+   
+      // Event listener for adding by-product
+      $("#addByProduct").click(function (e) {
+          e.preventDefault();
+          addByProductRow();
+      });
+
+      // Event listener for deleting row
+      $(document).on('click', '.delete-row', function () {
+          $(this).closest('.byproduct-row').remove();
+      });
+  }); 
+    function addByProductRow() {
           var newRowHtml = '<div class="row byproduct-row"> \
                                 <div class="col mb-3"> \
-                                  <select class="js-data-example-ajax" name="item" required></select> \
+                                  <select class="js-data-example-ajax-byproduct" name="item" required></select> \
                                 </div> \
                                 <div class="col mb-3"> \
                                     <input type="text" class="form-control" name="product_percentage[]" placeholder="Enter Percentage"> \
@@ -727,7 +739,7 @@ function updatetotalbillamount() {
           $("#byproducts").append(newRowHtml);
 
           // Initialize select2 for the newly added select element
-          $('.js-data-example-ajax').select2({
+          $('.js-data-example-ajax-byproduct').select2({
               ajax: {
                   url: 'http://localhost:3000/getnames',
                   dataType: 'json',
@@ -742,17 +754,6 @@ function updatetotalbillamount() {
           });
       }
 
-      // Event listener for adding by-product
-      $("#addByProduct").click(function (e) {
-          e.preventDefault();
-          addByProductRow();
-      });
-
-      // Event listener for deleting row
-      $(document).on('click', '.delete-row', function () {
-          $(this).closest('.byproduct-row').remove();
-      });
-  });
 </script>
 
 <script>
