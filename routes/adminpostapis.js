@@ -21,6 +21,7 @@ router.post('/addseller', adminpostapis.addseller);
 router.post('/addpurchasecommitment', adminpostapis.addpurchasecommitment);
 router.post('/addsalecommitment', adminpostapis.addsalecommitment);
 router.post('/addreference', adminpostapis.addrefference);
+router.post('/addproducts', adminpostapis.addproducts);
 
 
 module.exports = router;

@@ -95,7 +95,7 @@
                               <td style="width: 45%;padding: 5px">
                                   <div class="input-group">
                                     <div class="my-1 flex-nowrap input-group">
-                                      <select class="js-data-example-ajax" name="item" id="item" required></select>
+                                      <select class="items-js" name="item" id="item" required></select>
             
                                       <a class="bg-light fw-bold text-secondary small input-group-text" href="#" data-bs-toggle="modal" data-bs-target="#newitem"><i class="menu-icon tf-icons bx bx-user-plus"></i></a>
                                     </div>    
@@ -645,7 +645,26 @@ function updatetotalbillamount() {
     </div>
   </div>
  </div>
- <div class="modal fade hidden" id="newitem">
+ <style>
+  /* .select2-close-mask {
+    z-index: 2099;
+}
+
+.select2-dropdown {
+    z-index: 3051;
+} */
+.select2-container--default .select2-dropdown {
+    position: absolute;
+}
+.select2-container {
+    z-index: 1000; /* Adjust as needed */
+}
+
+.select2-dropdown {
+    z-index: 1000; /* Adjust as needed */
+}
+ </style>
+ <div class="modal fade hidden" id="newitem" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -660,7 +679,6 @@ function updatetotalbillamount() {
             <label for="name" class="form-label">New Item</label>
             <div class="my-1 flex-nowrap input-group">
               <input required type="text" name="productname" id="productname" class="form-control" placeholder="Enter Name">
-              <a class="bg-light fw-bold small input-group-text" href="#" id="addByProduct">Add By-Product</a>
             </div>   
             <div id="byproducts">
 
@@ -677,6 +695,17 @@ function updatetotalbillamount() {
               </div>
              
             </div>
+            <div class="row byproduct-row"> 
+              <div class="col mb-3"> 
+                <select class="js-data-example-ajax-byproduct" name="byproductitem" id="byproductitem" required></select> 
+              </div> 
+              <div class="col mb-3"> 
+                  <input type="text" class="form-control" name="byproductpercentage" id="byproductpercentage" placeholder="Enter Percentage"> 
+              </div> 
+              <div class="col mb-3"> 
+                  <button type="button" class="btn btn-primary" onclick=" addByProductRow();" id="addByProduct">Add By-Product</button> 
+              </div> 
+          </div>
           </div>
         </div>
           </div>
@@ -685,10 +714,10 @@ function updatetotalbillamount() {
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-outline-secondary" id="closeReferenceModalBtn" data-bs-dismiss="modal" >
+        <button type="button" class="btn btn-outline-secondary" id="closeaddproductmodal" data-bs-dismiss="modal" >
           Close
         </button>
-        <a onclick="addrefferance()" class="btn btn-primary text-white">Add Product</a>
+        <a onclick="addproduct()" class="btn btn-primary text-white">Add Product</a>
       </div>
   
     </div>
@@ -708,40 +737,11 @@ function updatetotalbillamount() {
 
 </script>
 <script>
+var byproducts = []
   $(document).ready(function () {
-
-      // Function to add a new by-product row
-   
-      // Event listener for adding by-product
-      $("#addByProduct").click(function (e) {
-          e.preventDefault();
-          addByProductRow();
-      });
-
-      // Event listener for deleting row
-      $(document).on('click', '.delete-row', function () {
-          $(this).closest('.byproduct-row').remove();
-      });
-  }); 
-    function addByProductRow() {
-          var newRowHtml = '<div class="row byproduct-row"> \
-                                <div class="col mb-3"> \
-                                  <select class="js-data-example-ajax-byproduct" name="item" required></select> \
-                                </div> \
-                                <div class="col mb-3"> \
-                                    <input type="text" class="form-control" name="product_percentage[]" placeholder="Enter Percentage"> \
-                                </div> \
-                                <div class="col mb-3"> \
-                                    <button type="button" class="btn btn-danger delete-row">Delete</button> \
-                                </div> \
-                            </div>';
-
-          $("#byproducts").append(newRowHtml);
-
-          // Initialize select2 for the newly added select element
-          $('.js-data-example-ajax-byproduct').select2({
+    $('.items-js').select2({
               ajax: {
-                  url: 'http://localhost:3000/getnames',
+                  url: 'http://localhost:3000/getproducts',
                   dataType: 'json',
                   delay: 250, // Delay in milliseconds before making the request
                   processResults: function (data) {
@@ -752,7 +752,108 @@ function updatetotalbillamount() {
                   cache: true // Enable caching to reduce server requests
               }
           });
+
+      // Function to add a new by-product row
+   
+      // Event listener for adding by-product
+      // $("#addByProduct").click(function (e) {
+      //     e.preventDefault();
+      //     addByProductRow();
+      // });
+
+      // Event listener for deleting row
+      $(document).on('click', '.delete-row', function () {
+        var index = $(this).data('index');
+        if(index < byproducts.length-1){
+          alert('delete the last item first')
+        }else{ byproducts.splice(index, 1);
+        $(this).closest('.byproduct-row').remove();
+        console.log(byproducts)}
+       
+      });
+  }); 
+  $('#newitem').on('shown.bs.modal', function () {
+    $('.js-data-example-ajax-byproduct').select2({
+            dropdownParent: $("#newitem"),
+              ajax: {
+                  url: 'http://localhost:3000/getproducts',
+                  dataType: 'json',
+                  delay: 250, // Delay in milliseconds before making the request
+                  processResults: function (data) {
+                      return {
+                          results: data.results.map(name => ({ id: name, text: name }))
+                      };
+                  },
+                  cache: true // Enable caching to reduce server requests
+              }
+          });
+});
+
+    function addByProductRow() {
+     
+
+         var byproductname = document.getElementById('byproductitem').value
+         var byproductpercentage = document.getElementById('byproductpercentage').value
+
+         var byProduct = {
+        name: byproductname,
+        percentage: byproductpercentage
+    };
+
+    byproducts.push(byProduct);
+    var rowIndex = byproducts.length - 1
+
+
+
+          var newRowHtml = '<div class="row byproduct-row"> \
+                                <div class="col mb-3">'+byproductname+'\
+                                 \
+                                </div> \
+                                <div class="col mb-3"> \
+                                    '+byproductpercentage+' \
+                                </div> \
+                                <div class="col mb-3"> \
+                                    <button type="button" class="btn btn-danger delete-row" data-index="' + rowIndex + '">Delete</button> \
+                                </div> \
+                            </div>';
+
+          $("#byproducts").append(newRowHtml);
+
+          
       }
+      // $.fn.modal.Constructor.prototype._enforceFocus = function() {};
+      function addproduct(){
+
+var productname = document.getElementById("productname").value;
+var data = {
+product: productname,
+byproduct : byproducts
+};
+if(productname){
+
+// Send a POST request to the server using Axios
+axios.post('http://localhost:3000/addproducts', data)
+  .then(response => {
+    // Handle the server response here
+
+    // Close the modal on successful response
+    if (response.data.success) {
+    var closeButton = document.getElementById('closeaddproductmodal');
+
+// Trigger the click event on the button
+closeButton.click();
+    }
+  })
+  .catch(error => {
+    // Handle errors here
+    console.error('Error:', error);
+  });
+}else{
+  alert('Please enter a product name')
+}
+
+
+}
 
 </script>
 

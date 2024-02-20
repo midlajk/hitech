@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const ClientModel = mongoose.model('Client')
 const CoffeeSchema = require('../model/clientsmodal');
 const Reference = require('../model/clientsmodal');
+const PoductsSchema = mongoose.model('PoductsSchema')
 
 
 exports.getclients = async (req, res) => {
@@ -30,6 +31,7 @@ exports.getclients = async (req, res) => {
     }
   };
   exports.getnames = async (req, res) => {
+    console.log('ss')
     try {
       const searchTerm = req.query.term;
   if(!searchTerm){
@@ -67,6 +69,36 @@ exports.getclients = async (req, res) => {
 //       console.error(error);
 //       res.status(500).send('An error occurred while fetching clients');
 //     }
+  };
+  exports.getproducts = async (req, res) => {
+    try {
+      const searchTerm = req.query.term;
+  if(!searchTerm){
+
+    const products = await PoductsSchema.aggregate([{ $sample: { size: 20 } }]);
+
+    const names = products.map(p => p.product);  
+      res.json({ results: names })
+  }else{
+
+    const escapedSearchTerm = searchTerm.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+
+      const product = await PoductsSchema.find({ product: { $regex: escapedSearchTerm, $options: 'i' } }, 'product');
+  
+      const names = product.map(p => p.product);
+  
+      res.json({ results: names });
+      
+  }
+      
+        
+  
+    
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+
   };
 
   ////

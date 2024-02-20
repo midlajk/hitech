@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 
 const ClientModel = mongoose.model('Client')
 const Reference = mongoose.model('Reference')
+const PoductsSchema = mongoose.model('PoductsSchema')
 
 const { v4: uuidv4 } = require('uuid');
 const { nanoid } = require('nanoid');
@@ -201,6 +202,26 @@ exports.addrefference = async (req, res) => {
   } catch (error) {
     // Handle errors and send an error response
     console.error('Error:', error);
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};
+exports.addproducts = async (req, res) => {
+  console.log('ggg')
+  try {
+    // Create a new reference document based on the request body
+    const newproduct = new PoductsSchema({
+      product: req.body.product,
+    byproduct:req.body.byproduct
+    });
+
+    // Save the newproduct document to MongoDB
+    await newproduct.save();
+
+    // Send a success response to the client
+    res.json({ success: true, message: 'Reference added successfully' });
+  } catch (error) {
+    // Handle errors and send an error response
+    console.log('Error:', error);
     res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
 };
