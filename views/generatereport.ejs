@@ -28,13 +28,13 @@
                               
                           <div class="d-flex flex-row align-items-center">
                               <span class="fw-bold d-block me-2">Bill Date:</span>
-                              <input type="date" class="form-control" name="dateOfIssue" id="dateOfIssue" style="max-width: 150px;" required>
+                              <input type="date" class="form-control" name="dateOfIssue" id="dateOfIssue" style="max-width: 150px;" required autofocus>
                           </div>
                       </div>
                         <div class="d-flex flex-row align-items-center col-6">
                         <span class="fw-bold me-2">Refference:&nbsp;</span>
                           <div class="my-1 flex-nowrap input-group">
-                            <select class="" name="reference" id="reference" ></select>
+                            <select class="" name="referenceselect" id="referenceselect" ></select>
   
                             <a class="bg-light fw-bold text-secondary small input-group-text" href="#" data-bs-toggle="modal" data-bs-target="#referanceAdd"><i class="menu-icon tf-icons bx bx-user-plus"></i></a>
                           </div>
@@ -49,14 +49,14 @@
                         <div class="my-1 flex-nowrap input-group">
                           <select class="js-data-example-ajax" name="billTo" id="billto" required></select>
 
-                          <a class="bg-light fw-bold text-secondary small input-group-text" href="#" onclick="openAddModal()" data-bs-toggle="modal" data-bs-target="#modalCenter"><i class="menu-icon tf-icons bx bx-user-plus"></i></a>
+                          <a class="bg-light fw-bold text-secondary small input-group-text" href="#"  data-bs-toggle="modal" data-bs-target="#modalCenter"><i class="menu-icon tf-icons bx bx-user-plus"></i></a>
                         </div>
-                        <label class="fw-bold">Transportation Agnet:</label>
+                        <label class="fw-bold">Transportation Agent:</label>
 
                         <div class="my-1 flex-nowrap input-group">
-                          <select class="js-data-example-ajax" name="deliveryagent" id="deliveryagent" required></select>
+                          <select class="" name="transportagent" id="transportagent" required></select>
 
-                          <a class="bg-light fw-bold text-secondary small input-group-text" href="#" onclick="openAddModal()" data-bs-toggle="modal" data-bs-target="#modalCenter"><i class="menu-icon tf-icons bx bx-user-plus"></i></a>
+                          <a class="bg-light fw-bold text-secondary small input-group-text" href="#" data-bs-toggle="modal" data-bs-target="#transportagentModal"><i class="menu-icon tf-icons bx bx-user-plus"></i></a>
                         </div>
                               <!-- <input placeholder="Who is this invoice to?" type="text" name="billTo" id="billto" class="form-control my-2" required> -->
                            
@@ -168,10 +168,10 @@
                             </span>
                           </div>
                           <div class="d-flex flex-row align-items-start justify-content-between mt-2">
-                            <span class="fw-bold mt-2">Weight Allowance (Kg):</span>
+                            <span class="fw-bold mt-2">Weight Adjustment (Kg):</span>
                             <span>
                               <div class="my-1 flex-nowrap input-group" >
-                              <input type="number" name="weightallowance" id="weightallowance" class="bg-white border form-control"  oninput="updateNetWeight()" style="width: 80px;" placeholder="0.2" min="0.0" step="0.1" max="100.0">
+                              <input type="number" name="weightallowance" id="weightallowance" class="bg-white border form-control"  oninput="updateNetWeight()" style="width: 80px;">
                               <span class="bg-light fw-bold text-secondary small input-group-text">  Kg</span>  
                              
                             </div>
@@ -192,13 +192,13 @@
               </div>
               <div class="col-md-4 col-lg-3" id="reportcol">
                   <div class="sticky-top pt-md-3 pt-xl-4">
-                      <a href="#" id="openModalBtn" onclick="modalclicked()"  class="btn btn-primary d-block w-100">Review Report</a>
+                      <!-- <a href="#" id="openModalBtn" onclick="modalclicked()"  class="btn btn-primary d-block w-100">Review Report</a> -->
                       <!-- <div class="my-3" id="clientslist" style="max-height: 700px;overflow-y: scroll;padding:10px">
                       </div> -->
                       <div class="my-3">
                         <label class="fw-bold">Report:</label>
                         <br>
-                        <label for="">Outern in 50kg</label>
+                        <label for="">Outern</label>
 
                         <div class="my-1 flex-nowrap input-group">
                             <input type="number" name="outern" oninput="updateNetWeight()"  id="outern" class="bg-white border form-control" placeholder="100" min="0.00" step="0.01" max="100.00">
@@ -261,11 +261,13 @@
                             <span class="fw-bold" id="epWeightDisplay"></span>
                         </div>
                         <div style="font-size: 1.125rem;" class="d-flex flex-row align-items-start justify-content-between">
-                          <span class="fw-bold">Ep % in 50kg:</span>
+                          <span class="fw-bold">Ep % :</span>
                           <span class="fw-bold" id="eppercenagedisplay"></span>
                       </div>
                       
                         </div>
+                        <a href="#" id="openModalBtn" onclick="modalclicked()"  class="btn btn-primary d-block w-100">Review Report</a>
+
                       </div>
                   </div>
           
@@ -520,11 +522,11 @@ function updatetotalbillamount() {
       
       </div>
       <div class="modal-body">
-          <form action="/addseller" method="post" id="sellerform">
+          <form>
         <div class="row">
           <div class="col mb-3">
             <label for="name" class="form-label">Party Name</label>
-            <input required type="text" name="name" id="name" class="form-control" placeholder="Enter Name">
+            <input  type="text" name="name" id="name" class="form-control" placeholder="Enter Name">
           </div>
           <div class="col mb-3">
             <label for="image" class="form-label">Address</label>
@@ -546,10 +548,54 @@ function updatetotalbillamount() {
         
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-outline-secondary" id="closeModalBtn" data-bs-dismiss="modal">
+        <button type="button" class="btn btn-outline-secondary" id="closeaddpartybtn" data-bs-dismiss="modal">
           Close
         </button>
-        <button type="submit" form="sellerform" id="submitbutton" class="btn btn-primary">Add Party</button>
+        <button type="submit" form="sellerform" id="submitbutton" onclick="addParty()" class="btn btn-primary">Add Party</button>
+      </div>
+  </form>
+    </div>
+  </div>
+ </div>
+ 
+ <div class="modal fade hidden" id="transportagentModal">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalCenterTitle">Add New Transport Agent</h5>
+      
+      </div>
+      <div class="modal-body">
+          <form  id="transportagentform">
+        <div class="row">
+          <div class="col mb-3">
+            <label for="name" class="form-label">Agent Name</label>
+            <input required type="text" name="Tagentname" id="Tagentname" class="form-control" placeholder="Enter Name">
+          </div>
+          <div class="col mb-3">
+            <label for="address" class="form-label">Address</label>
+            <input type="text" id="Tagentaddress" name="Tagentaddress" class="form-control" placeholder="Enter Address">
+          </div>
+          </div>
+ 
+          <div class="row">
+          <div class="col mb-3">
+            <label for="description" class="form-label">Phone</label>
+            <input  type="text" id="Tagentphone" name="Tagentphone" class="form-control" placeholder="Enter Phone">
+          </div>
+          <div class="col mb-3">
+            <label for="highlighted" class="form-label">Strength</label>
+            <input type="number" id="Tagentstrength" name="Tagentstrength" class="form-control" placeholder="Enter GSTIN">
+ 
+          </div>
+        </div>
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" id="closeTransportModalBtn" data-bs-dismiss="modal">
+          Close
+        </button>
+        <button type="submit" form="sellerform" id="submitbutton" onclick="addtransportagent()" class="btn btn-primary">Add Party</button>
       </div>
   </form>
     </div>
@@ -559,23 +605,25 @@ function updatetotalbillamount() {
   <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 700px;"> 
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="modalCenterTitle">Midlaj PB Purchase Commitments</h5>
-      
+        <h5 class="modal-title" id="commitments-titile"><span id="commitmentparty"> </span> <br><span id="commitmentitem"></span><br><span id="commitment-type"></span>
+        </h5>
+       
+
       </div>
       <div class="modal-body">
-          <form action="/addseller" method="post" id="sellerform">
+          <form >
         <div class="row">
           <div class="col  mb-3">
             <!-- <label for="name" class="form-label">Actual Weight</label> -->
             <div class="my-1 flex-nowrap input-group">
               <div class="bg-light text-secondary small input-group-text no-pointer-events" href="#" > Weight</div>
-              <input required type="text" name="name" id="name" class="form-control" placeholder="Actual Weight">
+              <input  type="text" name="actualweightcom" id="actualweightcom" class="form-control" placeholder="Actual Weight">
               <div class="bg-light fw-bold text-secondary small input-group-text no-pointer-events" href="#" >   <input type="radio" name="commitmentweightype" id="commitmentweightype"></div>
             </div>
            <!-- <label for="image" class="form-label">Ep Weight</label> -->
             <div class="lex-nowrap input-group">
               <div class="bg-light text-secondary small input-group-text no-pointer-events" href="#" >Ep wgt.</div>
-              <input required type="text" name="name" id="name" class="form-control" placeholder="Ep Weight">
+              <input  type="text" name="actualepcom" id="actualepcom" class="form-control" placeholder="Ep Weight">
               <div class="bg-light fw-bold text-secondary small input-group-text no-pointer-events" >   <input type="radio" name="commitmentweightype" id="commitmentweightype"></div>
             </div>
           </div>
@@ -627,7 +675,7 @@ function updatetotalbillamount() {
         <div class="row">
           <div class="col mb-3">
             <label for="name" class="form-label">New Refference</label>
-            <input required type="text" name="referance" id="referance" class="form-control" placeholder="Enter Name">
+            <input required type="text" name="newreferance" id="newreferance" class="form-control" placeholder="Enter Name">
           </div>
         
           </div>
@@ -673,7 +721,7 @@ function updatetotalbillamount() {
       </div>
 
       <div class="modal-body">
-          <form id="referanceform">
+          <form id="newproductform">
         <div class="row">
           <div class="col mb-3">
             <label for="name" class="form-label">New Item</label>
@@ -739,6 +787,13 @@ function updatetotalbillamount() {
 <script>
 var byproducts = []
   $(document).ready(function () {
+    const today = new Date();
+
+// Format today's date as yyyy-mm-dd
+const formattedDate = today.toISOString().split('T')[0];
+
+// Set the value of the input field to today's date
+document.getElementById('dateOfIssue').value = formattedDate;
     $('.items-js').select2({
               ajax: {
                   url: 'http://localhost:3000/getproducts',
@@ -894,10 +949,32 @@ closeButton.click();
   var dataTable;
   // Function to open the modal
   function openModal() {
-    const modal = document.getElementById('invoiceModal');
+    var item = document.getElementById('item').value
+
+    if(party && item){
+      const modal = document.getElementById('invoiceModal');
     modal.style.display = 'flex';
+    }else{
+      alert('Please choose a party name and Item')
+    }
+    
   }
   function openCommitments() {
+    const ditem = document.getElementById('item').value
+    var billtype = document.getElementById('billtype').value
+
+    document.getElementById('commitmentparty').innerText = party
+    document.getElementById('commitmentitem').innerText = ditem
+    document.getElementById('commitment-type').innerText =  billtype+'d Commitments' 
+
+var api;
+console.log(billtype)
+if (billtype === 'Purchase') {
+    api = 'purchasecommitments';
+} else if (billtype === 'Sales') {
+    api = 'salescommitments';
+}
+
     const modal = document.getElementById('commitmentmodal');
     modal.style.display = 'flex';
     if (dataTable) {
@@ -910,10 +987,11 @@ closeButton.click();
         searching: false, // Disable search option
         lengthChange: false,
         ajax: {
-            url: 'http://localhost:3000/purchasecommitments',
+            url: 'http://localhost:3000/' + api, 
             dataSrc: 'data', // Key that holds the array of data in the API response
             data: function (d) {
-              d.name = 'midlaj';
+              d.name = party;
+              d.item = ditem;
                 // Add any additional parameters you want to send to the server here
             },
         },
@@ -1072,7 +1150,7 @@ document.getElementById('generateInvoiceBtn').addEventListener('click', () => {
     document.getElementById('forignobjectDisplay').textContent = forgnweight.toFixed(2);
     document.getElementById('netWeightDisplay').textContent = netWeight.toFixed(2) + " Kg";
         const outturn = parseFloat(document.getElementById('outern').value) || 0;
-    epweight =  (netWeight/50)*outturn
+    epweight =  (netWeight/100)*outturn
     const huskpercentage = parseFloat(document.getElementById('huskpercentage').value) || 0;
     hcutting =  huskpercentage > 0.5 ? Math.round(((huskpercentage-0.5)/100)*epweight):0
     const moisturepercentage = parseFloat(document.getElementById('moisturepercentage').value) || 0;
@@ -1080,7 +1158,7 @@ document.getElementById('generateInvoiceBtn').addEventListener('click', () => {
     const bbpercentage = parseFloat(document.getElementById('bbpercentage').value) || 0;
     bbcutting =  bbpercentage > 15 ? Math.round((((bbpercentage-15)*0.15)/100)*epweight):0
     const berryborepercentage = parseFloat(document.getElementById('berryborepercentage').value) || 0;
-    berrycutting =  berryborepercentage > 2 ? Math.round((((berryborepercentage-2)*0.2)/100)*epweight):0
+    berrycutting =  berryborepercentage > 2 ? Math.round((((berryborepercentage-2)*0.25)/100)*epweight):0
     const other = parseFloat(document.getElementById('other').value) || 0;
     const allowance = parseFloat(document.getElementById('allowance').value) || 0;
 
@@ -1093,7 +1171,7 @@ document.getElementById('generateInvoiceBtn').addEventListener('click', () => {
     document.getElementById('moisturecutting').value = mcutting;
     document.getElementById('bbcutting').value = bbcutting;
     document.getElementById('berryborecutting').value = berrycutting;
-    eppercentage =((netepweight/netWeight)*100)/2
+    eppercentage =((netepweight/netWeight)*100)
     document.getElementById('epWeightDisplay').textContent = netepweight.toFixed(2) + " Kg";
     document.getElementById('eppercenagedisplay').textContent = eppercentage.toFixed(2) + " %";
 
@@ -1109,17 +1187,18 @@ document.getElementById('generateInvoiceBtn').addEventListener('click', () => {
     const allowance = parseFloat(document.getElementById('allowance').value) || 0;
 
     netepweight =  Math.round(epweight-hcutting-mcutting-bbcutting-berrycutting-other+allowance)
-    eppercentage =((netepweight/netWeight)*100)/2
+    eppercentage =((netepweight/netWeight)*100)
     document.getElementById('epWeightDisplay').textContent = netepweight.toFixed(2) + " Kg";
     document.getElementById('eppercenagedisplay').textContent = eppercentage.toFixed(2) + " %";
   }
   function multiply(){
     const outturn = parseFloat(document.getElementById('outern').value) || 0;
-    document.getElementById('outern').value = outturn*2
+    document.getElementById('outern').value = outturn
     updateNetWeight()
 
   }
   function modalclicked(){
+    
     consignment = netepweight || 0
     document.getElementById('epweightdisplay').innerText = netepweight
     document.getElementById('consignmentdisplay').innerText = consignment + " Kg"
@@ -1145,7 +1224,7 @@ document.getElementById('generateInvoiceBtn').addEventListener('click', () => {
   }
  
 });
-$('#reference').select2({
+$('#referenceselect').select2({
 
 ajax: {
 url: 'http://localhost:3000/getrefferance',
@@ -1169,7 +1248,30 @@ var party
   // You can use the selected value as needed, for example, set it to a variable
   // var myVariable = selectedValue;
 });
+$('#transportagent').select2({
 
+ajax: {
+url: 'http://localhost:3000/getTransportAgent',
+dataType: 'json',
+delay: 250, // Delay in milliseconds before making the request
+processResults: function (data) {
+  return {
+    results: data.results.map(name => ({ id: name, text: name }))
+  };
+},
+cache: true // Enable caching to reduce server requests
+}
+
+});
+var party
+ $('.js-data-example-ajax').on('change', function () {
+  // Get the selected value
+  party = $(this).val();
+  $('#partyname').text(party);
+
+  // You can use the selected value as needed, for example, set it to a variable
+  // var myVariable = selectedValue;
+});
 </script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
@@ -1177,15 +1279,11 @@ var party
 
   function addrefferance(){
 
-    var referance = document.getElementById("referance").value;
-    console.log(referance)
+    var referance = document.getElementById("newreferance").value;
     var data = {
-    newRouteName: reference
+    refference: referance
   };
-  var data = {
-      newRouteName: referance
-    };
-
+  
     // Send a POST request to the server using Axios
     axios.post('http://localhost:3000/addreference', data)
       .then(response => {
@@ -1202,12 +1300,79 @@ closeButton.click();
       })
       .catch(error => {
         // Handle errors here
-        console.error('Error:', error);
+        console.log('Error:', error);
       });
   
 
   }
-</script>
 
-<!-- Your HTML code continues... -->
+  function addtransportagent(){
+var agent = document.getElementById("Tagentname").value;
+var address = document.getElementById("Tagentaddress").value;
+var phone = document.getElementById("Tagentphone").value;
+var strength = document.getElementById("Tagentstrength").value;
+
+var data = {
+  agent: agent,
+  address:address,
+  phone:phone,
+  strength:strength
+};
+
+
+// Send a POST request to the server using Axios
+axios.post('http://localhost:3000/addtransportagent', data)
+  .then(response => {
+    // Handle the server response here
+
+    // Close the modal on successful response
+    if (response.data.success) {
+    var closeButton = document.getElementById('closeTransportModalBtn');
+
+// Trigger the click event on the button
+closeButton.click();
+    }
+  })
+  .catch(error => {
+    // Handle errors here
+    console.log('Error:', error);
+  });
+
+
+}
+</script>
+<script>
+   function addParty() {
+    // Get form data
+    const name = document.getElementById('name').value;
+    const address = document.getElementById('address').value;
+    const phone = document.getElementById('phone').value;
+    const gst = document.getElementById('gst').value;
+    var closeButton = document.getElementById('closeaddpartybtn');
+
+    // Prepare data to be sent
+    const data = {
+        name: name,
+        address: address,
+        phone: phone,
+        gst: gst
+    };
+
+ 
+      axios.post('http://localhost:3000/addseller', data)
+  .then(response => {
+    // Handle the server response here
+    closeButton.click();
+    // Close the modal on successful response
+    
+  })
+  .catch(error => {
+    // Handle errors here
+    console.log('Error:', error);
+  });
+     
+
+  }
+ </script>
+
                        <%- include('./include/end.ejs') -%>

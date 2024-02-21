@@ -12,6 +12,7 @@ router.get('/salescommitments', adminpostapis.salescommitments);
 router.get('/individualarrivals', adminpostapis.individualarrivals);
 router.get('/individualdespatch', adminpostapis.individualdespatch);
 router.get('/getrefferance', adminpostapis.getrefference);
+router.get('/getTransportAgent', adminpostapis.getTransportAgent);
 
 
 module.exports = router;

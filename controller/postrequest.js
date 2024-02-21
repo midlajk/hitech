@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const ClientModel = mongoose.model('Client')
 const Reference = mongoose.model('Reference')
 const PoductsSchema = mongoose.model('PoductsSchema')
+const Transportagent = mongoose.model('Transportagent')
 
 const { v4: uuidv4 } = require('uuid');
 const { nanoid } = require('nanoid');
@@ -97,9 +98,9 @@ exports.generatesalesreport = async (req, res) => {
 };
 exports.addseller = async (req, res) => {
 
-  const existingClient = await ClientModel.findOne({ name: req.body.billTo });
+  const existingClient = await ClientModel.findOne({ name: req.body.name });
   if (existingClient) {
-    res.redirect('/accounts');
+    res.json({ success: false, message: 'client already exist' });
 
   }else{
     const newClient = new ClientModel({
@@ -110,7 +111,7 @@ exports.addseller = async (req, res) => {
     });
 
     await newClient.save();
-    res.redirect('/accounts');
+    res.json({ success: true, message: 'Reference added successfully' });
 
   }
 }
@@ -187,11 +188,12 @@ console.log(req.body)
 
 
 exports.addrefference = async (req, res) => {
-  console.log(req.body)
+  console.log('ggg')
+
   try {
     // Create a new reference document based on the request body
     const newReference = new Reference({
-      name: req.body.newRouteName
+      name: req.body.refference
     });
 
     // Save the reference document to MongoDB
@@ -201,7 +203,7 @@ exports.addrefference = async (req, res) => {
     res.json({ success: true, message: 'Reference added successfully' });
   } catch (error) {
     // Handle errors and send an error response
-    console.error('Error:', error);
+    console.log('Error:', error);
     res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
 };
@@ -224,4 +226,28 @@ exports.addproducts = async (req, res) => {
     console.log('Error:', error);
     res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
-};
+
+  
+}
+exports.addtransportagent = async (req, res) => {
+    try {
+      // Create a new reference document based on the request body
+      const newproduct = new Transportagent({
+        agent: req.body.agent,
+        address:req.body.address,
+        phone:req.body.phone,
+        strength:req.body.strength,
+       
+      });
+  
+      // Save the newproduct document to MongoDB
+      await newproduct.save();
+  
+      // Send a success response to the client
+      res.json({ success: true, message: 'Reference added successfully' });
+    } catch (error) {
+      // Handle errors and send an error response
+      console.log('Error:', error);
+      res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+  };

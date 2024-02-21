@@ -2,9 +2,10 @@
 require('../model/clientsmodal')
 const mongoose = require('mongoose');
 const ClientModel = mongoose.model('Client')
-const CoffeeSchema = require('../model/clientsmodal');
-const Reference = require('../model/clientsmodal');
+const CoffeeSchema = mongoose.model('CoffeeSchema');
+const Reference = mongoose.model('Reference');
 const PoductsSchema = mongoose.model('PoductsSchema')
+const Transportagent = mongoose.model('Transportagent')
 
 
 exports.getclients = async (req, res) => {
@@ -103,7 +104,6 @@ exports.getclients = async (req, res) => {
 
   ////
 exports.purchasecommitment  = (async (req, res) => {
-  console.log('here')
   // Assuming you have already imported required modules and set up your Express app
   
   // API endpoint for paginated data
@@ -113,9 +113,9 @@ exports.purchasecommitment  = (async (req, res) => {
       const length = parseInt(req.query.length) || 10; // Get the number of records per page
       // Fetch data from the database with pagination
       const name = req.query.name; // Assuming 'name' is sent as a query parameter
-
+      console.log(name)
       const client = await ClientModel.findOne({ name: name});
-   
+   console.log(client)
 
       if (!client) {
         // Handle case where client with the specified name is not found
@@ -138,7 +138,6 @@ exports.purchasecommitment  = (async (req, res) => {
   
   });
   exports.salescommitments  = (async (req, res) => {
-    console.log('here')
     // Assuming you have already imported required modules and set up your Express app
     
     // API endpoint for paginated data
@@ -147,7 +146,19 @@ exports.purchasecommitment  = (async (req, res) => {
         const start = parseInt(req.query.start) || 0; // Get the starting index of the data to fetch
         const length = parseInt(req.query.length) || 10; // Get the number of records per page
         // Fetch data from the database with pagination
-        const client = await ClientModel.findOne({ name: req.query.name });
+        
+
+    let filter = {}; // Initialize an empty filter object
+
+    if (req.query.name) {
+      filter.name = req.query.name;
+  }
+
+  // Check if req.query.item exists and add it to the filter using dot notation
+  if (req.query.item) {
+      filter['salescommitmentsschema.item'] = req.query.item;
+  }
+        const client = await ClientModel.findOne({ name: filter });
   
         if (!client) {
           // Handle case where client with the specified name is not found
@@ -163,7 +174,7 @@ exports.purchasecommitment  = (async (req, res) => {
         data: salescommitmentsschema,
         });
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.log('Error fetching data:', error);
         res.status(500).json({ error: 'Server error' });
       }
     
@@ -337,16 +348,15 @@ exports.purchasecommitment  = (async (req, res) => {
           try {
             const searchTerm = req.query.term;
         if(!searchTerm){
-          const clients = await Reference.aggregate([{ $sample: { size: 20 } }]);
-      
-          const names = clients.map(client => client.name);  
+          const refferences = await Reference.aggregate([{ $sample: { size: 20 } }]);
+          const names = refferences.map(reff => reff.name);  
             res.json({ results: names })
         }else{
           const escapedSearchTerm = searchTerm.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
 
-            const clients = await Reference.find({ name: { $regex: escapedSearchTerm, $options: 'i' } }, 'newRouteName');
+            const refferences = await Reference.find({ name: { $regex: escapedSearchTerm, $options: 'i' } }, 'newRouteName');
         
-            const names = clients.map(client => client.name);
+            const names = refferences.map(reff => reff.name);
         
             res.json({ results: names });
             
@@ -362,3 +372,31 @@ exports.purchasecommitment  = (async (req, res) => {
     
         };
       
+        exports.getTransportAgent = async (req, res) => {
+          try {
+            const searchTerm = req.query.term;
+        if(!searchTerm){
+          const agents = await Transportagent.aggregate([{ $sample: { size: 20 } }]);
+      
+          const names = agents.map(agent => agent.agent);  
+            res.json({ results: names })
+        }else{
+          const escapedSearchTerm = searchTerm.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+
+            const agents = await Transportagent.find({ agent: { $regex: escapedSearchTerm, $options: 'i' } }, 'agent');
+        
+            const names = agents.map(agent => agent.agent);
+        
+            res.json({ results: names });
+            
+        }
+            
+              
+        
+          
+          } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal Server Error' });
+          }
+    
+        };

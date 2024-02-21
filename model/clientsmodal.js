@@ -97,14 +97,26 @@ const referenceSchema = new mongoose.Schema({
     byproduct:[]
 
   });
+  const transportagent = new mongoose.Schema({
+    agent: String,
+    address:String,
+    phone:String,
+    strength:Number,
+    loads:[]
+
+  });
 const ClientModel = mongoose.model('Client', clientSchema); // Use a different variable name here
 const CoffeeSchema = mongoose.model('CoffeeSchema', coffeeSchema); // Use a different variable name here
 
-  
+const Transportagent = mongoose.model('Transportagent', transportagent);
+
   // Create a model based on the schema
-  const PoductsSchema = mongoose.model('PoductsSchema', productsSchema);
+const PoductsSchema = mongoose.model('PoductsSchema', productsSchema);
 
 const Reference = mongoose.model('Reference', referenceSchema);
   
 module.exports = ClientModel;
 module.exports = Reference;
+module.exports = PoductsSchema;
+module.exports = Transportagent;
+module.exports = CoffeeSchema;

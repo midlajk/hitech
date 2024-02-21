@@ -40,7 +40,7 @@
         </div>
         <div class="col mb-3">
           <label for="name" class="form-label">Item</label>
-          <input type="text" id="pcitem" name="pcitem" class="form-control" placeholder="Enter Address">
+          <input type="text" id="pcitem" name="pcitem" class="form-control items-js" placeholder="Enter Address">
 
         </div>
 
@@ -49,7 +49,7 @@
       <div class="row">
         <div class="col mb-3">
           <label for="image" class="form-label">Reference</label>
-          <input type="text" id="pcreference" name="pcreference" class="form-control" placeholder="Enter Address">
+          <input type="text" id="pcreference" name="pcreference" class="form-control items-js-reffernece" placeholder="Enter Address">
         </div>
         <div class="col mb-3">
           <label for="description" class="form-label">Weight</label>
@@ -60,6 +60,18 @@
       <div class="row">
         <div class="col mb-3">
           <label for="highlighted" class="form-label">Expected EP %</label>
+          <input type="text" id="pcep" name="pcep" class="form-control" placeholder="Enter GSTIN">
+
+        </div>
+        <div class="col mb-3">
+          <label for="highlighted" class="form-label">Rate</label>
+          <input type="text" id="pcrate" name="pcrate" class="form-control" placeholder="Enter GSTIN">
+
+        </div>
+      </div>
+      <div class="row">
+        <div class="col mb-3">
+          <label for="highlighted" class="form-label">Additional</label>
           <input type="text" id="pcep" name="pcep" class="form-control" placeholder="Enter GSTIN">
 
         </div>
@@ -82,8 +94,10 @@
 </div>
 <script>
   function addpurchasecommitmentModal() {
+
     const modal = document.getElementById('addpurchasecommitment');
     modal.style.display = 'flex';
+ 
   }
 
   // Function to close the modal
@@ -94,13 +108,23 @@
 
 
 </script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 <!-- Include Axios library (if not already included) -->
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 <!-- Your existing HTML code -->
 
 <script>
+   $(document).ready(function () {
+        $('#addpurchasecommitment').on('shown.bs.modal', function () {
+            const today = new Date();
+            const formattedDate = today.toISOString().split('T')[0];
+            $('#pcdate').val(formattedDate);
+        });
+    });
   window.purchasecommitments = function () {
+   
      
     // var geturl = routeName == 'featured' ? 'featuredpropertieslist' : 'propertieslist'  // Assuming you're passing this variable from EJS
     // var buttonname = routeName == 'featured' ? 'Remove From Featured' : 'Add To Featured'  // Assuming you're passing this variable from EJS
@@ -164,23 +188,7 @@
       });
     }
 
-    function toggleFeatured(id, isFeatured) {
-      var formDataObj = { id: id, status: isFeatured ? 'notfeatured' : 'featured' };
-
-      $.ajax({
-        url: `https://www.safehomes.ae/backend/addfeatured`,
-        type: 'POST',
-        data: JSON.stringify(formDataObj),
-        contentType: 'application/json',
-        success: function (response) {
-          dataTable.ajax.reload();
-        },
-        error: function (error) {
-          console.error('Error updating data:', error);
-        },
-      });
-    }
-
+   
     $('#example').on('click', '.delete-btn', function () {
       var data = dataTable.row($(this).closest('tr')).data();
       var id = data._id;
@@ -239,4 +247,36 @@
       console.log('Error:', error);
     }
   }
+  $('.items-js').select2({
+    dropdownParent: $("#addpurchasecommitment"),
+
+              ajax: {
+                  url: 'http://localhost:3000/getproducts',
+                  dataType: 'json',
+                  delay: 250, // Delay in milliseconds before making the request
+                  processResults: function (data) {
+                      return {
+                          results: data.results.map(name => ({ id: name, text: name }))
+                      };
+                  },
+                  cache: true // Enable caching to reduce server requests
+              }
+          });
+
+          $('.items-js-reffernece').select2({
+                  dropdownParent: $("#addpurchasecommitment"),
+
+              ajax: {
+                  url: 'http://localhost:3000/getrefferance',
+                  dataType: 'json',
+                  delay: 250, // Delay in milliseconds before making the request
+                  processResults: function (data) {
+                      return {
+                          results: data.results.map(name => ({ id: name, text: name }))
+                      };
+                  },
+                  cache: true // Enable caching to reduce server requests
+              }
+          });
+
 </script>
