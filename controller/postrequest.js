@@ -124,12 +124,17 @@ exports.addpurchasecommitment = async (req, res) => {
       if (!client) {
           return res.status(404).json({ error: 'Client not found' });
       }
- const reference = req.body.pcreference || '';
+      const number = client.purchasecommitments.length+1 
+ const currentDate = new Date();
+ const day = ('0' + currentDate.getDate()).slice(-2); // Get the day with leading zero if necessary
+ const month = ('0' + (currentDate.getMonth() + 1)).slice(-2); // Get the month with leading zero if necessary
+
+ const formattedDate = `${month}${day}`;
  
- const currentDate = new Date().getTime();
-    
+ const trimmedItem = req.body.pcitem.trim().split(' ')[0]; // Get the first part of the item by trimming and splitting
+ 
+ const uniqueId = `${formattedDate}-${trimmedItem}-${number}-${req.body.name}`;
   // Generate a unique ID using uuidv4 and include the reference
-  const uniqueId = `pc-${reference}-${currentDate}`;
       // Add the new purchase commitment to the purchasecommitments array
       client.purchasecommitments.push({
         item:req.body.pcitem,
@@ -139,7 +144,9 @@ exports.addpurchasecommitment = async (req, res) => {
         weight:req.body.pcweight,
         eppercentage:req.body.pcep,
         balance:req.body.pcweight,
-        rate:req.body.pcrate
+        rate:req.body.pcrate,
+        additional:req.body.scAdditional,
+        info:req.body.scInfo
       });
    
       // Save the updated client to the database
@@ -147,24 +154,29 @@ exports.addpurchasecommitment = async (req, res) => {
 
       res.status(200).json({ message: 'Purchase commitment added successfully!' });
   } catch (error) {
-      console.error(error);
+      console.log(error);
       res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 exports.addsalecommitment = async (req, res) => {
   try {
-console.log(req.body)
-      const client = await ClientModel.findOne({ name: 'Dubai' });
+      const client = await ClientModel.findOne({ name: req.body.name });
 
       if (!client) {
           return res.status(404).json({ error: 'Client not found' });
       }
- const reference = req.body.screference || '';
+ const number = client.salescommitmentsschema.length+1
  
- const currentDate = new Date().getTime();
-    
-  // Generate a unique ID using uuidv4 and include the reference
-  const uniqueId = `sc-${reference}-${currentDate}`;
+ const currentDate = new Date();
+ const day = ('0' + currentDate.getDate()).slice(-2); // Get the day with leading zero if necessary
+ const month = ('0' + (currentDate.getMonth() + 1)).slice(-2); // Get the month with leading zero if necessary
+
+ 
+ const formattedDate = `${month}${day}`;
+ 
+ const trimmedItem = req.body.scitem.trim().split(' ')[0]; // Get the first part of the item by trimming and splitting
+ 
+ const uniqueId = `${formattedDate}-${trimmedItem}-${number}-${req.body.name }`;
       // Add the new purchase commitment to the purchasecommitments array
       client.salescommitmentsschema.push({
         item:req.body.scitem,
@@ -174,7 +186,9 @@ console.log(req.body)
         weight:req.body.scweight,
         eppercentage:req.body.scep,
         balance:req.body.scweight,
-        rate:req.body.scrate
+        rate:req.body.scrate,
+        additional:req.body.pcAdditional,
+        info:req.body.pcInfo
       });
    
       // Save the updated client to the database

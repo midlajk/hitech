@@ -202,41 +202,41 @@
 
 
 
-  async function submitpurchasecommitment() {
-    const pcdate = document.getElementById('pcdate').value;
-    const pcitem = document.getElementById('pcitem').value;
-    const pcreference = document.getElementById('pcreference').value;
-    const pcweight = document.getElementById('pcweight').value;
-    const pcep = document.getElementById('pcep').value;
-    const pcrate = document.getElementById('pcrate').value;
+  // async function submitpurchasecommitment() {
+  //   const pcdate = document.getElementById('pcdate').value;
+  //   const pcitem = document.getElementById('pcitem').value;
+  //   const pcreference = document.getElementById('pcreference').value;
+  //   const pcweight = document.getElementById('pcweight').value;
+  //   const pcep = document.getElementById('pcep').value;
+  //   const pcrate = document.getElementById('pcrate').value;
 
-    const payload = {
-      name:name,
-      pcdate: pcdate,
-      pcitem: pcitem,
-      pcreference: pcreference,
-      pcweight: pcweight,
-      pcep: pcep,
-      pcrate: pcrate
-    };
+  //   const payload = {
+  //     name:name,
+  //     pcdate: pcdate,
+  //     pcitem: pcitem,
+  //     pcreference: pcreference,
+  //     pcweight: pcweight,
+  //     pcep: pcep,
+  //     pcrate: pcrate
+  //   };
 
-    try {
-      // Use Axios to make the POST request
-      const response = await axios.post('http://localhost:3000/addpurchasecommitment', payload, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+  //   try {
+  //     // Use Axios to make the POST request
+  //     const response = await axios.post('http://localhost:3000/addpurchasecommitment', payload, {
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //     });
 
-      // Handle the response (you can add your own logic here)
+  //     // Handle the response (you can add your own logic here)
 
-      // Close the modal after server response
-      closepurchasecommitmentModal();
-      alTable.ajax.reload();
+  //     // Close the modal after server response
+  //     closepurchasecommitmentModal();
+  //     alTable.ajax.reload();
 
-    } catch (error) {
-      // Handle errors, such as network issues or server errors
-      console.log('Error:', error);
-    }
-  }
+  //   } catch (error) {
+  //     // Handle errors, such as network issues or server errors
+  //     console.log('Error:', error);
+  //   }
+  // }
 </script>

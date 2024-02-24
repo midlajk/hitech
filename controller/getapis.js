@@ -102,84 +102,204 @@ exports.getclients = async (req, res) => {
 
   };
 
-  ////
-exports.purchasecommitment  = (async (req, res) => {
-  // Assuming you have already imported required modules and set up your Express app
-  
-  // API endpoint for paginated data
-    try {
-      const draw = parseInt(req.query.draw) || 1; // Get the draw count (used by DataTables)
+
+// exports.purchasecommitment = async (req, res) => {
+//   try {
+//       const draw = parseInt(req.query.draw) || 1;
+//       const name = req.query.name; // Get the name parameter
+//       const item = req.query.item; // Get the item parameter
+//       const start = parseInt(req.query.start) || 0; // Get the starting index of the data to fetch
+//       const length = parseInt(req.query.length) || 10; // Get the number of records per page
+
+//       // Construct the aggregation pipeline
+//       const countPipeline = [
+//           {
+//               $match: { name: name } // Match documents by name
+//           },
+//           {
+//               $unwind: '$purchasecommitments' // Unwind the purchasecommitments array
+//           }
+//       ];
+
+//       // If item parameter is provided, add match stage for item
+//       if (item) {
+//         countPipeline.push({
+//               $match: { 'purchasecommitments.item': item } // Match documents by item
+//           });
+//       }
+//       countPipeline.push(
+//         {
+//             $group: {
+//                 _id: '$_id',
+//                 totalCount: { $sum: 1 } // Count the total number of documents
+//             }
+//         }
+//     );
+
+//     const totalCountResult = await ClientModel.aggregate(countPipeline);
+//     const totalCount = totalCountResult.length > 0 ? totalCountResult[0].totalCount : 0;
+//     countPipeline.pop()
+//     const pipeline = [...countPipeline]; 
+//     pipeline.push({ $sort: { 'purchasecommitments._id': -1 } });
+//     // pipeline.push({ $sort: { 'purchasecommitments.date': -1 } }); 
+//       // Add pagination stages
+//       pipeline.push(
+//           { $skip: start }, // Skip records for pagination
+//           { $limit: length } // Limit records for pagination
+//       );
+      
+//       pipeline.push({
+//           $group: {
+//               _id: '$_id',
+//               name: { $first: '$name' },
+//               purchasecommitments: { $push: '$purchasecommitments' } // Push matching purchasecommitments to array
+//           }
+//       });
+
+//       const client = await ClientModel.aggregate(pipeline);
+//       const purchasecommitments = client.length>0?client[0].purchasecommitments:[];
+//       console.log(purchasecommitments)
+
+//       if (!client || client.length === 0) {
+//           // Handle case where client with the specified name is not found
+//           return res.status(404).json({ error: 'Client with specified name not found' });
+//       }
+
+//       res.json({
+//       draw,
+//       recordsTotal: totalCount,
+//       recordsFiltered: totalCount,
+//       data: purchasecommitments,
+//       });
+//   } catch (error) {
+//       console.error('Error fetching data:', error);
+//       res.status(500).json({ error: 'Server error' });
+//   }
+// };
+exports.purchasecommitment = async (req, res) => {
+  try {
+      const draw = parseInt(req.query.draw) || 1;
+      const name = req.query.name; // Get the name parameter
+      const item = req.query.item; // Get the item parameter
       const start = parseInt(req.query.start) || 0; // Get the starting index of the data to fetch
       const length = parseInt(req.query.length) || 10; // Get the number of records per page
-      // Fetch data from the database with pagination
-      const name = req.query.name; // Assuming 'name' is sent as a query parameter
-      console.log(name)
-      const client = await ClientModel.findOne({ name: name});
-   console.log(client)
 
-      if (!client) {
-        // Handle case where client with the specified name is not found
-        res.status(404).json({ error: 'Client not found' });
-        return;
+      // Construct the aggregation pipeline
+      const pipeline = [
+          {
+              $match: { name: name } // Match documents by name
+          },
+          {
+              $unwind: '$purchasecommitments' // Unwind the salescommitmentsschema array
+          }
+      ];
+
+      // If item parameter is provided, add match stage for item
+      if (item) {
+          pipeline.push({
+              $match: { 'purchasecommitments.item': item } // Match documents by item
+          });
       }
-      const purchaseCommitments = client.purchasecommitments.slice(start, start + length);
-      console.log(purchaseCommitments)
-      res.json({
-      draw,
-      recordsTotal: client.purchasecommitments.length,
-      recordsFiltered: client.purchasecommitments.length,
-      data: purchaseCommitments,
+
+      // Count the total number of documents
+      const countPipeline = [...pipeline, { $count: 'totalCount' }];
+      const countResult = await ClientModel.aggregate(countPipeline);
+      const totalCount = countResult.length > 0 ? countResult[0].totalCount : 0;
+      pipeline.push({ $sort: { 'purchasecommitments._id': -1 } });
+
+      // Add pagination stages
+      pipeline.push(
+          { $skip: start }, // Skip records for pagination
+          { $limit: length } // Limit records for pagination
+      );
+
+      // Group the data
+      pipeline.push({
+          $group: {
+              _id: '$_id',
+              name: { $first: '$name' },
+              purchasecommitments: { $push: '$purchasecommitments' } // Push matching salescommitmentsschema to array
+          }
       });
-    } catch (error) {
+
+      // Execute the aggregation pipeline
+      const client = await ClientModel.aggregate(pipeline);
+      const purchasecommitments = client.length > 0 ? client[0].purchasecommitments : [];
+
+      res.json({
+          draw,
+          recordsTotal: totalCount,
+          recordsFiltered: totalCount,
+          data: purchasecommitments,
+      });
+  } catch (error) {
       console.error('Error fetching data:', error);
       res.status(500).json({ error: 'Server error' });
-    }
-  
-  
-  });
-  exports.salescommitments  = (async (req, res) => {
-    // Assuming you have already imported required modules and set up your Express app
-    
-    // API endpoint for paginated data
-      try {
-        const draw = parseInt(req.query.draw) || 1; // Get the draw count (used by DataTables)
-        const start = parseInt(req.query.start) || 0; // Get the starting index of the data to fetch
-        const length = parseInt(req.query.length) || 10; // Get the number of records per page
-        // Fetch data from the database with pagination
-        
-
-    let filter = {}; // Initialize an empty filter object
-
-    if (req.query.name) {
-      filter.name = req.query.name;
   }
+};
+exports.salescommitments = async (req, res) => {
+  try {
+      const draw = parseInt(req.query.draw) || 1;
+      const name = req.query.name; // Get the name parameter
+      const item = req.query.item; // Get the item parameter
+      const start = parseInt(req.query.start) || 0; // Get the starting index of the data to fetch
+      const length = parseInt(req.query.length) || 10; // Get the number of records per page
 
-  // Check if req.query.item exists and add it to the filter using dot notation
-  if (req.query.item) {
-      filter['salescommitmentsschema.item'] = req.query.item;
-  }
-        const client = await ClientModel.findOne({ name: filter });
-  
-        if (!client) {
-          // Handle case where client with the specified name is not found
-          res.status(404).json({ error: 'Client not found' });
-          return;
-        }
-        const salescommitmentsschema = client.salescommitmentsschema.slice(start, start + length);
-  
-        res.json({
-          draw,
-        recordsTotal: client.salescommitmentsschema.length,
-        recordsFiltered: client.salescommitmentsschema.length,
-        data: salescommitmentsschema,
-        });
-      } catch (error) {
-        console.log('Error fetching data:', error);
-        res.status(500).json({ error: 'Server error' });
+      // Construct the aggregation pipeline
+      const pipeline = [
+          {
+              $match: { name: name } // Match documents by name
+          },
+          {
+              $unwind: '$salescommitmentsschema' // Unwind the salescommitmentsschema array
+          }
+      ];
+
+      // If item parameter is provided, add match stage for item
+      if (item) {
+          pipeline.push({
+              $match: { 'salescommitmentsschema.item': item } // Match documents by item
+          });
       }
-    
-    
-    });
+
+      // Count the total number of documents
+      const countPipeline = [...pipeline, { $count: 'totalCount' }];
+      const countResult = await ClientModel.aggregate(countPipeline);
+      const totalCount = countResult.length > 0 ? countResult[0].totalCount : 0;
+      pipeline.push({ $sort: { 'salescommitmentsschema._id': -1 } });
+      // Add pagination stages
+      pipeline.push(
+          { $skip: start }, // Skip records for pagination
+          { $limit: length } // Limit records for pagination
+      );
+
+      // Group the data
+      pipeline.push({
+          $group: {
+              _id: '$_id',
+              name: { $first: '$name' },
+              salescommitmentsschema: { $push: '$salescommitmentsschema' } // Push matching salescommitmentsschema to array
+          }
+      });
+
+      // Execute the aggregation pipeline
+      const client = await ClientModel.aggregate(pipeline);
+      console.log(client)
+      const salescommitmentsschema = client.length > 0 ? client[0].salescommitmentsschema : [];
+
+      res.json({
+          draw,
+          recordsTotal: totalCount,
+          recordsFiltered: totalCount,
+          data: salescommitmentsschema,
+      });
+  } catch (error) {
+      console.error('Error fetching data:', error);
+      res.status(500).json({ error: 'Server error' });
+  }
+};
+
+ 
     //////arrivals   ////////////
     exports.arrivals  = (async (req, res) => {
       // Assuming you have already imported required modules and set up your Express app

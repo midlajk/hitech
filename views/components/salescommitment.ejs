@@ -34,12 +34,13 @@
       <div class="row">
         <div class="col mb-3">
           <label for="date" class="form-label">Date</label>
-          <input type="date" id="scdate" name="scdate" class="form-control" placeholder="Enter Address">
+          <input type="date" id="scdate" name="scdate" class="form-control">
 
         </div>
         <div class="col mb-3">
           <label for="name" class="form-label">Item</label>
-          <input type="text" id="scitem" name="scitem" class="form-control" placeholder="Enter Address">
+          <select type="text" id="scitem" name="scitem" class="form-control items-js" ></select>
+
 
         </div>
 
@@ -48,30 +49,43 @@
       <div class="row">
         <div class="col mb-3">
           <label for="image" class="form-label">Reference</label>
-          <input type="text" id="screference" name="screference" class="form-control" placeholder="Enter Address">
+          <select type="text" id="screference" name="screference" class="form-control items-js-reffernece"></select>
+
         </div>
         <div class="col mb-3">
           <label for="description" class="form-label">Weight</label>
-          <input type="text" id="scweight" name="scweight" class="form-control" placeholder="Enter Phone">
+          <input type="number" id="scweight" name="scweight" class="form-control" placeholder="Enter weight">
         </div>
 
       </div>
       <div class="row">
         <div class="col mb-3">
           <label for="highlighted" class="form-label">Expected EP %</label>
-          <input type="text" id="scep" name="scep" class="form-control" placeholder="Enter GSTIN">
+          <input type="number" id="scep" name="scep" class="form-control" placeholder="Ep %">
 
         </div>
         <div class="col mb-3">
           <label for="highlighted" class="form-label">Rate</label>
-          <input type="text" id="scrate" name="scrate" class="form-control" placeholder="Enter GSTIN">
+          <input type="number" id="scrate" name="scrate" class="form-control" placeholder="Rate">
+
+        </div>
+      </div>
+      <div class="row">
+        <div class="col mb-3">
+          <label for="highlighted" class="form-label">Additional</label>
+          <input type="text" id="scAdditional" name="scAdditional" class="form-control" placeholder="Additional">
+
+        </div>
+        <div class="col mb-3">
+          <label for="highlighted" class="form-label">Info</label>
+          <input type="text" id="scInfo" name="scInfo" class="form-control" placeholder="Info">
 
         </div>
       </div>
 
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-outline-secondary" onclick="closeModal()" data-bs-dismiss="modal">
+      <button type="button" class="btn btn-outline-secondary" onclick="closepcModal()" data-bs-dismiss="modal">
         Close
       </button>
       <button onclick="submitsalescommitment()" id="submitbutton" class="btn btn-primary">Add Party</button>
@@ -109,6 +123,10 @@
           return d;
         },
       },
+      error: function (xhr, error, thrown) {
+            // Handle AJAX error here
+            console.log('AJAX Error:', error);
+        },
       columns: [
       {
         data: 'date',
@@ -120,20 +138,18 @@
         { data: 'id' },
         { data: 'item' },
         { data: 'weight' },
+        { data: 'eppercentage' },
+
+        { data: 'rate' },
+        { data: 'balance' },
         {
           data: null,
           render: function (data, type, row) {
-            console.log('eppercentage:', row.eppercentage);
-            console.log('weight:', row.weight);
-
-            var epercentage = row.eppercentage || 0.2; // Default to 0.2 if 'eppercentage' is not present
-            var adjustedWeight = Math.round(row.weight * (epercentage / 100));
+          
+            var adjustedWeight = Math.round(row.balance * (row.eppercentage / 100));
             return adjustedWeight;
           }
         },
-        { data: 'rate' },
-        { data: 'weight' },
-        { data: 'weight' },
         {
           data: null,
           render: function (data, type, row) {
@@ -142,9 +158,8 @@
                   <i class="bx bx-dots-vertical-rounded"></i>
                 </button>
                 <div class="dropdown-menu">
-                  <a class="dropdown-item featured-button" href="javascript:void(0);"><i class="bx bx-star me-1"></i>delete </a>
                   <a class="dropdown-item" href="/backend/editproperties?id=${row._id}"><i class="bx bx-edit me-1"></i> Edit /View </a>
-                  <a class="dropdown-item delete-btn" href="javascript:void(0);"><i class="bx bx-trash me-1"></i> Delete</a>
+                  <a class="dropdown-item delete-sales-commbtn" href="javascript:void(0);"><i class="bx bx-trash me-1"></i> Delete</a>
                 </div>
               </div>`;
           },
@@ -153,12 +168,12 @@
     });
 
     // Delete Button Click Event
-    function deleteData(id) {
+    function deletesalescommData(id) {
       $.ajax({
-        url: `https://www.safehomes.ae/backend/deleteproperty/${id}`,
+        url: `http://localhost:3000/deletesalescommitments/${id}/${name}`,
         type: 'DELETE',
         success: function (response) {
-          dataTable.ajax.reload();
+          scTable.ajax.reload();
         },
         error: function (error) {
           console.error('Error deleting data:', error);
@@ -166,38 +181,12 @@
       });
     }
 
-    function toggleFeatured(id, isFeatured) {
-      var formDataObj = { id: id, status: isFeatured ? 'notfeatured' : 'featured' };
-
-      $.ajax({
-        url: `https://www.safehomes.ae/backend/addfeatured`,
-        type: 'POST',
-        data: JSON.stringify(formDataObj),
-        contentType: 'application/json',
-        success: function (response) {
-          dataTable.ajax.reload();
-        },
-        error: function (error) {
-          console.error('Error updating data:', error);
-        },
-      });
-    }
-
-    $('#example').on('click', '.delete-btn', function () {
-      var data = dataTable.row($(this).closest('tr')).data();
+   
+    $('#salescommitmenttable').on('click', '.delete-sales-commbtn', function () {
+      console.log('heheh')
+      var data = scTable.row($(this).closest('tr')).data();
       var id = data._id;
-      deleteData(id);
-    });
-
-    $('#example').on('click', '.featured-button', function () {
-      var data = dataTable.row($(this).closest('tr')).data();
-      var id = data._id;
-
-      if (routeName === 'featured') {
-        toggleFeatured(id, true); // Remove from Featured
-      } else if (routeName === 'properties') {
-        toggleFeatured(id, false); // Add to Featured
-      }
+      deletesalescommData(id);
     });
 
   }
@@ -211,14 +200,22 @@
     const scweight = document.getElementById('scweight').value;
     const scep = document.getElementById('scep').value;
     const scrate = document.getElementById('scrate').value;
-
+    scAdditional=document.getElementById('scAdditional').value;
+    scInfo=document.getElementById('scInfo').value;
+    if(!scdate||!scitem||!screference||!scweight||!scep||!scrate){
+      return alert('Please fill Date,Item,Refference,Weight,Ep,Rate fields')
+    }
     const payload = {
+      name : name,
       scdate: scdate,
       scitem: scitem,
       screference: screference,
       scweight: scweight,
       scep: scep,
-      scrate: scrate
+      scrate: scrate,
+      scInfo:scInfo,
+      scAdditional:scAdditional
+
     };
 
     try {
@@ -240,4 +237,35 @@
       console.log('Error:', error);
     }
   }
+  $('.items-js').select2({
+    dropdownParent: $("#addsalescommitment"),
+
+              ajax: {
+                  url: 'http://localhost:3000/getproducts',
+                  dataType: 'json',
+                  delay: 250, // Delay in milliseconds before making the request
+                  processResults: function (data) {
+                      return {
+                          results: data.results.map(name => ({ id: name, text: name }))
+                      };
+                  },
+                  cache: true // Enable caching to reduce server requests
+              }
+          });
+
+          $('.items-js-reffernece').select2({
+                  dropdownParent: $("#addsalescommitment"),
+
+              ajax: {
+                  url: 'http://localhost:3000/getrefferance',
+                  dataType: 'json',
+                  delay: 250, // Delay in milliseconds before making the request
+                  processResults: function (data) {
+                      return {
+                          results: data.results.map(name => ({ id: name, text: name }))
+                      };
+                  },
+                  cache: true // Enable caching to reduce server requests
+              }
+          });
 </script>

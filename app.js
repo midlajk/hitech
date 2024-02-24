@@ -14,6 +14,7 @@ var adminpostapis = require('./routes/adminpostapis');
 var adminapis = require('./routes/adminapis');
 var getapis = require('./routes/getapis');
 var getdetails = require('./routes/getdetailedview');
+var deleteapis = require('./routes/deleteapis');
 
 /////front end //
 
@@ -58,6 +59,8 @@ app.use('/', adminpostapis);
 app.use('/', adminapis);
 app.use('/', getapis);
 app.use('/',getdetails)
+app.use('/',deleteapis)
+
 /////Front end routes ///
 
 
@@ -68,7 +71,6 @@ app.use(function(req, res, next) {
 
 // error handler
 app.use(function(err, req, res, next) {
-  console.log('gege')
 
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'POST');

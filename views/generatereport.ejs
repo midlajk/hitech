@@ -34,7 +34,7 @@
                         <div class="d-flex flex-row align-items-center col-6">
                         <span class="fw-bold me-2">Refference:&nbsp;</span>
                           <div class="my-1 flex-nowrap input-group">
-                            <select class="" name="referenceselect" id="referenceselect" ></select>
+                            <select class="form-control" name="referenceselect" id="referenceselect" ></select>
   
                             <a class="bg-light fw-bold text-secondary small input-group-text" href="#" data-bs-toggle="modal" data-bs-target="#referanceAdd"><i class="menu-icon tf-icons bx bx-user-plus"></i></a>
                           </div>
@@ -54,7 +54,7 @@
                         <label class="fw-bold">Transportation Agent:</label>
 
                         <div class="my-1 flex-nowrap input-group">
-                          <select class="" name="transportagent" id="transportagent" required></select>
+                          <select class="form-control" name="transportagent" id="transportagent" required></select>
 
                           <a class="bg-light fw-bold text-secondary small input-group-text" href="#" data-bs-toggle="modal" data-bs-target="#transportagentModal"><i class="menu-icon tf-icons bx bx-user-plus"></i></a>
                         </div>
@@ -271,9 +271,10 @@
                       </div>
                   </div>
           
-              </div>
+              </div> 
+            </form>
           </div>
-      </form>
+     
        </div>
        </div>
   <!-- Footer -->
@@ -304,7 +305,7 @@
           <div class="d-flex flex-row justify-content-between align-items-start bg-light w-100 p-4">
             <div class="w-100">
               <h4 class="fw-bold my-2" id="partyname"></h4>
-              <h6 class="fw-bold text-secondary mb-1">Lot No #: </h6>
+              <h6 class="fw-bold text-secondary mb-1">Lot No #: <span id="lotnumber"></span> </h6>
             </div>
             <div class="text-end ms-4">
               <h6 class="fw-bold mt-1 mb-2">Actual&nbsp;Weight:</h6>
@@ -944,18 +945,37 @@ closeButton.click();
   });
 </script>
 
-               
+            
 <script>
   var dataTable;
+   var lotnumber  
   // Function to open the modal
   function openModal() {
     var item = document.getElementById('item').value
 
-    if(party && item){
+    const currentDate = new Date();
+
+// Get date components
+const day = String(currentDate.getDate()).padStart(2, '0');
+const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+const year = String(currentDate.getFullYear()).slice(2); // Get last two digits of the year
+
+// Get time components
+const hours = String(currentDate.getHours()).padStart(2, '0');
+const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+
+// Concatenate the components to form the unique ID
+lotnumber = `${day}${month}${year}-${hours}${minutes}${seconds}`;
+
+
+   document.getElementById('lotnumber').innerText = lotnumber
+    
+    if(party && item && eppercentage >=0){
       const modal = document.getElementById('invoiceModal');
     modal.style.display = 'flex';
     }else{
-      alert('Please choose a party name and Item')
+      alert('Please choose a party name , Item and ep percentage')
     }
     
   }
@@ -1078,12 +1098,7 @@ async function submitForm() {
   const formData = await new FormData(form);
   const formDataObj = {};
       formData.forEach((value, key) => {
-        if (key !== "file") {
-          formDataObj[key] = value;
-        }else{
-          formDataObj[key] = fileurl;
-
-        }
+        formDataObj[key] = value;
       });
   try {
     const response = await fetch('/submit-bill', {
@@ -1097,6 +1112,7 @@ async function submitForm() {
     if (response.ok) {
       alert('Form submitted successfully');
       // You can redirect or perform any other action here
+      window.location.reload()
     } else {
       alert('Error submitting the form');
     }
@@ -1130,7 +1146,7 @@ document.getElementById('generateInvoiceBtn').addEventListener('click', () => {
 <script>
   var netWeight = 0 
   var epweight = 0
-  var eppercentage = 0
+  var eppercentage = -1
   function updateNetWeight() {
     // Get values from input fields
     const bags = parseFloat(document.getElementById('bags').value) || 0;

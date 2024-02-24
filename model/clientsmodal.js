@@ -64,6 +64,8 @@ const purchasecommitmentsschema = new Schema({
     delivered:Number,
     balance:Number,
     rate:Number,
+    additional:String,
+    info:String
      // Price/Rate
 });
 const salescommitmentsschema = new Schema({
