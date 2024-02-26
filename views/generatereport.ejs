@@ -305,6 +305,9 @@
           <div class="d-flex flex-row justify-content-between align-items-start bg-light w-100 p-4">
             <div class="w-100">
               <h4 class="fw-bold my-2" id="partyname"></h4>
+              <h5 class="fw-bold my-2" id="itemnamedisplay"></h5>
+              <h5 class="fw-bold my-2" id="businesstype"></h5>
+              <h5 class="fw-bold my-2" id="Transportvehicle"></h5>
               <h6 class="fw-bold text-secondary mb-1">Lot No #: <span id="lotnumber"></span> </h6>
             </div>
             <div class="text-end ms-4">
@@ -318,20 +321,25 @@
           <div class="p-4">
             <div class="row mb-4">
               <div class="col-md-4">
-                <div class="fw-bold">Date:</div>
-                <div> </div>
-                <div> </div>
-                <div> </div>
-              </div>
-              <div class="col-md-4">
-                <div class="fw-bold">Vehicle:</div>
-                <div> </div>
+                <div class="fw-bold">Bill Date:</div>
+                <div><input type="date" class="form-control" id="billingdate"></div>
                 <div> </div>
                 <div> </div>
               </div>
               <div class="col-md-4">
-                <div class="fw-bold mt-2">Delivery:</div>
+                <div class="fw-bold">Billing Number:</div>
+                <div><input type="text" class="form-control" id="billingnumber"></div>
                 <div> </div>
+                <div> </div>
+              </div>
+              <div class="col-md-4">
+                <div class="fw-bold">Product Tax:</div>
+                <div><select name="tax" class="form-control" id="tax">
+                  <option value="0-0-0">sgst-0% + cgst-0% + igst-0%</option>
+                  <option value="2.5-2.5-0">sgst-2.5% + cgst-2.5% + igst-0%</option>
+                  <option value="2.5-2.5-5">sgst-2.5% + cgst-2.5% + igst-5%</option>
+
+                </select> </div>
               </div>
             </div>
             <table class="table table-bordered">
@@ -419,12 +427,20 @@
 
 var bill = []
   function onButtonClick() {
+    var referenceselect = document.getElementById('referenceselect').value
+    var billid=document.getElementById('billingnumber').value;
+    const uniqueId = new Date().getTime().toString();
+    var referenceselect = document.getElementById('referenceselect').value
+
       // Extract data from HTML elements
-      var commitId = document.getElementById('newcommitid').value;
+      var commitId = document.getElementById('newcommitid').value || referenceselect;
       var commitQty = document.getElementById('newcommitqty').value;
       var commitRate = document.getElementById('newcommitrate').value;
       var commitTotal = document.getElementById('newcommittotal').innerText;
       var billData = {
+        lot:lotnumber,
+        uniqueid:uniqueid,
+        billid:billid,
         id: commitId,
         quantity: commitQty,
         rate: commitRate,
@@ -952,6 +968,10 @@ closeButton.click();
   // Function to open the modal
   function openModal() {
     var item = document.getElementById('item').value
+    var referenceselect = document.getElementById('referenceselect').value
+
+    var billtype = document.getElementById('billtype').value
+    var Transportvehicle = document.getElementById('lorry').value
 
     const currentDate = new Date();
 
@@ -968,10 +988,14 @@ const seconds = String(currentDate.getSeconds()).padStart(2, '0');
 // Concatenate the components to form the unique ID
 lotnumber = `${day}${month}${year}-${hours}${minutes}${seconds}`;
 
+document.getElementById('lotnumber').innerText = lotnumber
 
-   document.getElementById('lotnumber').innerText = lotnumber
-    
-    if(party && item && eppercentage >=0){
+   document.getElementById('businesstype').innerText = billtype
+   document.getElementById('Transportvehicle').innerText = Transportvehicle.toUpperCase()
+   document.getElementById('billingnumber').value = lotnumber
+   document.getElementById('itemnamedisplay').innerText = item
+
+    if(party && item && eppercentage >=0 && referenceselect){
       const modal = document.getElementById('invoiceModal');
     modal.style.display = 'flex';
     }else{
@@ -1389,6 +1413,29 @@ closeButton.click();
      
 
   }
+  $(document).ready(function() {
+    // Get references to the input elements
+    const $qtyInput = $('#newcommitqty');
+    const $rateInput = $('#newcommitrate');
+    const $totalCell = $('#newcommittotal');
+
+    // Add event listeners to detect changes in quantity and rate inputs
+    $qtyInput.on('input', updateTotal);
+    $rateInput.on('input', updateTotal);
+
+    // Function to update the total based on quantity and rate inputs
+    function updateTotal() {
+        // Get the values of quantity and rate inputs
+        const qty = parseFloat($qtyInput.val()) || 0; // Use 0 if the value is not a valid number
+        const rate = parseFloat($rateInput.val()) || 0; // Use 0 if the value is not a valid number
+
+        // Calculate the total
+        const total = qty * rate;
+
+        // Update the content of the total cell
+        $totalCell.text(total.toFixed(2)); // Adjust the precision as needed
+    }
+});
  </script>
 
                        <%- include('./include/end.ejs') -%>
