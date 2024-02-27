@@ -13,6 +13,7 @@ router.get('/individualarrivals', adminpostapis.individualarrivals);
 router.get('/individualdespatch', adminpostapis.individualdespatch);
 router.get('/getrefferance', adminpostapis.getrefference);
 router.get('/getTransportAgent', adminpostapis.getTransportAgent);
-
+router.get('/salesbills', adminpostapis.salesbills);
+router.get('/purchasebills', adminpostapis.purchasebills);
 
 module.exports = router;

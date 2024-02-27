@@ -6,12 +6,13 @@
       <tr>
         <th>Date</th>
         <th>ID</th>
-        <th>Reference</th>
+        <th>Reference</th>     
+        <th>Bags</th>
         <th>Weight</th>
-        <th>Expected Ep</th>
-        <th>Price</th>
-        <th>Remaining</th>
-        <th>Expected Ep</th>
+        <th>Ep %</th>
+        <th>EP</th>
+        <th>EP Consignment</th>
+   
         <th>Action</th>
 
       </tr>
@@ -124,14 +125,14 @@
           // Format the date using moment.js
           return moment(data).format('DD/MM/YYYY');
         }
-      },
-        { data: 'item' },
+      },{ data: 'lotnumber' },
+        { data: 'item' }, 
         { data: 'bags' },
-        { data: 'qty' },
-        { data: 'qty' },
-        { data: 'qty' },
-        { data: 'qty' },
-        { data: 'qty' },
+        { data: 'netWeight' },
+        { data: 'eppercentage' },
+        { data: 'netepweight' },
+        { data: 'storage' },
+       
         {
           data: null,
           render: function (data, type, row) {
@@ -202,41 +203,4 @@
 
 
 
-  // async function submitpurchasecommitment() {
-  //   const pcdate = document.getElementById('pcdate').value;
-  //   const pcitem = document.getElementById('pcitem').value;
-  //   const pcreference = document.getElementById('pcreference').value;
-  //   const pcweight = document.getElementById('pcweight').value;
-  //   const pcep = document.getElementById('pcep').value;
-  //   const pcrate = document.getElementById('pcrate').value;
-
-  //   const payload = {
-  //     name:name,
-  //     pcdate: pcdate,
-  //     pcitem: pcitem,
-  //     pcreference: pcreference,
-  //     pcweight: pcweight,
-  //     pcep: pcep,
-  //     pcrate: pcrate
-  //   };
-
-  //   try {
-  //     // Use Axios to make the POST request
-  //     const response = await axios.post('http://localhost:3000/addpurchasecommitment', payload, {
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //     });
-
-  //     // Handle the response (you can add your own logic here)
-
-  //     // Close the modal after server response
-  //     closepurchasecommitmentModal();
-  //     alTable.ajax.reload();
-
-  //   } catch (error) {
-  //     // Handle errors, such as network issues or server errors
-  //     console.log('Error:', error);
-  //   }
-  // }
 </script>

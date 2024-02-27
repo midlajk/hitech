@@ -423,14 +423,29 @@
   </div>
 </div>
 <script>
-  var netepweight = 0
+ 
+  var bill = [] ;
+  var consignment = 0  ;
+  var epweight = 0;
+  var lotnumber  ;
+  var netepweight = 0;
+  var netWeight = 0 ;
+  var eppercentage = -1;
+  var billedquantity = 0;
+  function setBillDateToCurrentDate() {
+    // Get the current date
+    var currentDate = new Date().toISOString().slice(0, 10);
 
-var bill = []
+    // Set the value of the bill date input field to the current date
+    document.getElementById('billingdate').value = currentDate;
+  }
+
   function onButtonClick() {
     var referenceselect = document.getElementById('referenceselect').value
     var billid=document.getElementById('billingnumber').value;
-    const uniqueId = new Date().getTime().toString();
+    const uniqueid = new Date().getTime().toString();
     var referenceselect = document.getElementById('referenceselect').value
+    var billingdate = document.getElementById('billingdate').value || new Date().toISOString().slice(0, 10);
 
       // Extract data from HTML elements
       var commitId = document.getElementById('newcommitid').value || referenceselect;
@@ -438,6 +453,7 @@ var bill = []
       var commitRate = document.getElementById('newcommitrate').value;
       var commitTotal = document.getElementById('newcommittotal').innerText;
       var billData = {
+        date:billingdate,
         lot:lotnumber,
         uniqueid:uniqueid,
         billid:billid,
@@ -446,16 +462,21 @@ var bill = []
         rate: commitRate,
         total: commitTotal
     };
-
-    // Push the object into the bill array
-    bill.push(billData);
-    console.log(bill)
+    if ((consignment-commitQty) < 0) {
+          alert('You cant add more bill than original End Product  quantity')
+            return; // Skip the iteration
+        }else{
+           bill.push(billData);
+  
 
     displayBill();
 
+        }
+    // Push the object into the bill array
+   
       // Call addbill function with the extracted data
   }
-  var consignment = 0
+ 
   function displayBill() {
     var tableBody = document.getElementById("billtablebody");
     // Clear previous content
@@ -464,7 +485,9 @@ var bill = []
     var totalQty = 0;
 
     // Iterate over the bill array and create rows for each object
-    bill.forEach(function(billData, index) {
+    bill.forEach(function(billData, index) { 
+      
+     
         var row = tableBody.insertRow();
         var cellId = row.insertCell(0);
         var cellQty = row.insertCell(1);
@@ -481,6 +504,8 @@ var bill = []
         totalbill += parseFloat(billData.total);
         totalQty += parseFloat(billData.quantity);
         consignment = netepweight-totalQty
+        billedquantity+=totalQty;
+
         // Create a delete button/icon
         var deleteButton = document.createElement("button");
         deleteButton.innerHTML = "&times;"; // The 'times' symbol (×) for delete
@@ -964,9 +989,9 @@ closeButton.click();
             
 <script>
   var dataTable;
-   var lotnumber  
   // Function to open the modal
   function openModal() {
+    setBillDateToCurrentDate()
     var item = document.getElementById('item').value
     var referenceselect = document.getElementById('referenceselect').value
 
@@ -1012,7 +1037,6 @@ document.getElementById('lotnumber').innerText = lotnumber
     document.getElementById('commitment-type').innerText =  billtype+'d Commitments' 
 
 var api;
-console.log(billtype)
 if (billtype === 'Purchase') {
     api = 'purchasecommitments';
 } else if (billtype === 'Sales') {
@@ -1124,6 +1148,13 @@ async function submitForm() {
       formData.forEach((value, key) => {
         formDataObj[key] = value;
       });
+      formDataObj['bill'] = bill;
+      formDataObj['lotnumber'] = lotnumber;
+      formDataObj['netepweight'] = netepweight;
+      formDataObj['netWeight'] = netWeight;
+      formDataObj['eppercentage'] = eppercentage;
+      formDataObj['billedquantity'] = billedquantity;
+
   try {
     const response = await fetch('/submit-bill', {
         method: "POST", // Replace with the appropriate HTTP method (e.g., POST, PUT, etc.)
@@ -1168,9 +1199,6 @@ document.getElementById('generateInvoiceBtn').addEventListener('click', () => {
 </script>
 
 <script>
-  var netWeight = 0 
-  var epweight = 0
-  var eppercentage = -1
   function updateNetWeight() {
     // Get values from input fields
     const bags = parseFloat(document.getElementById('bags').value) || 0;

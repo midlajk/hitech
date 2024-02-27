@@ -18,32 +18,69 @@ exports.generatepurchasereport = async (req, res) => {
       // If the client exists, update the coffee array
       existingClient.coffee.push({
         date: req.body.dateOfIssue,
-        invoice: req.body.invoicenumber,
-        item: req.body.item,
-        bags: req.body.bags,
-        qty: req.body.quantity,
-        priceRate: req.body.price,
+        referenceselect: req.body.referenceselect,
+        billTo: req.body.billTo,
+        transportagent: req.body.transportagent,
         lorry: req.body.lorry,
         billtype: req.body.billtype,
-        Commitment: req.body.commitment,
-        igst: req.body.igst,
-        sgst: req.body.sgst,
-        cgst: req.body.cgst,
-        total: req.body.total,
-        aftercutting: req.body.aftercutting,
+        delivery: req.body.delivery,
+        remarks: req.body.remarks,
+        item: req.body.item,
+        bags: req.body.bags,
+        quantity: req.body.quantity,
+        bagweight: req.body.bagweight,
+        forignobject: req.body.forignobject,
+        weightallowance: req.body.weightallowance,
         outern: req.body.outern,
-        Moisture: req.body.moisture,
-        blacks: req.body.blacks,
-        husk: req.body.husk,
-        aaa: req.body.aaa,
+        huskpercentage: req.body.huskpercentage,
+        huskcutting: req.body.huskcutting,
+        moisturepercentage: req.body.moisturepercentage,
+        moisturecutting: req.body.moisturecutting,
+        bbpercentage: req.body.bbpercentage,
+        bbcutting: req.body.bbcutting,
+        berryborepercentage: req.body.berryborepercentage,
+        berryborecutting: req.body.berryborecutting,
+        other: req.body.other,
+        allowance: req.body.allowance,
+        lotnumber:req.body.lotnumber,
+        netepweight:req.body.netepweight,
+        netWeight:req.body.netWeight,
+        eppercentage:req.body.eppercentage,
+        storage:req.body.netepweight - ((req.body.billedquantity*100)/req.body.eppercentage)
 
-        aa: req.body.aa,
-        a: req.body.a,
-        b: req.body.b,
-        c: req.body.c,
-        pberry: req.body.pberry,
       });
+      if(req.body.bill.length>0){
+        for (const bill of req.body.bill) {
 
+          // Push the new sales bill document to the client's salesbillSchema array
+          existingClient.purchasebillSchema.push({
+            date: bill.date,
+            invoice: bill.billid,
+            uniqueid: bill.uniqueid,
+            commitment: bill.id,
+            lotnumber: bill.lot,
+            qty: bill.quantity,
+            amount: bill.rate,
+            subtotal: bill.total,
+            sgst: bill.sgst,
+            cgst: bill.cgst,
+            igst: bill.igst,
+            total: bill.total,
+            tds: bill.tds
+          });
+          const purchasecommitment = existingClient.purchasecommitments.find(commitment => commitment.id === bill.id);
+
+          if (purchasecommitment) {
+            // Calculate the new balance by subtracting the delivered quantity from the total quantity
+            const newBalance = purchasecommitment.balance - parseInt((bill.quantity*100)/req.body.eppercentage) ;
+    
+            // Update the balance in the sales commitment object
+            purchasecommitment.balance = newBalance<0?0:newBalance;
+        }
+       
+        }
+
+      }
       await existingClient.save();
     }
 
@@ -58,34 +95,73 @@ exports.generatesalesreport = async (req, res) => {
     const existingClient = await ClientModel.findOne({ name: req.body.billTo });
 
     if (existingClient) {
+      console.log(req.body.netepweight - req.body.billedquantity)
       // If the client exists, update the coffee array
       existingClient.despatch.push({
         date: req.body.dateOfIssue,
-        invoice: req.body.invoicenumber,
-        item: req.body.item,
-        bags: req.body.bags,
-        qty: req.body.quantity,
-        priceRate: req.body.price,
+        referenceselect: req.body.referenceselect,
+        billTo: req.body.billTo,
+        transportagent: req.body.transportagent,
         lorry: req.body.lorry,
         billtype: req.body.billtype,
-        Commitment: req.body.commitment,
-        igst: req.body.igst,
-        sgst: req.body.sgst,
-        cgst: req.body.cgst,
-        total: req.body.total,
-        aftercutting: req.body.aftercutting,
+        delivery: req.body.delivery,
+        remarks: req.body.remarks,
+        item: req.body.item,
+        bags: req.body.bags,
+        quantity: req.body.quantity,
+        bagweight: req.body.bagweight,
+        forignobject: req.body.forignobject,
+        weightallowance: req.body.weightallowance,
         outern: req.body.outern,
-        Moisture: req.body.moisture,
-        blacks: req.body.blacks,
-        husk: req.body.husk,
-        aaa: req.body.aaa,
-
-        aa: req.body.aa,
-        a: req.body.a,
-        b: req.body.b,
-        c: req.body.c,
-        pberry: req.body.pberry,
+        huskpercentage: req.body.huskpercentage,
+        huskcutting: req.body.huskcutting,
+        moisturepercentage: req.body.moisturepercentage,
+        moisturecutting: req.body.moisturecutting,
+        bbpercentage: req.body.bbpercentage,
+        bbcutting: req.body.bbcutting,
+        berryborepercentage: req.body.berryborepercentage,
+        berryborecutting: req.body.berryborecutting,
+        other: req.body.other,
+        allowance: req.body.allowance,
+        lotnumber:req.body.lotnumber,
+        netepweight:req.body.netepweight,
+        netWeight:req.body.netWeight,
+        eppercentage:req.body.eppercentage,
+        storage:req.body.netepweight - ((req.body.billedquantity*100)/req.body.eppercentage)
       });
+      
+      if(req.body.bill.length>0){
+        for (const bill of req.body.bill) {
+
+          // Push the new sales bill document to the client's salesbillSchema array
+          existingClient.salesbillSchema.push({
+            date: bill.date,
+            invoice: bill.billid,
+            uniqueid: bill.uniqueid,
+            commitment: bill.id,
+            lotnumber: bill.lot,
+            qty: bill.quantity,
+            amount: bill.rate,
+            subtotal: bill.total,
+            sgst: bill.sgst,
+            cgst: bill.cgst,
+            igst: bill.igst,
+            total: bill.total,
+            tds: bill.tds
+          });
+          const salesCommitment = existingClient.salescommitmentsschema.find(commitment => commitment.id === bill.id);
+
+          if (salesCommitment) {
+            // Calculate the new balance by subtracting the delivered quantity from the total quantity
+            const newBalance = salesCommitment.balance - parseInt((bill.quantity*100)/req.body.eppercentage) ;
+    
+            // Update the balance in the sales commitment object
+            salesCommitment.balance = newBalance<0?0:newBalance;
+        }
+       
+        }
+
+      }
 
       await existingClient.save();
     } 

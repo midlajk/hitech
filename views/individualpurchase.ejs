@@ -77,7 +77,7 @@
               <div class="card-body">
                 
                 <a class="btn btn-primary text-white" href="#" onclick="showpurchasebill()" id="purchasebill">Purchase Bills</a>
-                <a class="btn btn-primary text-white" href="#" onclick="showslesbill()" id="salesbill">Sales Bills</a>
+                <a class="btn btn-primary text-white" href="#" onclick="showsalesbill()" id="salesbill">Sales Bills</a>
                 <a class="btn btn-primary text-white" onclick="showtransactions()" href="#" id="transaction">Transactions</a>
                 <a class="btn btn-primary text-white" href="#" onclick="showarrival()" id="arrival">Arrival</a>
                 <a class="btn btn-primary text-white" href="#" onclick="showdespatch()" id="despatch">Despatch</a>
@@ -85,8 +85,17 @@
                 <a class="btn btn-primary text-white" href="#" onclick="showstoreout()" id="storeout">Store-Out</a>
                 <a class="btn btn-primary text-white" href="#"  onclick="showpcommitments()" id="purchasecommitment">Purchase Commitments</a>
                 <a class="btn btn-primary text-white" href="#" onclick="showscommitments()" id="salescommitment">Sales Commitments</a>
-               
-                <div id="purchasecommitmentdiv" class="tab-content">
+            
+                <div id="purchasebilldiv" class="tab-content">
+                  <!-- Content will be loaded here based on userType -->
+                  <%- include("./components/purchasebill.ejs") -%>
+
+                </div>    <div id="salesbilldiv" class="tab-content d-none">
+                  <!-- Content will be loaded here based on userType -->
+                  <%- include("./components/salesbill.ejs") -%>
+
+                </div>
+                <div id="purchasecommitmentdiv" class="tab-content d-none">
                   <!-- Content will be loaded here based on userType -->
                   <%- include("./components/purchasecommitment.ejs") -%>
 
@@ -144,11 +153,14 @@ var name = '<%= name %>';
     let scTable;
     let alTable;
     let dpTable;
-
+    let sbillTable;
+    let psbillTable;
     const purchasecommitmentdiv = $('#purchasecommitmentdiv');
     const salescommitmentsdiv = $('#salescommitmentsdiv');
     const arrivalssdiv = $('#arrivalssdiv');
     const despatcsdiv = $('#despatcsdiv');
+    const salesbilldiv = $('#salesbilldiv');
+    const purchasebilldiv = $('#purchasebilldiv');
 
 //     function showpcommitments() {
 //       salescommitmentsdiv.addClass('d-none')
@@ -226,6 +238,14 @@ function showarrival() {
 function showdespatch() {
   showContent(despatcsdiv, dpTable);
   initializeDataTable(dpTable, individualdespatch);
+}
+function showsalesbill() {
+  showContent(salesbilldiv, sbillTable);
+  initializeDataTable(sbillTable, individualsalesbill);
+}
+function showpurchasebill() {
+  showContent(purchasebilldiv,psbillTable);
+  initializeDataTable(psbillTable, purchasebilltable);
 }
 </script>
 

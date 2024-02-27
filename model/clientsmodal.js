@@ -1,59 +1,73 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+
 const coffeeSchema = new Schema({
-    invoice: String,
-    item: String,      // Item name
-    bags: Number,      // Number of bags
-    qty: Number,       // Quantity
-    priceRate: Number,
-    lorry: String,
-    billtype: String,
-    Commitment: String,
-    igst: String,
-    sgst: String,
-    cgst: String,
-    total: String,
-    aftercutting: Number,
-    outern: Number,
-    Moisture: Number,
-    blacks: Number,
-    husk: Number,
-    aaa: Number,
-    aa: Number,
-    a: Number,
-    b: Number,
-    c: Number,
-    pberry: Number
-     // Price/Rate
+  date: Date,
+  referenceselect: String,
+  billTo: String,
+  transportagent: String,
+  lorry: String,
+  billtype: String,
+  delivery: String,
+  remarks: String,
+  item: String,
+  bags: Number,
+  quantity: Number,
+  bagweight: Number,
+  forignobject: Number,
+  weightallowance: Number,
+  outern: Number,
+  huskpercentage: Number,
+  huskcutting: Number,
+  moisturepercentage: Number,
+  moisturecutting: Number,
+  bbpercentage: Number,
+  bbcutting: Number,
+  berryborepercentage: Number,
+  berryborecutting: Number,
+  other: Number,
+  allowance: Number,
+  lotnumber:String,
+  netepweight:Number,
+  netWeight:Number,
+  eppercentage:Number,
+  storage:Number,
+});
+const despatch = new Schema({
+  date: Date,
+  referenceselect: String,
+  billTo: String,
+  transportagent: String,
+  lorry: String,
+  billtype: String,
+  delivery: String,
+  remarks: String,
+  item: String,
+  bags: Number,
+  quantity: Number,
+  bagweight: Number,
+  forignobject: Number,
+  weightallowance: Number,
+  outern: Number,
+  huskpercentage: Number,
+  huskcutting: Number,
+  moisturepercentage: Number,
+  moisturecutting: Number,
+  bbpercentage: Number,
+  bbcutting: Number,
+  berryborepercentage: Number,
+  berryborecutting: Number,
+  other: Number,
+  allowance: Number,
+  lotnumber:String,
+  netepweight:Number,
+  netWeight:Number,
+  eppercentage:Number,
+  storage:Number,
 });
 
-const despatch = new Schema({
-    invoice: String,
-    item: String,      // Item name
-    bags: Number,      // Number of bags
-    qty: Number,       // Quantity
-    priceRate: Number,
-    lorry: String,
-    billtype: String,
-    Commitment: String,
-    igst: String,
-    sgst: String,
-    cgst: String,
-    total: String,
-    aftercutting: Number,
-    outern: Number,
-    Moisture: Number,
-    blacks: Number,
-    husk: Number,
-    aaa: Number,
-    aa: Number,
-    a: Number,
-    b: Number,
-    c: Number,
-    pberry: Number
-     // Price/Rate
-});
+
 const purchasecommitmentsschema = new Schema({
     item:String,
     date:Date,
@@ -78,7 +92,45 @@ const salescommitmentsschema = new Schema({
     delivered:Number,
     balance:Number,
     rate:Number,
+    additional:String,
+    info:String
      // Price/Rate
+});
+const purchasebillSchema = new Schema({
+  // Define fields for the bill schema
+  // Example fields:
+  date: Date,
+  invoise:String,
+  uniqueid:String,
+  commitment:String,
+  lotnumber:String,
+  qty:Number,
+  amount: Number,
+  subtotal:Number,
+  sgst:Number,
+  cgst:Number,
+  igst:Number,
+  total:Number,
+  tds:Number
+  // Add other fields as needed
+});
+const salesbillSchema = new Schema({
+  // Define fields for the bill schema
+  // Example fields:
+  date: Date,
+  invoice:String,
+  uniqueid:String,
+  commitment:String,
+  lotnumber:String,
+  qty:Number,
+  amount: Number,
+  subtotal:Number,
+  sgst:Number,
+  cgst:Number,
+  igst:Number,
+  total:Number,
+  tds:Number
+  // Add other fields as needed
 });
 const clientSchema = new Schema({
     name: String,
@@ -88,7 +140,9 @@ const clientSchema = new Schema({
     coffee: [coffeeSchema],
     purchasecommitments:[purchasecommitmentsschema],
     salescommitmentsschema:[salescommitmentsschema],
-    despatch:[despatch]
+    despatch:[despatch],
+    purchasebillSchema:[purchasebillSchema],
+    salesbillSchema:[salesbillSchema]
 });
 
 const referenceSchema = new mongoose.Schema({
@@ -107,6 +161,7 @@ const referenceSchema = new mongoose.Schema({
     loads:[]
 
   });
+
 const ClientModel = mongoose.model('Client', clientSchema); // Use a different variable name here
 const CoffeeSchema = mongoose.model('CoffeeSchema', coffeeSchema); // Use a different variable name here
 
