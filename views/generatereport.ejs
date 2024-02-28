@@ -466,10 +466,25 @@
           alert('You cant add more bill than original End Product  quantity')
             return; // Skip the iteration
         }else{
-           bill.push(billData);
-  
+          function isIdAlreadyExists(newId, billArray) {
+           for (var i = 0; i < billArray.length; i++) {
+        if (billArray[i].id === newId) {
+            return true; // If the id already exists, return true
+        }
+    }
+    return false; // If the id doesn't exist, return false
+}
 
-    displayBill();
+// Example usage:
+
+    if (isIdAlreadyExists(billData.id, bill)) {
+        alert("Bill for "+billData.id+" already exists!");
+    } else {
+      bill.push(billData);
+      displayBill();
+
+    }
+              
 
         }
     // Push the object into the bill array
@@ -658,22 +673,18 @@ function updatetotalbillamount() {
           <div class="col  mb-3">
             <!-- <label for="name" class="form-label">Actual Weight</label> -->
             <div class="my-1 flex-nowrap input-group">
-              <div class="bg-light text-secondary small input-group-text no-pointer-events" href="#" > Weight</div>
+              <div class="bg-light text-secondary small input-group-text no-pointer-events" href="#" >Billable Weight</div>
               <input  type="text" name="actualweightcom" id="actualweightcom" class="form-control" placeholder="Actual Weight">
-              <div class="bg-light fw-bold text-secondary small input-group-text no-pointer-events" href="#" >   <input type="radio" name="commitmentweightype" id="commitmentweightype"></div>
             </div>
            <!-- <label for="image" class="form-label">Ep Weight</label> -->
-            <div class="lex-nowrap input-group">
-              <div class="bg-light text-secondary small input-group-text no-pointer-events" href="#" >Ep wgt.</div>
-              <input  type="text" name="actualepcom" id="actualepcom" class="form-control" placeholder="Ep Weight">
-              <div class="bg-light fw-bold text-secondary small input-group-text no-pointer-events" >   <input type="radio" name="commitmentweightype" id="commitmentweightype"></div>
-            </div>
+          
           </div>
-          <div class="col mb-3">
-            <label for="name" class="form-label">Billable Weight</label>
-            <h2></h2>
-           <label for="image" class="form-label">Billable Ep</label>
-            <h2></h2>
+          <div class="col mb-3"> 
+             <div class="lex-nowrap input-group">
+              <div class="bg-light text-secondary small input-group-text no-pointer-events" href="#" >Billable Ep wgt.</div>
+              <input  type="text" name="actualepcom" id="actualepcom" class="form-control" placeholder="Ep Weight">
+            </div>
+         
                     </div>
           </div>
  
@@ -683,8 +694,8 @@ function updatetotalbillamount() {
             <tr>
               <th>Date</th>
               <th>Commitment</th>
-              <th>Weight</th>
-              <th>Balance Ep</th>
+              <th>Balance Wgt.</th>
+              <th>Ep Balance</th>
               <th>Rate</th>
               <th>Action</th>
             </tr>
@@ -1024,17 +1035,21 @@ document.getElementById('lotnumber').innerText = lotnumber
       const modal = document.getElementById('invoiceModal');
     modal.style.display = 'flex';
     }else{
-      alert('Please choose a party name , Item and ep percentage')
+      alert('Please choose a party name , Item,Refferennce and ep percentage')
     }
     
   }
   function openCommitments() {
+
+
     const ditem = document.getElementById('item').value
     var billtype = document.getElementById('billtype').value
 
     document.getElementById('commitmentparty').innerText = party
     document.getElementById('commitmentitem').innerText = ditem
     document.getElementById('commitment-type').innerText =  billtype+'d Commitments' 
+document.getElementById('actualepcom').value = consignment
+document.getElementById('actualweightcom').value = ((consignment*100)/eppercentage)
 
 var api;
 if (billtype === 'Purchase') {
@@ -1072,8 +1087,13 @@ if (billtype === 'Purchase') {
         }
       },
             { data: 'id' },
-            { data: 'weight' },
             { data: 'balance' },
+            { data: null,
+          render: function (data, type, row) {
+            return parseInt(data.balance*(data.eppercentage/100))
+
+          } },
+
             { data: 'rate' },
             {
           data: null,
@@ -1081,7 +1101,7 @@ if (billtype === 'Purchase') {
             return `<div class="dropdown">
                 <button type="button" class="btn p-0 dropdown-toggle hide-arrow assign-commitment-btn" 
                          data-id="${row.id}"
-                        data-weight="${row.weight}"
+                        data-weight="${parseInt(data.balance*(data.eppercentage/100))}"
                         data-rate="${row.rate}"
                         >
                   <i class="bx bx-plus-circle text-primary"></i>
@@ -1094,15 +1114,15 @@ if (billtype === 'Purchase') {
     });
   }
   $('#commitments-table').on('click', '.assign-commitment-btn', function() {
+
     var id = $(this).data('id');
-    var weight = $(this).data('weight');
-    var rate = $(this).data('rate');
+    var weight = $(this).data('weight');   
+    var rate = $(this).data('rate');   
     $('#newcommitid').val(id)
     $('#newcommitqty').val(weight)
     $('#newcommitrate ').val(rate)
     $('#commitmentmodal').modal('hide');
     $('#newcommittotal').text(rate*weight)
-
 
     // Call the assignCommitment function with the retrieved arguments
 });
@@ -1464,6 +1484,38 @@ closeButton.click();
         $totalCell.text(total.toFixed(2)); // Adjust the precision as needed
     }
 });
+
+
+///// weight commitment calculation ////
+const actualWeightInput = document.getElementById('actualweightcom');
+    const actualEpInput = document.getElementById('actualepcom');
+
+    // Add event listeners to both input elements
+    actualWeightInput.addEventListener('input', updateEpWeight);
+    actualEpInput.addEventListener('input', updateActualWeight);
+
+    function updateEpWeight() {
+      // Get the value of the actual weight input
+      const actualWeightValue = parseFloat(actualWeightInput.value);
+
+      // Perform the calculation
+      const epWeightValue = (actualWeightValue / 100) * eppercentage; // You should define eppercentage
+
+      // Update the ep weight input with the calculated value
+      actualEpInput.value = isNaN(epWeightValue) ? '' : epWeightValue.toFixed(2); // You may adjust the decimal places as needed
+    }
+
+    function updateActualWeight() {
+      // Get the value of the ep weight input
+      const actualEpValue = parseFloat(actualEpInput.value);
+
+      // Perform the calculation in reverse to get the actual weight
+      const actualWeightValue = (actualEpValue / eppercentage) * 100; // You should define eppercentage
+
+      // Update the actual weight input with the calculated value
+      actualWeightInput.value = isNaN(actualWeightValue) ? '' : actualWeightValue.toFixed(2); // You may adjust the decimal places as needed
+    }
+    // /////
  </script>
 
                        <%- include('./include/end.ejs') -%>

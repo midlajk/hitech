@@ -306,11 +306,16 @@ exports.salescommitments = async (req, res) => {
       
       // API endpoint for paginated data
         try {
+          const name = req.query.name;
+
           const draw = parseInt(req.query.draw) || 1; // Get the draw count (used by DataTables)
           const start = parseInt(req.query.start) || 0; // Get the starting index of the data to fetch
           const length = parseInt(req.query.length) || 10; // Get the number of records per page
           // Fetch data from the database with pagination
           const client = await ClientModel.aggregate([
+            {
+              $match: { name: name } // Match documents by name
+          },
             {
                 $unwind: "$coffee"
             },
@@ -404,7 +409,7 @@ exports.salescommitments = async (req, res) => {
         
         
         });
-      /////////////////////////////////////////////////////////////////
+      ///////////////////////////////////////////////////////////////// biills
       exports.salesbills  = (async (req, res) => {
         console.log('sdsd')
         // Assuming you have already imported required modules and set up your Express app
@@ -445,11 +450,11 @@ exports.salescommitments = async (req, res) => {
             ])
             const salesbills = client.length > 0 ? client[0].salesbillSchema : [];
 
-            if (!client || client.length === 0) {
-              // Handle case where no client or coffee data is found
-              res.status(404).json({ error: 'No client or coffee data found' });
-              return;
-          }
+          //   if (!client || client.length === 0) {
+          //     // Handle case where no client or coffee data is found
+          //     res.status(404).json({ error: 'No client or coffee data found' });
+          //     return;
+          // }
           const totalclients = await ClientModel.aggregate([
             {
                 $unwind: "$salesbillSchema"
@@ -507,21 +512,173 @@ exports.salescommitments = async (req, res) => {
               
               ])
               const purchasebills = client.length > 0 ? client[0].purchasebillSchema : [];
-  
-              if (!client || client.length === 0) {
-                // Handle case where no client or coffee data is found
-                res.status(404).json({ error: 'No client or coffee data found' });
-                return;
-            }
+            //   if (!client || client.length === 0) { 
+            //     // Handle case where no client or coffee data is found
+            //     res.status(404).json({ error: 'No client or coffee data found' });
+            //     return;
+            // }
             const totalclients = await ClientModel.aggregate([
+              {
+                $match: { name: name } // Match documents by name
+            },
               {
                   $unwind: "$salesbillSchema"
               }])
+            
             res.json({
                 draw,
                 recordsTotal: totalclients.length,
                 recordsFiltered: totalclients.length,
                 data: purchasebills,
+            });
+            } catch (error) {
+              console.LOG('Error fetching data:', error);
+              res.status(500).json({ error: 'Server error' });
+            }
+          
+          
+          });
+        
+      ///////// storages
+
+      exports.storein  = (async (req, res) => {
+        // Assuming you have already imported required modules and set up your Express app
+        
+        // API endpoint for paginated data
+          try {
+            const name = req.query.name;
+
+            const draw = parseInt(req.query.draw) || 1; // Get the draw count (used by DataTables)
+            const start = parseInt(req.query.start) || 0; // Get the starting index of the data to fetch
+            const length = parseInt(req.query.length) || 10; // Get the number of records per page
+            // Fetch data from the database with pagination
+            const client = await ClientModel.aggregate([
+              
+              {
+                $match: { name: name } // Match documents by name
+            },
+              {
+                  $unwind: "$coffee"
+              },
+              {
+                $match: { "coffee.storage": { $gt: 0 } } // Match documents where coffee.storage is greater than 0
+            },
+              {
+                  $skip: start
+              },
+              {
+                  $limit: start+length
+              },
+              
+                {
+                $group: {
+                  _id: '$_id',
+                  name: { $first: '$name' },
+                  coffee: { $push: '$coffee' } // Push matching salescommitmentsschema to array
+              }}
+              // {
+              //     $project: {
+              //         draw: { $literal: draw }, // Include the draw value in the result
+              //         coffee: "$coffee"
+              //     }
+              // }
+            ])
+            const coffee = client.length > 0 ? client[0].coffee : [];
+
+          //   if (!client || client.length === 0) {
+          //     // Handle case where no client or coffee data is found
+          //     res.status(404).json({ error: 'No client or coffee data found' });
+          //     return;
+          // }
+          const totalclients = await ClientModel.aggregate([
+            {
+              $match: { name: name } // Match documents by name
+          },
+            {
+                $unwind: "$coffee"
+            },
+            {
+              $match: { "coffee.storage": { $gt: 0 } } // Match documents where coffee.storage is greater than 0
+          },])
+
+
+          res.json({
+              draw,
+              recordsTotal: totalclients.length,
+              recordsFiltered: totalclients.length,
+              data: coffee,
+          });
+          } catch (error) {
+            console.log('Error fetching data:', error);
+            res.status(500).json({ error: 'Server error' });
+          }
+        
+        
+        });
+        exports.storeout  = (async (req, res) => {
+          console.log('heheh')
+          // Assuming you have already imported required modules and set up your Express app
+          
+          // API endpoint for paginated data
+            try {
+              const name = req.query.name;
+              const draw = parseInt(req.query.draw) || 1; // Get the draw count (used by DataTables)
+              const start = parseInt(req.query.start) || 0; // Get the starting index of the data to fetch
+              const length = parseInt(req.query.length) || 10; // Get the number of records per page
+              // Fetch data from the database with pagination
+              const client = await ClientModel.aggregate([
+                {
+                  $match: { name: name } // Match documents by name
+              },
+                {
+                    $unwind: "$despatch"
+                },
+                {
+                  $match: { "despatch.storage": { $gt: 0 } } // Match documents where coffee.storage is greater than 0
+              },
+              
+                {
+                    $skip: start
+                },
+                {
+                    $limit: start+length
+                },
+                {
+                  $group: {
+                    _id: '$_id',
+                    name: { $first: '$name' },
+                    despatch: { $push: '$despatch' } // Push matching salescommitmentsschema to array
+                }}
+                // {
+                //     $project: {
+                //         draw: { $literal: draw }, // Include the draw value in the result
+                //         coffee: "$coffee"
+                //     }
+                // }
+              ])
+             
+            //   if (!client || client.length === 0) {
+            //     // Handle case where no client or coffee data is found
+            //     res.status(404).json({ error: 'No client or coffee data found' });
+            //     return;
+            // }
+            const despatch = client.length > 0 ? client[0].despatch : [];
+
+            const totalclients = await ClientModel.aggregate([
+              {
+                $match: { name: name } // Match documents by name
+            },
+            {
+              $match: { "despatch.storage": { $gt: 0 } } // Match documents where coffee.storage is greater than 0
+          },
+              {
+                  $unwind: "$despatch"
+              }])
+            res.json({
+                draw,
+                recordsTotal: totalclients.length,
+                recordsFiltered: totalclients.length,
+                data: despatch,
             });
             } catch (error) {
               console.error('Error fetching data:', error);
@@ -530,8 +687,79 @@ exports.salescommitments = async (req, res) => {
           
           
           });
+
+
+
+      /////
+      exports.transactions  = (async (req, res) => {
+        console.log('here')
+        // Assuming you have already imported required modules and set up your Express app
         
-      /////////
+        // API endpoint for paginated data
+          try {
+            const name = req.query.name;
+            const draw = parseInt(req.query.draw) || 1; // Get the draw count (used by DataTables)
+            const start = parseInt(req.query.start) || 0; // Get the starting index of the data to fetch
+            const length = parseInt(req.query.length) || 10; // Get the number of records per page
+            // Fetch data from the database with pagination
+            const client = await ClientModel.aggregate([
+              {
+                $match: { name: name } // Match documents by name
+            },
+              {
+                  $unwind: "$transaction"
+              },
+             
+            
+              {
+                  $skip: start
+              },
+              {
+                  $limit: start+length
+              },
+              {
+                $group: {
+                  _id: '$_id',
+                  name: { $first: '$name' },
+                  transaction: { $push: '$transaction' } // Push matching salescommitmentsschema to array
+              }}
+              // {
+              //     $project: {
+              //         draw: { $literal: draw }, // Include the draw value in the result
+              //         coffee: "$coffee"
+              //     }
+              // }
+            ])
+           
+          //   if (!client || client.length === 0) {
+          //     // Handle case where no client or coffee data is found
+          //     res.status(404).json({ error: 'No client or coffee data found' });
+          //     return;
+          // }
+          const transaction = client.length > 0 ? client[0].transaction : [];
+
+          const totalclients = await ClientModel.aggregate([
+            {
+              $match: { name: name } // Match documents by name
+          },
+          
+            {
+                $unwind: "$transaction"
+            }])
+          res.json({
+              draw,
+              recordsTotal: totalclients.length,
+              recordsFiltered: totalclients.length,
+              data: transaction,
+          });
+          } catch (error) {
+            console.error('Error fetching data:', error);
+            res.status(500).json({ error: 'Server error' });
+          }
+        
+        
+        });
+      /////
     exports.individualarrivals  = (async (req, res) => {
       // Assuming you have already imported required modules and set up your Express app
       

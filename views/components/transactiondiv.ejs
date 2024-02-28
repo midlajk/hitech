@@ -1,18 +1,51 @@
 <div class="table-responsive text-nowrap p-4">
-  <h3>Despathes</h3>
-  <a class="btn btn-success text-white" href="#" onclick="addpurchasecommitmentModal()">Add New</a>
-  <table class="table" id="despatchtable">
+  <h3>Transactions</h3>
+  <table class="table" style="width: 100%;">
+    <tr>
+      <th>Date</th>
+      <th>Medium</th>
+      <th>Paid</th>
+      <th>Recieved</th>
+      <th>Action</th>
+
+    </tr>
+    <tr>
+
+      <td>
+        <input type="date" id="transactiondate" class="form-control">
+      </td>
+      <td>
+        <select name="transactionmedium" id="transactionmedium" class="form-control">
+          <option value="bank">BANK</option>
+          <option value="cash">CASH</option>
+          <option value="tds">TDS</option>
+
+        </select>
+
+      </td>
+      <td>
+        <input type="number" id="transactionpaid" class="form-control">
+      </td>
+      <td>
+        <input type="number" id="transactionrecieved" class="form-control">
+      </td>
+      <td>
+        <a class="btn btn-success text-white" href="#" id="submitTransaction">Submit</a>
+
+      </td>
+    </tr>
+
+  </table>
+  <table class="table" id="transactionTable" style="width: 100%;">
     <thead>
       <tr>
         <th>Date</th>
-        <th>ID</th>
-        <th>Reference</th>     
-        <th>Bags</th>
-        <th>Weight</th>
-        <th>Ep %</th>
-        <th>EP</th>
-        <th>EP Consignment</th>
-   
+        <th>Refference</th>
+        <th>Recievable</th>
+        <th>Payable</th>
+        <th>Medium</th>
+        <th>Recieved</th>
+        <th>Paid</th>
         <th>Action</th>
 
       </tr>
@@ -101,16 +134,16 @@
 <!-- Your existing HTML code -->
 
 <script>
-  window.individualdespatch = function () {
+  window.individualtransactions = function () {
      
     // var geturl = routeName == 'featured' ? 'featuredpropertieslist' : 'propertieslist'  // Assuming you're passing this variable from EJS
     // var buttonname = routeName == 'featured' ? 'Remove From Featured' : 'Add To Featured'  // Assuming you're passing this variable from EJS
 
-    dpTable = $('#despatchtable').DataTable({
+    transactionTable = $('#transactionTable').DataTable({
       processing: true,
       serverSide: true,
       ajax: {
-        url: 'http://localhost:3000/individualdespatch', // Replace with your API endpoint
+        url: 'http://localhost:3000/alltransactions', // Replace with your API endpoint
         dataSrc: 'data', // Key that holds the array of data in the API response
         data: function (d) {
              d.name = name; // Add the 'name' parameter to the data object
@@ -125,13 +158,13 @@
           // Format the date using moment.js
           return moment(data).format('DD/MM/YYYY');
         }
-      },{ data: 'lotnumber' },
-        { data: 'item' }, 
-        { data: 'bags' },
-        { data: 'netWeight' },
-        { data: 'eppercentage' },
-        { data: 'netepweight' },
-        { data: 'storage' },
+      }, 
+        { data: 'refference' },
+        { data: 'revievable' },
+        { data: 'payable' },
+        { data: 'medium' },
+        { data: 'recieved' },
+        { data: 'paid' },
        
         {
           data: null,
@@ -202,5 +235,35 @@
   }
 
 
+  $('#submitTransaction').click(function() {
+  var data = {
+    name:name,
+    date: $('#transactiondate').val(),
+    medium: $('#transactionmedium').val(),
+    paid: $('#transactionpaid').val(),
+    recieved: $('#transactionrecieved').val()
+    // Add other fields as needed
+  };
 
+  // Send data to the server
+  $.ajax({
+    url: 'http://localhost:3000/saveTransaction',
+    type: 'POST',
+    contentType: 'application/json',
+    data: JSON.stringify(data),
+    success: function(response) {
+      // Update DataTable on success
+      transactionTable.ajax.reload();
+      // Optionally, clear the form fields
+      $('#transactiondate').val('');
+      $('#transactionmedium').val('');
+      $('#transactionpaid').val('');
+      $('#transactionrecieved').val('');
+    },
+    error: function(xhr, status, error) {
+      console.error('Error:', error);
+      // Handle error
+    }
+  });
+});
 </script>

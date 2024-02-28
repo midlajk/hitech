@@ -15,5 +15,8 @@ router.get('/getrefferance', adminpostapis.getrefference);
 router.get('/getTransportAgent', adminpostapis.getTransportAgent);
 router.get('/salesbills', adminpostapis.salesbills);
 router.get('/purchasebills', adminpostapis.purchasebills);
+router.get('/salesstorages',adminpostapis.storeout);
+router.get('/purchasestorages', adminpostapis.storein);
+router.get('/alltransactions', adminpostapis.transactions);
 
 module.exports = router;

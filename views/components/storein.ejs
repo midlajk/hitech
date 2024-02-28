@@ -1,18 +1,16 @@
 <div class="table-responsive text-nowrap p-4">
-  <h3>Despathes</h3>
+  <h3>Store-In</h3>
   <a class="btn btn-success text-white" href="#" onclick="addpurchasecommitmentModal()">Add New</a>
-  <table class="table" id="despatchtable">
+  <table class="table" id="storeIntable">
     <thead>
       <tr>
         <th>Date</th>
-        <th>ID</th>
-        <th>Reference</th>     
-        <th>Bags</th>
-        <th>Weight</th>
-        <th>Ep %</th>
-        <th>EP</th>
-        <th>EP Consignment</th>
-   
+        <th>Item</th>
+        <th>LotNumber</th>
+        <th>Net Weight</th>
+        <th>Net EP %</th>
+        <th>Storage Wgt.</th>
+        <th>Storage EP</th>
         <th>Action</th>
 
       </tr>
@@ -101,16 +99,16 @@
 <!-- Your existing HTML code -->
 
 <script>
-  window.individualdespatch = function () {
+  window.individualstorein = function () {
      
     // var geturl = routeName == 'featured' ? 'featuredpropertieslist' : 'propertieslist'  // Assuming you're passing this variable from EJS
     // var buttonname = routeName == 'featured' ? 'Remove From Featured' : 'Add To Featured'  // Assuming you're passing this variable from EJS
 
-    dpTable = $('#despatchtable').DataTable({
+    storeIntable = $('#storeIntable').DataTable({
       processing: true,
       serverSide: true,
       ajax: {
-        url: 'http://localhost:3000/individualdespatch', // Replace with your API endpoint
+        url: 'http://localhost:3000/purchasestorages', // Replace with your API endpoint
         dataSrc: 'data', // Key that holds the array of data in the API response
         data: function (d) {
              d.name = name; // Add the 'name' parameter to the data object
@@ -125,14 +123,19 @@
           // Format the date using moment.js
           return moment(data).format('DD/MM/YYYY');
         }
-      },{ data: 'lotnumber' },
-        { data: 'item' }, 
-        { data: 'bags' },
+      }, 
+        { data: 'item' },
+        { data: 'lotnumber' },
         { data: 'netWeight' },
         { data: 'eppercentage' },
-        { data: 'netepweight' },
         { data: 'storage' },
-       
+        { data: null,
+          render: function (data, type, row) {
+            return parseInt((data.storage/100)*data.eppercentage)
+
+          } },
+
+
         {
           data: null,
           render: function (data, type, row) {
@@ -142,7 +145,7 @@
                 </button>
                 <div class="dropdown-menu">
                   <a class="dropdown-item featured-button" href="javascript:void(0);"><i class="bx bx-star me-1"></i>delete</a>
-                  <a class="dropdown-item" href="/backend/editproperties?id=${row._id}"><i class="bx bx-edit me-1"></i> Edit /View </a>
+                  <a class="dropdown-item"><i class="bx bx-edit me-1"></i> Edit /View </a>
                   <a class="dropdown-item delete-btn" href="javascript:void(0);"><i class="bx bx-trash me-1"></i> Delete</a>
                 </div>
               </div>`;
@@ -152,41 +155,7 @@
     });
 
     // Delete Button Click Event
-    function deleteData(id) {
-      $.ajax({
-        url: `https://www.safehomes.ae/backend/deleteproperty/${id}`,
-        type: 'DELETE',
-        success: function (response) {
-          dataTable.ajax.reload();
-        },
-        error: function (error) {
-          console.error('Error deleting data:', error);
-        },
-      });
-    }
-
-    function toggleFeatured(id, isFeatured) {
-      var formDataObj = { id: id, status: isFeatured ? 'notfeatured' : 'featured' };
-
-      $.ajax({
-        url: `https://www.safehomes.ae/backend/addfeatured`,
-        type: 'POST',
-        data: JSON.stringify(formDataObj),
-        contentType: 'application/json',
-        success: function (response) {
-          dataTable.ajax.reload();
-        },
-        error: function (error) {
-          console.error('Error updating data:', error);
-        },
-      });
-    }
-
-    $('#example').on('click', '.delete-btn', function () {
-      var data = dataTable.row($(this).closest('tr')).data();
-      var id = data._id;
-      deleteData(id);
-    });
+  
 
     // $('#example').on('click', '.featured-button', function () {
     //   var data = dataTable.row($(this).closest('tr')).data();

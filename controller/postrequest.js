@@ -55,10 +55,12 @@ exports.generatepurchasereport = async (req, res) => {
           // Push the new sales bill document to the client's salesbillSchema array
           existingClient.purchasebillSchema.push({
             date: bill.date,
+            item: req.body.item,
             invoice: bill.billid,
             uniqueid: bill.uniqueid,
             commitment: bill.id,
             lotnumber: bill.lot,
+            weight:parseInt((req.body.quantity*100)/req.body.eppercentage),
             qty: bill.quantity,
             amount: bill.rate,
             subtotal: bill.total,
@@ -95,7 +97,6 @@ exports.generatesalesreport = async (req, res) => {
     const existingClient = await ClientModel.findOne({ name: req.body.billTo });
 
     if (existingClient) {
-      console.log(req.body.netepweight - req.body.billedquantity)
       // If the client exists, update the coffee array
       existingClient.despatch.push({
         date: req.body.dateOfIssue,
@@ -136,10 +137,12 @@ exports.generatesalesreport = async (req, res) => {
           // Push the new sales bill document to the client's salesbillSchema array
           existingClient.salesbillSchema.push({
             date: bill.date,
+            item: req.body.item,
             invoice: bill.billid,
             uniqueid: bill.uniqueid,
             commitment: bill.id,
             lotnumber: bill.lot,
+            weight:parseInt((req.body.quantity*100)/req.body.eppercentage),
             qty: bill.quantity,
             amount: bill.rate,
             subtotal: bill.total,
@@ -341,3 +344,34 @@ exports.addtransportagent = async (req, res) => {
       res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
   };
+
+  ////Transactions //////
+  exports.addTransactions = async (req, res) => {
+
+    try {
+      console.log(req.body.name)
+      const client = await ClientModel.findOne({ name: req.body.name });
+
+      if (!client) {
+          return res.status(404).json({ error: 'Client not found' });
+      }
+
+
+      client.transaction.push({
+        date:req.body.date,
+        refference:req.body.refference||'Transaction',
+        revievable:req.body.revievable||0,
+        payable:req.body.payable||0,
+        medium:req.body.medium,
+        recieved:req.body.recieved||0,
+        paid:req.body.paid||0
+      });
+      await client.save();
+   
+      // Save the updated client to the database
+      res.status(201).json({ message: 'Transaction saved successfully' });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+  }

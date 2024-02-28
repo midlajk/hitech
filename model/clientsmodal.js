@@ -100,11 +100,14 @@ const purchasebillSchema = new Schema({
   // Define fields for the bill schema
   // Example fields:
   date: Date,
-  invoise:String,
+  item: String,
+  invoice:String,
   uniqueid:String,
   commitment:String,
   lotnumber:String,
   qty:Number,
+  weight:Number,
+
   amount: Number,
   subtotal:Number,
   sgst:Number,
@@ -118,10 +121,12 @@ const salesbillSchema = new Schema({
   // Define fields for the bill schema
   // Example fields:
   date: Date,
+  item: String,
   invoice:String,
   uniqueid:String,
   commitment:String,
   lotnumber:String,
+  weight:Number,
   qty:Number,
   amount: Number,
   subtotal:Number,
@@ -132,17 +137,35 @@ const salesbillSchema = new Schema({
   tds:Number
   // Add other fields as needed
 });
+const Transaction = new Schema({
+ 
+  date: Date,
+  refference: String,
+  revievable:Number,
+  payable:Number,
+  medium:String,
+  id:String,
+  recieved:Number,
+  paid:Number,
+
+  // Add other fields as needed
+});
 const clientSchema = new Schema({
     name: String,
     gst: String,
     address: String,
     phone: String,
+    recievable: Number,
+    payable: Number,
+    paid:Number,
+    recieved:Number,
     coffee: [coffeeSchema],
     purchasecommitments:[purchasecommitmentsschema],
     salescommitmentsschema:[salescommitmentsschema],
     despatch:[despatch],
     purchasebillSchema:[purchasebillSchema],
-    salesbillSchema:[salesbillSchema]
+    salesbillSchema:[salesbillSchema],
+    transaction:[Transaction]
 });
 
 const referenceSchema = new mongoose.Schema({

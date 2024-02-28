@@ -1,10 +1,11 @@
 <div class="table-responsive text-nowrap p-4">
-  <h3>Purchase commitments</h3>
+  <h3>Purchase Bills</h3>
   <a class="btn btn-success text-white"   >Add New</a>
   <table class="table" id="purchasebilltable">
     <thead>
       <tr>
         <th>Date</th>
+        <th>Bill no.</th>
         <th>Item</th>
         <th>LotNumber</th>
         <th>Commitment</th>
@@ -116,13 +117,13 @@
           return moment(data).format('DD/MM/YYYY');
         }
       },
-      { data: 'total' },
-        { data: 'total' },
-        { data: 'total' },
-        { data: 'total' },
-        { data: 'total' },
-        { data: 'total' },
-        { data: 'total' },
+      { data: 'invoice' },
+        { data: 'item' },
+        { data: 'lotnumber' },
+        { data: 'commitment' },
+        { data: 'weight' },
+        { data: 'qty' },
+        { data: 'amount' },
         { data: 'total' },
         {
           data: null,

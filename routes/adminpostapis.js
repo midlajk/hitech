@@ -7,7 +7,6 @@ const adminpostapis = require('../controller/postrequest');
 router.post('/submit-bill', (req, res, next) => {
     // Check the value of req.body.billtype
     console.log(req.body)
-    const billType = req.body.billtype;
   
     if (billType === 'Sales') {
       // If billType is 'sales', route to generatesalesreport
@@ -23,6 +22,7 @@ router.post('/addsalecommitment', adminpostapis.addsalecommitment);
 router.post('/addreference', adminpostapis.addrefference);
 router.post('/addproducts', adminpostapis.addproducts);
 router.post('/addtransportagent', adminpostapis.addtransportagent);
+router.post('/saveTransaction', adminpostapis.addTransactions);
 
 
 module.exports = router;
