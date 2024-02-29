@@ -12,10 +12,10 @@
     <tr>
 
       <td>
-        <input type="date" id="transactiondate" class="form-control">
+        <input type="date" id="transactiondate" class="form-control" autofocus>
       </td>
       <td>
-        <select name="transactionmedium" id="transactionmedium" class="form-control">
+        <select name="transactionmedium" id="transactionmedium"  class="form-control">
           <option value="bank">BANK</option>
           <option value="cash">CASH</option>
           <option value="tds">TDS</option>
@@ -57,77 +57,8 @@
 
 </div>
 
-<div id="addpurchasecommitment" class="modal"
-  style="display: none; justify-content: center; align-items: center; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5);">
-  <div class="modal-content"
-    style="background-color: white; padding: 20px; border-radius: 5px; width: 50%;  max-width: 500px; position: relative;">
-    <div class="modal-header">
-      <h5 class="modal-title" id="modalCenterTitle">Add New Commitments</h5>
-
-    </div>
-    <div class="modal-body">
-      <div class="row">
-        <div class="col mb-3">
-          <label for="date" class="form-label">Date</label>
-          <input type="date" id="pcdate" name="pcdate" class="form-control" placeholder="Enter Address">
-
-        </div>
-        <div class="col mb-3">
-          <label for="name" class="form-label">Item</label>
-          <input type="text" id="pcitem" name="pcitem" class="form-control" placeholder="Enter Address">
-
-        </div>
-
-      </div>
-
-      <div class="row">
-        <div class="col mb-3">
-          <label for="image" class="form-label">Reference</label>
-          <input type="text" id="pcreference" name="pcreference" class="form-control" placeholder="Enter Address">
-        </div>
-        <div class="col mb-3">
-          <label for="description" class="form-label">Weight</label>
-          <input type="text" id="pcweight" name="pcweight" class="form-control" placeholder="Enter Phone">
-        </div>
-
-      </div>
-      <div class="row">
-        <div class="col mb-3">
-          <label for="highlighted" class="form-label">Expected EP %</label>
-          <input type="text" id="pcep" name="pcep" class="form-control" placeholder="Enter GSTIN">
-
-        </div>
-        <div class="col mb-3">
-          <label for="highlighted" class="form-label">Rate</label>
-          <input type="text" id="pcrate" name="pcrate" class="form-control" placeholder="Enter GSTIN">
-
-        </div>
-      </div>
-
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-outline-secondary" onclick="closepurchasecommitmentModal()"
-        data-bs-dismiss="modal">
-        Close
-      </button>
-      <button onclick="submitpurchasecommitment()" id="submitbutton" class="btn btn-primary">Add Party</button>
-    </div>
-  </div>
-</div>
-<script>
-  function addpurchasecommitmentModal() {
-    const modal = document.getElementById('addpurchasecommitment');
-    modal.style.display = 'flex';
-  }
-
-  // Function to close the modal
-  function closepurchasecommitmentModal() {
-    const modal = document.getElementById('addpurchasecommitment');
-    modal.style.display = 'none';
-  }
 
 
-</script>
 <!-- Include Axios library (if not already included) -->
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
@@ -135,7 +66,9 @@
 
 <script>
   window.individualtransactions = function () {
-     
+
+
+     document.getElementById('transactiondate').focus()
     // var geturl = routeName == 'featured' ? 'featuredpropertieslist' : 'propertieslist'  // Assuming you're passing this variable from EJS
     // var buttonname = routeName == 'featured' ? 'Remove From Featured' : 'Add To Featured'  // Assuming you're passing this variable from EJS
 
@@ -256,7 +189,6 @@
       transactionTable.ajax.reload();
       // Optionally, clear the form fields
       $('#transactiondate').val('');
-      $('#transactionmedium').val('');
       $('#transactionpaid').val('');
       $('#transactionrecieved').val('');
     },

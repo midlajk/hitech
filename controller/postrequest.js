@@ -46,9 +46,13 @@ exports.generatepurchasereport = async (req, res) => {
         netepweight:req.body.netepweight,
         netWeight:req.body.netWeight,
         eppercentage:req.body.eppercentage,
-        storage:req.body.netepweight - ((req.body.billedquantity*100)/req.body.eppercentage)
+        storage:req.body.netepweight - req.body.billedquantity
 
       });
+      const storeout = (existingClient.storeout||0)+0
+      const storein = (existingClient.storein||0) + (req.body.netepweight - req.body.billedquantity)
+      existingClient.storeout = storeout;
+          existingClient.storein = storein;
       if(req.body.bill.length>0){
         for (const bill of req.body.bill) {
 
@@ -60,7 +64,7 @@ exports.generatepurchasereport = async (req, res) => {
             uniqueid: bill.uniqueid,
             commitment: bill.id,
             lotnumber: bill.lot,
-            weight:parseInt((req.body.quantity*100)/req.body.eppercentage),
+            weight:parseInt((bill.quantity*100)/req.body.eppercentage),
             qty: bill.quantity,
             amount: bill.rate,
             subtotal: bill.total,
@@ -70,6 +74,31 @@ exports.generatepurchasereport = async (req, res) => {
             total: bill.total,
             tds: bill.tds
           });
+          const payable = (existingClient.payable||0) + bill.total
+          const recievable = (existingClient.recievable||0) + 0
+          const paid = (existingClient.paid||0) + payable>5000000?parseInt(bill.total*0.1/100):0
+          const recieved = (existingClient.recieved||0) + 0
+
+          existingClient.payable = payable;
+          existingClient.recievable = recievable;
+          existingClient.paid = paid;
+          existingClient.recieved = recieved;
+          existingClient.transaction.push({
+ 
+            date: bill.date,
+            refference: req.body.item + ' ' + bill.quantity + '*' + bill.rate,
+            revievable:0,
+            payable:bill.total,
+            medium:payable>5000000?'TDS':'Bill',
+            id:bill.uniqueid,
+            recieved:0,
+            paid:payable>5000000?parseInt(bill.total*0.1/100):0,
+          
+            // Add other fields as needed
+          });
+
+          
+
           const purchasecommitment = existingClient.purchasecommitments.find(commitment => commitment.id === bill.id);
 
           if (purchasecommitment) {
@@ -128,9 +157,12 @@ exports.generatesalesreport = async (req, res) => {
         netepweight:req.body.netepweight,
         netWeight:req.body.netWeight,
         eppercentage:req.body.eppercentage,
-        storage:req.body.netepweight - ((req.body.billedquantity*100)/req.body.eppercentage)
+        storage:req.body.netepweight - req.body.billedquantity
       });
-      
+      const storeout =(existingClient.storein||0) + (req.body.netepweight - req.body.billedquantity);
+      const storein =  (existingClient.storeout||0)+0 ;
+      existingClient.storeout = storeout;
+          existingClient.storein = storein;
       if(req.body.bill.length>0){
         for (const bill of req.body.bill) {
 
@@ -151,8 +183,32 @@ exports.generatesalesreport = async (req, res) => {
             igst: bill.igst,
             total: bill.total,
             tds: bill.tds
+          });   
+           const salesCommitment = existingClient.salescommitmentsschema.find(commitment => commitment.id === bill.id);
+          const payable = (existingClient.payable||0) + 0
+          const recievable =( existingClient.recievable||0) + bill.total
+          const paid = (existingClient.paid||0) + 0
+          const recieved = (existingClient.recieved||0) + recievable>5000000?parseInt(bill.total*0.1/100):0
+
+          existingClient.payable = payable;
+          existingClient.recievable = recievable;
+          existingClient.paid = paid;
+          existingClient.recieved = recieved;
+          existingClient.transaction.push({
+ 
+            date: bill.date,
+            refference: req.body.item + ' ' + bill.quantity + '*' + bill.rate,
+            revievable:bill.total,
+            payable:0,
+            medium:recievable>5000000?'TDS':'Bill',
+            id:bill.uniqueid,
+            recieved:recievable>5000000?parseInt(bill.total*0.1/100):0,
+            paid:0,
+          
+            // Add other fields as needed
           });
-          const salesCommitment = existingClient.salescommitmentsschema.find(commitment => commitment.id === bill.id);
+
+      
 
           if (salesCommitment) {
             // Calculate the new balance by subtracting the delivered quantity from the total quantity
@@ -195,6 +251,7 @@ exports.addseller = async (req, res) => {
   }
 }
 exports.addpurchasecommitment = async (req, res) => {
+  console.log(req.body)
   try {
 
       // Find the client by name
@@ -210,22 +267,22 @@ exports.addpurchasecommitment = async (req, res) => {
 
  const formattedDate = `${month}${day}`;
  
- const trimmedItem = req.body.pcitem.trim().split(' ')[0]; // Get the first part of the item by trimming and splitting
+ const trimmedItem = req.body.pccomitem.trim().split(' ')[0]; // Get the first part of the item by trimming and splitting
  
  const uniqueId = `${formattedDate}-${trimmedItem}-${number}-${req.body.name}`;
   // Generate a unique ID using uuidv4 and include the reference
       // Add the new purchase commitment to the purchasecommitments array
       client.purchasecommitments.push({
-        item:req.body.pcitem,
-        date:req.body.pcdate,
+        item:req.body.pccomitem,
+        date:req.body.pccomdate,
         referance:req.body.reference,
         id:uniqueId,
-        weight:req.body.pcweight,
-        eppercentage:req.body.pcep,
-        balance:req.body.pcweight,
-        rate:req.body.pcrate,
-        additional:req.body.scAdditional,
-        info:req.body.scInfo
+        weight:req.body.pccomweight,
+        eppercentage:req.body.pccomep,
+        balance:req.body.pccomweight,
+        rate:req.body.pccomrate,
+        additional:req.body.pccomAdditional,
+        info:req.body.pccomInfo
       });
    
       // Save the updated client to the database
@@ -266,8 +323,8 @@ exports.addsalecommitment = async (req, res) => {
         eppercentage:req.body.scep,
         balance:req.body.scweight,
         rate:req.body.scrate,
-        additional:req.body.pcAdditional,
-        info:req.body.pcInfo
+        additional:req.body.scAdditional,
+        info:req.body.scInfo
       });
    
       // Save the updated client to the database
@@ -366,6 +423,12 @@ exports.addtransportagent = async (req, res) => {
         recieved:req.body.recieved||0,
         paid:req.body.paid||0
       });
+ 
+      const paid = (client.paid||0) + req.body.paid||0
+      const recieved = (client.recieved||0) + req.body.recieved||0
+
+      client.paid = paid;
+      client.recieved = recieved;
       await client.save();
    
       // Save the updated client to the database

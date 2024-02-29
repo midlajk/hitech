@@ -15,6 +15,7 @@ var adminapis = require('./routes/adminapis');
 var getapis = require('./routes/getapis');
 var getdetails = require('./routes/getdetailedview');
 var deleteapis = require('./routes/deleteapis');
+var getsumapis = require('./routes/getsumapi');
 
 /////front end //
 
@@ -60,6 +61,7 @@ app.use('/', adminapis);
 app.use('/', getapis);
 app.use('/',getdetails)
 app.use('/',deleteapis)
+app.use('/',getsumapis)
 
 /////Front end routes ///
 

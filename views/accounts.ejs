@@ -13,10 +13,10 @@
                     <div class="d-flex justify-content-between flex-sm-row flex-column gap-1">
                       <div class="d-flex flex-sm-column flex-row align-items-start justify-content-between">
                         <div class="card-title">
-                            <span class="badge bg-label-warning rounded-pill">Arrived 2021</span> <br>
-                            <span class="badge bg-label-info rounded-pill">Storage : 2300 kg </span><br>
-                            <span class="badge bg-label-danger rounded-pill">committed : 1000 kg </span><br>
-                            <span class="badge bg-label-success rounded-pill">Value : 100000S </span>
+                            <span class="">Arrived EP <span id="arrivald"></span> </span> <br>
+                            <span class="badge bg-label-info rounded-pill">Billed Ep: <span id="billedarrival"></span></span><br>
+                            <span class="badge bg-label-danger rounded-pill">Ep Avg. Rate : <span id="averageaep"></span></span><br>
+                            <span class="badge bg-label-primary rounded-pill">Pending Payments : <span id="pendingapayment"></span> </span>
 
                           
                         </div>
@@ -32,10 +32,10 @@
                     <div class="d-flex justify-content-between flex-sm-row flex-column gap-2">
                       <div class="d-flex flex-sm-column flex-row align-items-start justify-content-between">
                         <div class="card-title">
-                          <span class="badge bg-label-warning rounded-pill">Dispatched 2021</span> <br>
-                          <span class="badge bg-label-info rounded-pill">Storage : 2300 kg </span><br>
-                          <span class="badge bg-label-danger rounded-pill">committed : 1000 kg </span><br>
-                          <span class="badge bg-label-success rounded-pill">Value : 100000S </span>
+                          <span class="rounded-pill">Despatched <span id="salessum"></span></span> <br>
+                          <span class="badge bg-label-info rounded-pill">Billed : <span id="billedsales"></span> </span><br>
+                          <span class="badge bg-label-danger rounded-pill">Avg Rate : <span id="averagesales"></span> </span><br>
+                          <span class="badge bg-label-primary rounded-pill">Pending Payment : <span id="pendingrecievable"></span> </span>
                         </div>
                      
                       </div>
@@ -50,10 +50,10 @@
                       <div class="d-flex flex-sm-column flex-row align-items-start justify-content-between">
                         <div class="card-title">
                        
-                          <span class="badge bg-label-warning rounded-pill">Paid 2021</span> <br>
-                          <span class="badge bg-label-info rounded-pill">Remaining : 2300 kg </span><br>
-                          <span class="badge bg-label-danger rounded-pill">Recieved : 1000 kg </span><br>
-                          <span class="badge bg-label-success rounded-pill">Remaining : 100000S </span>
+                          <span class="badge bg-label-primary rounded-pill">Pending Purchase : 2021</span> <br>
+                          <span class="badge bg-label-danger rounded-pill">Avg Rate : 1000 kg </span><br>
+                          <span class="badge bg-label-info rounded-pill">Pending Sales : 2300 kg </span><br>   
+                          <span class="badge bg-label-danger rounded-pill">Avg. Rate : 100000S </span>
                         </div>
                        
                       </div>
@@ -63,11 +63,8 @@
               </div>
             </div>
             <div class="row justify-content-between"> 
-              <div class="col-6" id="heading"><h3>Sellers Accounts</h3> </div>
-              <div class="col-3">  <button id="tooglebutton" class="btn btn-secondary text-white"  onclick="showBuyers()">Buyers Accounts</button>
-
-</div>
-             
+              <div class="col-6" id="heading"><h3>Accounts</h3> </div>
+          
             </div>
             
 
@@ -76,10 +73,7 @@
               <%- include("./components/sellers") -%>
               <!-- Content will be loaded here based on userType -->
             </div>
-            <div id="buyerscontainer" class="d-none">
-              <%- include("./components/buyers") -%>
-              <!-- Content will be loaded here based on userType -->
-            </div>
+        
 <!--/ Basic Bootstrap Table -->
 
 </div>
@@ -106,32 +100,45 @@
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 <script>
+  $(document).ready(function() {
+        // Show loading indicator
+      
+        // Send GET request to fetch data using Axios
+        axios.get('http://localhost:3000/getpurchasesum')
+            .then(function(response) {
+              console.log(response)
+                var data = response.data.data;
+                // Populate fields with fetched data
+                console.log(data)
+                $('#arrivald').text(data.totalNetepweight);
+                $('#billedarrival').text(data.totalQty);
+                $('#averageaep').text(parseFloat(data.totalAmount/data.totalQty));
+                $('#pendingapayment').text((data.totalPayable - data.totalPaid));
 
-    var button = document.getElementById('tooglebutton');
-    var heading = document.getElementById('heading');
-    const sellerscontainer = $('#sellerscontainer');
-    const buyerscontainer = $('#buyerscontainer');
+                // Hide loading indicator
+            })
+            .catch(function(error) {
+                console.error('Error fetching data:', error);
+                // Hide loading indicator in case of error
+            });
 
-    function showBuyers() {
-      button.innerHTML = 'Show Sellers';
-      button.onclick = showSellers;
-      heading.innerHTML = '<h3>Buyers Accounts</h3>';
-      sellerscontainer.addClass('d-none')
-      buyerscontainer.removeClass('d-none')
+            axios.get('http://localhost:3000/getsalessum')
+            .then(function(response) {
+              console.log(response)
+                var data = response.data.data;
+                // Populate fields with fetched data
+                console.log(data)
+                $('#salessum').text(data.totalNetepweight);
+                $('#billedsales').text(data.totalQty);
+                $('#averagesales').text(parseFloat(data.totalAmount/data.totalQty));
+                $('#pendingrecievable').text((data.totalrevievable - data.totalrecieved));
 
-    }
-
-    function showSellers() {
-      button.innerHTML = 'Show Buyers';
-      button.onclick = showBuyers;
-      heading.innerHTML = '<h3>Sellers Accounts</h3>';
-      sellerscontainer.removeClass('d-none')
-      buyerscontainer.addClass('d-none')
-
-    }
-
-    // Log a message when the document is ready
-    console.log('Document is ready');
-
+                // Hide loading indicator
+            })
+            .catch(function(error) {
+                console.error('Error fetching data:', error);
+                // Hide loading indicator in case of error
+            });
+    });
 </script>
     <%- include('./include/end.ejs') -%>

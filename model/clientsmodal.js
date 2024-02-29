@@ -159,6 +159,8 @@ const clientSchema = new Schema({
     payable: Number,
     paid:Number,
     recieved:Number,
+    storein:Number,
+    storeout:Number,
     coffee: [coffeeSchema],
     purchasecommitments:[purchasecommitmentsschema],
     salescommitmentsschema:[salescommitmentsschema],

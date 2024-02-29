@@ -501,7 +501,7 @@ exports.salescommitments = async (req, res) => {
                 $group: {
                   _id: '$_id',
                   name: { $first: '$name' },
-                  salesbillSchema: { $push: '$purchasebillSchema' } // Push matching salescommitmentsschema to array
+                  purchasebillSchema: { $push: '$purchasebillSchema' } // Push matching salescommitmentsschema to array
               }}
                 // {
                 //     $project: {
@@ -511,12 +511,9 @@ exports.salescommitments = async (req, res) => {
                 // }
               
               ])
+              console.log(client)
               const purchasebills = client.length > 0 ? client[0].purchasebillSchema : [];
-            //   if (!client || client.length === 0) { 
-            //     // Handle case where no client or coffee data is found
-            //     res.status(404).json({ error: 'No client or coffee data found' });
-            //     return;
-            // }
+         console.log(purchasebills)
             const totalclients = await ClientModel.aggregate([
               {
                 $match: { name: name } // Match documents by name

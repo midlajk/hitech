@@ -6,9 +6,8 @@ const adminpostapis = require('../controller/postrequest');
 
 router.post('/submit-bill', (req, res, next) => {
     // Check the value of req.body.billtype
-    console.log(req.body)
   
-    if (billType === 'Sales') {
+    if (req.body.billtype === 'Sales') {
       // If billType is 'sales', route to generatesalesreport
       adminpostapis.generatesalesreport(req, res, next);
     } else {
