@@ -23,7 +23,7 @@ exports.getpurchasesum = async (req, res) => {
             { $unwind: '$coffee' },
             {
                 $match: {
-                    'coffee.item': { $ne: 'husk' }
+                    'coffee.item': { $ne: 'HUSK' }
                 }
             },
             {
@@ -38,7 +38,7 @@ exports.getpurchasesum = async (req, res) => {
             { $unwind: '$purchasebillSchema' },
             {
                 $match: {
-                    'purchasebillSchema.item': { $ne: 'husk' }
+                    'purchasebillSchema.item': { $ne: 'HUSK' }
                 }
             },
             {
@@ -86,7 +86,7 @@ exports.getsalessum = async (req, res) => {
             { $unwind: '$despatch' },
             {
                 $match: {
-                    'despatch.item': { $ne: 'husk' }
+                    'despatch.item': { $ne: 'HUSK' }
                 }
             },
             {
@@ -101,7 +101,67 @@ exports.getsalessum = async (req, res) => {
             { $unwind: '$salesbillSchema' },
             {
                 $match: {
-                    'salesbillSchema.item': { $ne: 'husk' }
+                    'salesbillSchema.item': { $ne: 'HUSK' }
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    totalQty: { $sum: '$salesbillSchema.qty' },
+                    totalAmount: { $sum: '$salesbillSchema.total' }
+                }
+            }
+        ]);
+        res.json({
+            data: {
+                totalNetepweight: result2[0]?.totalNetepweight || 0,
+                totalQty: result3[0]?.totalQty || 0,
+                totalAmount: result3[0]?.totalAmount || 0,
+                totalRevievable: result1[0]?.totalRevievable || 0,
+                totalRecieved: result1[0]?.totalRecieved || 0
+            }
+        });
+    } catch (error) {
+        console.error('Error in aggregation:', error);
+        res.status(500).json({ error: 'Error in aggregation' });
+    }
+};
+exports.getcommitmentsum = async (req, res) => {
+    const startDate = new Date('2024-01-01');
+    const endDate = new Date('2024-01-31');
+
+    try {
+        const result1 = await ClientModel.aggregate([
+            { $unwind: '$purchasecommitments' },
+            {
+                $group: {
+                    _id: null,
+                    totalRevievable: { $sum: '$transaction.balance' },
+                    totalRecieved: { $sum: '$transaction.recieved' }
+                }
+            }
+        ]);
+
+        const result2 = await ClientModel.aggregate([
+            { $unwind: '$despatch' },
+            {
+                $match: {
+                    'despatch.item': { $ne: 'HUSK' }
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    totalNetepweight: { $sum: '$despatch.netepweight' }
+                }
+            }
+        ]);
+
+        const result3 = await ClientModel.aggregate([
+            { $unwind: '$salesbillSchema' },
+            {
+                $match: {
+                    'salesbillSchema.item': { $ne: 'HUSK' }
                 }
             },
             {

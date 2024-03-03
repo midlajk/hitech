@@ -33,6 +33,7 @@ const coffeeSchema = new Schema({
   netWeight:Number,
   eppercentage:Number,
   storage:Number,
+  stat:String
 });
 const despatch = new Schema({
   date: Date,
