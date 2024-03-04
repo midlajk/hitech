@@ -84,7 +84,7 @@ exports.generatepurchasereport = async (req, res) => {
           existingClient.paid = paid;
           existingClient.recieved = recieved;
           existingClient.transaction.push({
- 
+            name:req.body.name,
             date: bill.date,
             refference: req.body.item + ' ' + bill.quantity + '*' + bill.rate,
             revievable:0,
@@ -195,7 +195,7 @@ exports.generatesalesreport = async (req, res) => {
           existingClient.paid = paid;
           existingClient.recieved = recieved;
           existingClient.transaction.push({
- 
+            name:req.body.name,
             date: bill.date,
             refference: req.body.item + ' ' + bill.quantity + '*' + bill.rate,
             revievable:bill.total,
@@ -415,6 +415,7 @@ exports.addtransportagent = async (req, res) => {
 
 
       client.transaction.push({
+        name:req.body.name,
         date:req.body.date,
         refference:req.body.refference||'Transaction',
         revievable:req.body.revievable||0,

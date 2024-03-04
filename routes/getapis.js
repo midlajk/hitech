@@ -18,5 +18,8 @@ router.get('/purchasebills', adminpostapis.purchasebills);
 router.get('/salesstorages',adminpostapis.storeout);
 router.get('/purchasestorages', adminpostapis.storein);
 router.get('/alltransactions', adminpostapis.transactions);
+/////
+router.get('/arrivals', adminpostapis.arrivals);
+router.get('/despatch', adminpostapis.despatch);
 
 module.exports = router;

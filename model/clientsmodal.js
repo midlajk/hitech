@@ -66,6 +66,8 @@ const despatch = new Schema({
   netWeight:Number,
   eppercentage:Number,
   storage:Number,
+  stat:String
+
 });
 
 
@@ -139,7 +141,7 @@ const salesbillSchema = new Schema({
   // Add other fields as needed
 });
 const Transaction = new Schema({
- 
+  name:String,
   date: Date,
   refference: String,
   revievable:Number,

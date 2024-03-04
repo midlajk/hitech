@@ -255,9 +255,9 @@
                                   <span class="bg-light fw-bold text-secondary small input-group-text">Kg</span>
                                 </div>
                                 <label for="">Report Finalized</label>
-                                <input type="radio" name="reportstatus" checked value="finalizedreport">
+                                <input type="radio" id="finalizedreport" name="reportstatus" checked value="finalizedreport">
                                 <label for="">Report Pending</label>
-                                <input type="radio" name="reportstatus" value="pendingreport">
+                                <input type="radio" id="pendingreport" name="reportstatus" value="pendingreport">
 
                               
                                   
@@ -452,7 +452,6 @@
     var referenceselect = document.getElementById('referenceselect').value
     var billid=document.getElementById('billingnumber').value;
     const uniqueid = new Date().getTime().toString();
-    var referenceselect = document.getElementById('referenceselect').value
     var billingdate = document.getElementById('billingdate').value || new Date().toISOString().slice(0, 10);
 
       // Extract data from HTML elements
@@ -470,8 +469,17 @@
         rate: commitRate,
         total: commitTotal
     };
-    if ((consignment-commitQty) < 0) {
-          alert('You cant add more bill than original End Product  quantity')
+
+    var reportstatus =  $("input[type='radio'][name='reportstatus']:checked").val();
+    console.log(reportstatus)
+    if ((consignment-commitQty) < 0 || reportstatus == 'pendingreport') {
+           if(reportstatus=='pendingreport'){
+            alert('You cant make bill before finalizing the report')
+
+           }else{
+                      alert('You cant add more bill than original End Product  quantity')
+
+           }
             return; // Skip the iteration
         }else{
           function isIdAlreadyExists(newId, billArray) {
