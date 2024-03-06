@@ -34,7 +34,9 @@
                         <div class="d-flex flex-row align-items-center col-6">
                         <span class="fw-bold me-2">Refference:&nbsp;</span>
                           <div class="my-1 flex-nowrap input-group">
-                            <select class="form-control" name="referenceselect" id="referenceselect" ></select>
+                            <select class="form-control" name="referenceselect" id="referenceselect" >
+                              <option value="<%=refferance%>" ><%=refferance%></option>
+                            </select>
   
                             <a class="bg-light fw-bold text-secondary small input-group-text" href="#" data-bs-toggle="modal" data-bs-target="#referanceAdd"><i class="menu-icon tf-icons bx bx-user-plus"></i></a>
                           </div>
@@ -613,7 +615,7 @@ function updatetotalbillamount() {
             <input  type="text" id="phone" name="phone" class="form-control" placeholder="Enter Phone">
           </div>
           <div class="col mb-3">
-            <label for="highlighted" class="form-label">GStIN</label>
+            <label for="highlighted" class="form-label">GSTIN</label>
             <input type="text" id="gst" name="gst" class="form-control" placeholder="Enter GSTIN">
  
           </div>
@@ -796,6 +798,12 @@ function updatetotalbillamount() {
             <label for="name" class="form-label">New Item</label>
             <div class="my-1 flex-nowrap input-group">
               <input required type="text" name="productname" id="productname" class="form-control" placeholder="Enter Name">
+              <select name="itemtype" id="itemtype" class="form-control">
+                <option value="Primary">Primary Item</option>
+                <option value="Secondary">Secondary Item</option>
+
+              </select>
+
             </div>   
             <div id="byproducts">
 
@@ -949,10 +957,14 @@ document.getElementById('dateOfIssue').value = formattedDate;
       function addproduct(){
 
 var productname = document.getElementById("productname").value;
+var itemtype = document.getElementById("itemtype").value;
+
 var data = {
 product: productname,
+itemtype:itemtype,
 byproduct : byproducts
 };
+
 if(productname){
 
 // Send a POST request to the server using Axios
@@ -963,7 +975,9 @@ axios.post('http://localhost:3000/addproducts', data)
     // Close the modal on successful response
     if (response.data.success) {
     var closeButton = document.getElementById('closeaddproductmodal');
-
+    document.getElementById("productname").value = ''
+    document.getElementById("byproducts").innerHTML = '';
+    byproduct = []
 // Trigger the click event on the button
 closeButton.click();
     }

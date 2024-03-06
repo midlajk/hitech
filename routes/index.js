@@ -13,7 +13,7 @@ router.get('/dashboard', function(req, res, next) {
   res.render('dashboard',{ route: 'dashboard' });
 });
 router.get('/generatereport', function(req, res, next) {
-  res.render('generatereport',{ route: 'generatereport' });
+  res.render('generatereport',{ route: 'generatereport',refferance:'CROP 23-24' });
 });
 router.get('/accounts', function(req, res, next) {
   res.render('accounts',{ route: 'accounts' });

@@ -362,6 +362,7 @@ exports.addproducts = async (req, res) => {
   try {
     // Create a new reference document based on the request body
     const newproduct = new PoductsSchema({
+      itemtype:req.body.itemtype,
       product: req.body.product,
     byproduct:req.body.byproduct
     });

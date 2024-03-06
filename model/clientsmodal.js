@@ -177,7 +177,11 @@ const referenceSchema = new mongoose.Schema({
     name: String
   });
   const productsSchema = new mongoose.Schema({
+    itemtype:String,
     product: String,
+    stockweight:Number,
+    stockep:Number,
+    stockpercentage:Number,
     byproduct:[]
 
   });
@@ -189,7 +193,16 @@ const referenceSchema = new mongoose.Schema({
     loads:[]
 
   });
+  const variables = new mongoose.Schema({
+    refference: String,
+    pbillid: Number,
+    sbill: Number,
+    creditnoteid: Number,
+    debitnoteid: Number,
+    urdbillid: Number,
+    financialyear: String,
 
+  });
 const ClientModel = mongoose.model('Client', clientSchema); // Use a different variable name here
 const CoffeeSchema = mongoose.model('CoffeeSchema', coffeeSchema); // Use a different variable name here
 
