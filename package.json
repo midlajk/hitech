@@ -21,6 +21,7 @@
     "morgan": "~1.9.1",
     "nanoid": "^3.1.20",
     "nodemon": "^3.0.1",
-    "pdf-creator-node": "^2.3.5"
+    "pdf-creator-node": "^2.3.5",
+    "pdf-master": "^1.1.0"
   }
 }

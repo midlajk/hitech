@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .company-logo {
+            max-width: 150px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+        .company-info {
+            padding-left: 3px; /* Adjust the gap here */
+        }
+    .table-custom {
+        font-size: 16px; /* Adjust font size as needed */
+        width: 100%; /* Set the width to 100% */
+    }
+
+    .table-custom th,
+    .table-custom td {
+        padding: 12px; /* Adjust padding as needed */
+        height: 50px; /* Adjust cell height */
+    }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-1">
+                <!-- Logo -->
+                <img src="logo.png" class="company-logo">
+            </div>
+            <div class="col-md-5">
+                <!-- Company Info -->
+                <div class="company-info">
+                    <h2>Your Company Name</h2>
+                    <p>Your Company Address</p>
+                </div>
+            </div>
+            <div class="col-md-6 text-right">
+                <p>Email: example@example.com</p>
+                <p>Phone: +1234567890</p>
+            </div>
+        </div>
+
+ 
+
+        <!-- Bill Type -->
+<div class="row">
+    <div class="col-md-12 text-center ">
+        <h4  class="border border-success rounded" style="padding: 5px;">Delivery Report</h4>
+    </div>
+</div>
+        <!-- Party Info -->
+        <div class="row mb-1">
+            <div class="col-md-6">
+                <h4>PARTY : Keloth Huller</h4>
+                <h5>ITEM : </h5>
+                <h5>Refference : </h5>
+
+                <!-- Include more address lines as needed -->
+            </div>
+            <div class="col-md-6 text-right">
+                <h6>08/03/2024</h6>
+                <h6>Delivery : </h6>
+                <h6>Vehicle No. : </h6>
+
+                <!-- Include more address lines as needed -->
+            </div>
+        </div>
+
+        <!-- Item List -->
+        <div class="row">
+            <div class="col-md-12" style="height: 400px;">
+                <table class="table table-bordered table-custom" >
+                    <thead>
+                        <tr style="height: 60px;">
+                            <th>G. Weight : </th>
+                            <th>Bags : </th>
+                            <th>Bag Weight : </th>
+                            <th>NET Weight : </th>
+
+                            <!-- Add more headers as needed -->
+                        </tr>
+                           <tr style="height: 60px;">                            
+                            <th>FM (%) : </th>
+                            <th>HUSK / O (%): </th>
+                            <th>WGHT. ADJST. : </th>
+                            <th>FINAL Weight : </th>
+
+                            <!-- Add more headers as needed -->
+                        </tr>
+                    </thead>
+                    <tr style="height: 60px;">
+                            <td>OUTERN</td>
+                            <td>MC </td>
+                            <td>MC DED</td>
+                            <td></td>
+                            <!-- Add more columns for each item -->
+                        </tr>
+                         <tr style="height: 60px;">
+                            <td>BB</td>
+                            <td>IDB </td>
+                            <td colspan="2">OTHER</td>
+                            <!-- Add more columns for each item -->
+                        </tr>
+                        <tr style="height: 60px;">
+                            <td>BB DED. </td>
+                            <td>IDB DED. </td>
+                            <td colspan="2">OTHER DED .</td>
+                            <!-- Add more columns for each item -->
+                        </tr>
+                         <tr style="height: 60px;"> 
+                            <th>EP. ADJST. : </th>                           
+                            <th>EP PERCENTAGE : </th>
+                            <th colspan="2">NET EP WEIGHT: </th>
+
+                            <!-- Add more headers as needed -->
+                        </tr>
+                    {{!-- <tbody>
+                        <tr>
+                            <td>Item 1</td>
+                            <td>10 kg</td>
+                            <td>Bag Type</td>
+                            <!-- Add more columns for each item -->
+                        </tr>
+                        <!-- Add more rows for more items -->
+                        <tr>
+                            <td colspan="3"> <!-- colspan to span all columns -->
+                                <!-- This row is for additional notes or remarks -->
+                                Remarks: Any additional notes or remarks can be mentioned here.
+                            </td>
+                        </tr>
+                    </tbody> --}}
+                </table>
+            </div>
+        </div>
+
+        <!-- Deduction -->
+        <div class="row">
+            <div class="col-md-10">
+                <p>The report has been finalized according to company standards and verified by our expert team.</p>
+                <!-- You can style this area as needed -->
+            </div>
+             <div class="col-md-2">
+                <p>Signature.</p>
+                <!-- You can style this area as needed -->
+            </div>
+        </div>
+    </div>
+</body>
+</html>
