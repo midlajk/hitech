@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const adminpostapis = require('../controller/postrequest');
+const generatereport = require('../controller/generatereport');
 
 /* GET home page. */
 
@@ -9,10 +10,10 @@ router.post('/submit-bill', (req, res, next) => {
   
     if (req.body.billtype === 'Sales') {
       // If billType is 'sales', route to generatesalesreport
-      adminpostapis.generatesalesreport(req, res, next);
+      generatereport.generatesalesreport(req, res, next);
     } else {
       // For any other value or if not specified, route to generatepurchasereport
-      adminpostapis.generatepurchasereport(req, res, next);
+      generatereport.generatepurchasereport(req, res, next);
     }
 });
 router.post('/addseller', adminpostapis.addseller);

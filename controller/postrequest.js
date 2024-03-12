@@ -5,9 +5,11 @@ const ClientModel = mongoose.model('Client')
 const Reference = mongoose.model('Reference')
 const PoductsSchema = mongoose.model('PoductsSchema')
 const Transportagent = mongoose.model('Transportagent')
-
+const fs = require('fs');
+const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 const { nanoid } = require('nanoid');
+const pdfMaster = require("pdf-master");
 
 exports.generatepurchasereport = async (req, res) => {
   console.log(req.body);
@@ -114,10 +116,54 @@ exports.generatepurchasereport = async (req, res) => {
       }
       await existingClient.save();
     }
+    var data = {
+      companyname:'HI TECH COFFEE',
+      party:req.body.billTo ,
+      item:req.body.item, 
+      delivery:req.body.delivery, 
+      date:req.body.dateOfIssue,
+      vehicleno:req.body.lorry,
+      type:'Purchase',
+      bags: req.body.bags,
+      quantity: req.body.quantity,
+      bagweight: parseInt(req.body.bagweight*req.body.bags),
+      netweights:parseInt(req.body.quantity-parseFloat(req.body.bagweight*req.body.bags)),
+      forignobject: req.body.forignobject,
+      weightallowance: req.body.weightallowance,
+      huskpercentage: req.body.huskpercentage,
+      outern: req.body.outern,
+      huskcutting: req.body.huskcutting,
+      moisturepercentage: req.body.moisturepercentage,
+      moisturecutting: req.body.moisturecutting,
+      bbpercentage: req.body.bbpercentage,
+      bbcutting: req.body.bbcutting,
+      berryborepercentage: req.body.berryborepercentage,
+      berryborecutting: req.body.berryborecutting,
+      other: req.body.other,
+      allowance: req.body.allowance,
+      lotnumber:req.body.lotnumber,
+      netepweight:req.body.netepweight,
+      eppercentage:parseFloat(req.body.eppercentage).toFixed(2),
+      refference:req.body.referenceselect,
+      netWeight:req.body.netWeight-req.body.huskcutting,
+
+  }
+  
+  let options = {
+    // displayHeaderFooter: true,
+    format: "A4",
+    margin: { top: "60px", bottom: "100px" },
+    // base: 'file://' + path.resolve('./public') + '/'
+  
+  };
+  
+  let PDF = await pdfMaster.generatePdf("template.hbs", { data }, options);
+
+  const filePath = path.join(__dirname, '..', 'public', 'report.pdf');
+  fs.writeFileSync(filePath, PDF);
 
     res.status(201).json({ message: 'Form submitted successfully' });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ message: 'Error submitting the form' });
   }
 };
@@ -224,7 +270,51 @@ exports.generatesalesreport = async (req, res) => {
 
       await existingClient.save();
     } 
+    var data = {
+      companyname:'HI TECH COFFEE',
+      party:req.body.billTo ,
+      item:req.body.item, 
+      delivery:req.body.delivery, 
+      date:req.body.dateOfIssue,
+      vehicleno:req.body.lorry,
+      type:'Sales',
+      bags: req.body.bags,
+      quantity: req.body.quantity,
+      bagweight: parseInt(req.body.bagweight*req.body.bags),
+      netweights:parseInt(req.body.quantity-parseFloat(req.body.bagweight*req.body.bags)),
+      forignobject: req.body.forignobject,
+      weightallowance: req.body.weightallowance,
+      huskpercentage: req.body.huskpercentage,
+      outern: req.body.outern,
+      huskcutting: req.body.huskcutting,
+      moisturepercentage: req.body.moisturepercentage,
+      moisturecutting: req.body.moisturecutting,
+      bbpercentage: req.body.bbpercentage,
+      bbcutting: req.body.bbcutting,
+      berryborepercentage: req.body.berryborepercentage,
+      berryborecutting: req.body.berryborecutting,
+      other: req.body.other,
+      allowance: req.body.allowance,
+      lotnumber:req.body.lotnumber,
+      netepweight:req.body.netepweight,
+      eppercentage:parseFloat(req.body.eppercentage).toFixed(2),
+      refference:req.body.referenceselect,
+      netWeight:req.body.netWeight-req.body.huskcutting,
 
+  }
+  
+  let options = {
+    // displayHeaderFooter: true,
+    format: "A4",
+    margin: { top: "60px", bottom: "100px" },
+    // base: 'file://' + path.resolve('./public') + '/'
+  
+  };
+  
+  let PDF = await pdfMaster.generatePdf("template.hbs", { data }, options);
+
+  const filePath = path.join(__dirname, '..', 'public', 'report.pdf');
+  fs.writeFileSync(filePath, PDF);
     res.status(201).json({ message: 'Form submitted successfully' });
   } catch (error) {
     console.error(error);

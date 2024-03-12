@@ -1205,7 +1205,6 @@ async function submitForm() {
       formDataObj['eppercentage'] = eppercentage;
       formDataObj['billedquantity'] = billedquantity;
 
-  try {
     const response = await fetch('/submit-bill', {
         method: "POST", // Replace with the appropriate HTTP method (e.g., POST, PUT, etc.)
         headers: {
@@ -1214,17 +1213,25 @@ async function submitForm() {
         body: JSON.stringify(formDataObj),
       });
 
-    if (response.ok) {
+    if (response) {
       alert('Form submitted successfully');
       // You can redirect or perform any other action here
-      window.location.reload()
+      const pdfWindow = window.open('http://localhost:3000/report.pdf', '_blank');
+      if (pdfWindow) {
+        // Listen for the beforeunload event
+        window.addEventListener('beforeunload', () => {
+          // Reload the screen after the printing tab is closed or after the PDF is printed
+          window.location.reload();
+        });
+      } else {
+        alert('Error opening PDF file');
+      }
+      window.location.reload();
+
     } else {
       alert('Error submitting the form');
     }
-  } catch (error) {
-    console.error('Error:', error);
-    alert('Error submitting the form');
-  }
+
 }
 
 // Add an event listener to the "Generate Invoice" button to trigger the form submission

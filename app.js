@@ -18,12 +18,16 @@ var deleteapis = require('./routes/deleteapis');
 var getsumapis = require('./routes/getsumapi');
 var editapis = require('./routes/editapis');
 
-/////front end //
+
+// Define the public directory
 
 var cors = require('cors')
 
 
 var app = express();
+app.use(express.static(path.join(__dirname, 'public')));///front end //
+app.use(express.static('public'));
+ 
 const url = `mongodb://127.0.0.1:27017/hitech`;
 
 const store = new MongoDBStore({

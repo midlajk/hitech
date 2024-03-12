@@ -12,35 +12,8 @@ router.get('/login', function(req, res, next) {
 });
 router.get('/dashboard', async function(req, res, next) {
 
-  var students = [
-    {
-        id: 1,
-        name: "Sam",
-        age: 21
-    },
-    {
-        id: 2,
-        name: "Jhon",
-        age: 20
-    },
-    {
-        id: 3,
-        name: "Jim",
-        age: 24
-    }
-  ]
+  res.render('dashboard',{ route: 'dashboard' });
 
-let options = {
-  displayHeaderFooter: true,
-  format: "A4",
-  headerTemplate: `<h3> Header </h3>`,
-  footerTemplate: `<h3> Copyright 2023 </h3>`,
-  margin: { top: "80px", bottom: "100px" },
-};
-
-let PDF = await pdfMaster.generatePdf("template.hbs", students, options);
-res.contentType("application/pdf");
-res.status(200).send(PDF);
   // res.render('dashboard',{ route: 'dashboard' });
 });
 router.get('/generatereport', function(req, res, next) {
