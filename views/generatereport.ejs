@@ -203,7 +203,7 @@
                         <label for="">Outern</label>
 
                         <div class="my-1 flex-nowrap input-group">
-                            <input type="number" name="outern" oninput="updateNetWeight()"  id="outern" class="bg-white border form-control" placeholder="100" min="0.00" step="0.01" max="100.00">
+                            <input type="number" name="outern" oninput="updateNetWeight()"  id="outern" class="bg-white border form-control" value="100" min="0.00" step="0.01" max="100.00">
                             <a class="bg-light fw-bold text-secondary small input-group-text" onclick="multiply()">%</a>
                           </div>
                             <label for="">Husk</label>
@@ -277,6 +277,7 @@
                       
                         </div>
                         <a href="#" id="openModalBtn" onclick="modalclicked()"  class="btn btn-primary d-block w-100">Review Report</a>
+                        <a href="report.pdf" target="_blank"  class="btn btn-secondary d-block w-100 mt-1">View Previous Report</a>
 
                       </div>
                   </div>
@@ -345,9 +346,9 @@
               <div class="col-md-4">
                 <div class="fw-bold">Product Tax:</div>
                 <div><select name="tax" class="form-control" id="tax">
-                  <option value="0-0-0">sgst-0% + cgst-0% + igst-0%</option>
-                  <option value="2.5-2.5-0">sgst-2.5% + cgst-2.5% + igst-0%</option>
-                  <option value="2.5-2.5-5">sgst-2.5% + cgst-2.5% + igst-5%</option>
+                  <option value="0">sgst-0% + cgst-0% + igst-0%</option>
+                  <option value="5">sgst-2.5% + cgst-2.5% + igst-0%</option>
+                  <option value="10">sgst-2.5% + cgst-2.5% + igst-5%</option>
 
                 </select> </div>
               </div>
@@ -442,6 +443,8 @@
   var netWeight = 0 ;
   var eppercentage = -1;
   var billedquantity = 0;
+  var drefferance = '<%=refferance%>';
+
   function setBillDateToCurrentDate() {
     // Get the current date
     var currentDate = new Date().toISOString().slice(0, 10);
@@ -467,13 +470,16 @@
         uniqueid:uniqueid,
         billid:billid,
         id: commitId,
+        weight: parseFloat(commitQty*100/eppercentage).toFixed(1),
         quantity: commitQty,
         rate: commitRate,
         total: commitTotal
     };
-
+    document.getElementById('newcommitid').value = ''
+    document.getElementById('newcommitqty').value = ''
+    document.getElementById('newcommitrate').value = ''
+    document.getElementById('newcommittotal').innerText = ''
     var reportstatus =  $("input[type='radio'][name='reportstatus']:checked").val();
-    console.log(reportstatus)
     if ((consignment-commitQty) < 0 || reportstatus == 'pendingreport') {
            if(reportstatus=='pendingreport'){
             alert('You cant make bill before finalizing the report')
@@ -486,7 +492,7 @@
         }else{
           function isIdAlreadyExists(newId, billArray) {
            for (var i = 0; i < billArray.length; i++) {
-        if (billArray[i].id === newId) {
+        if (billArray[i].id === newId && billArray[i].id != drefferance) {
             return true; // If the id already exists, return true
         }
     }
@@ -547,11 +553,14 @@
         deleteButton.addEventListener("click", function() {
             // Remove the row from the table
             // Remove the corresponding data from the bill array 
-            row.remove();
-            if(bill.length==1){
+            if(bill.length==1){           
+               row.remove();
               bill=[]
-            }else{
+            }else if(bill.length-1 == index){
+              row.remove();
             bill.splice(index,1);
+            }else{
+              alert('Delete last data first')
             }
             updatetotalbillamount()
         });
@@ -1204,6 +1213,8 @@ async function submitForm() {
       formDataObj['netWeight'] = netWeight;
       formDataObj['eppercentage'] = eppercentage;
       formDataObj['billedquantity'] = billedquantity;
+      formDataObj['tax'] = document.getElementById('tax').value;
+      formDataObj['epweight'] = epweight
 
     const response = await fetch('/submit-bill', {
         method: "POST", // Replace with the appropriate HTTP method (e.g., POST, PUT, etc.)
@@ -1221,12 +1232,12 @@ async function submitForm() {
         // Listen for the beforeunload event
         window.addEventListener('beforeunload', () => {
           // Reload the screen after the printing tab is closed or after the PDF is printed
-          window.location.reload();
+          // window.location.reload();
         });
       } else {
         alert('Error opening PDF file');
       }
-      window.location.reload();
+      // window.location.reload();
 
     } else {
       alert('Error submitting the form');
@@ -1413,7 +1424,6 @@ var party
     axios.post('http://localhost:3000/addreference', data)
       .then(response => {
         // Handle the server response here
-        console.log(response.data);
 
         // Close the modal on successful response
         if (response.data.success) {

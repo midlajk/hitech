@@ -75,11 +75,11 @@
 
         <!-- Item List -->
         <div class="row">
-            <div class="col-md-12" style="height: 400px;">
+            <div class="col-md-12" style="height: 350px;">
                 <table class="table table-bordered table-custom" >
                     <thead>
                         <tr style="height: 60px;">
-                          <th>G. Weight : {{data.quantity}}</th>
+                            <th>G. Weight : {{data.quantity}}</th>
                             <th>Bags : {{data.bags}}</th>
                             <th>Bag Weight : {{data.bagweight}}</th>
                             <th>NET Weight : {{data.netweights}}</th>
@@ -87,37 +87,42 @@
                             <!-- Add more headers as needed -->
                         </tr>
                            <tr style="height: 60px;">                            
-                            <th>FM (%) : {{data.forignobject}}</th>
-                            <th>HUSK / O (%): {{data.huskpercentage}}</th>
-                            <th>WGHT. ADJST. : {{data.weightallowance}}</th>
+                            <th>FM ( {{data.forignobject}} %) : {{data.forignobject}}</th>
+                            <th>WGHT. DED. : {{data.weightallowance}}</th>
                             <th>FINAL Weight : {{data.netWeight}}</th>
+                            <th>OUTERN : {{data.outern}} </th>
 
                             <!-- Add more headers as needed -->
                         </tr>
                     </thead>
                     <tr style="height: 60px;">
-                            <td>OUTERN : {{data.outern}} </td>
+                            {{!-- <td>OUTERN : {{data.outern}} </td> --}}
                             <td>MC : {{data.moisturepercentage}}</td>
-                            <td>MC DED : {{data.moisturecutting}}</td>
-                            <td></td>
+                            <td>BB  : {{data.bbpercentage}}</td>
+                            <td>IDB : {{data.berryborepercentage}}</td>
+                            {{!-- <td>MC DED : {{data.moisturecutting}}</td> --}}
+                            <td>OTHER</td>
+
                             <!-- Add more columns for each item -->
                         </tr>
-                         <tr style="height: 60px;">
+                         {{!-- <tr style="height: 60px;">
                             <td>BB  : {{data.bbpercentage}}</td>
                             <td>IDB : {{data.berryborepercentage}}</td>
                             <td colspan="2">OTHER</td>
                             <!-- Add more columns for each item -->
-                        </tr>
+                        </tr> --}}
                         <tr style="height: 60px;">
+                            <td>MC DED : {{data.moisturecutting}}</td>
                             <td>BB DED. :{{data.bbcutting}}</td>
                             <td>IDB DED. : {{data.berryborecutting}} </td>
-                            <td colspan="2">OTHER DED . : {{data.other}}</td>
+                            <td>OTHER DED . : {{data.other}}</td>
                             <!-- Add more columns for each item -->
                         </tr>
                          <tr style="height: 60px;"> 
-                            <th>EP. ADJST. : {{data.allowance}}</th>                           
+                            <th>HUSK / O ( {{data.huskpercentage}} %): {{data.huskcutting}}</th>
+                            <th>TOTAL EP DED. : {{data.cuttings}} </th>
                             <th>EP PERCENTAGE : {{data.eppercentage}}</th>
-                            <th colspan="2">NET EP WEIGHT: {{data.netepweight}}</th>
+                            <th>NET EP WEIGHT: {{data.netepweight}}</th>
 
                             <!-- Add more headers as needed -->
                         </tr>
@@ -151,6 +156,73 @@
                 <!-- You can style this area as needed -->
             </div>
         </div>
+
+        {{!-- if data.bill.length greater than 0  --}}
+{{#if data.bill.length}}
+<div class="row">
+    <div class="col-md-12">
+        <h2>Billing Confirmation</h2>
+        <table class="table table-bordered table-custom">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Commitment</th>
+                     <th>Net Weight</th>
+                    <th>E.P. Weight</th>
+                    <th>Rate</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each data.bill}}
+                <tr> 
+                    <td>{{this.uniqueid}}</td>
+                    <td>{{this.id}}</td>
+                    <td>{{this.weight}}</td>
+                    <td>{{this.quantity}}</td>
+                    <td>{{this.rate}}</td>
+                    <td>{{this.total}}</td>
+
+                </tr>
+                {{/each}}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th colspan="5" class="text-right">Sub Total</th>
+                    <th>{{data.total}}</th>
+                    {{!-- <th>{{grandTotal}}</th>  --}}
+                    <!-- Assuming grand total is passed from backend -->
+                </tr>
+                <tr>
+                    <th colspan="5" class="text-right">OTHER : {{data.taxtype}}</th>
+                    <th>{{data.taxtotal}}</th>
+                    {{!-- <th>{{grandTotal}}</th>  --}}
+                    <!-- Assuming grand total is passed from backend -->
+                </tr>
+                <tr>
+                    <th colspan="5" class="text-right">Grand Total</th>
+                    <th>{{data.grandtotal}}</th>
+                    {{!-- <th>{{grandTotal}}</th>  --}}
+                    <!-- Assuming grand total is passed from backend -->
+                </tr>
+            </tfoot>
+        </table>
     </div>
+     <div class="row p-3 mt-1">
+            <div class="col-md-10">
+                <p>This document serves solely as a billing confirmation for reference purposes and does not constitute the actual bill. .</p>
+                <!-- You can style this area as needed -->
+            </div>
+             <div class="col-md-2">
+                <p>Party Signature.</p>
+                <!-- You can style this area as needed -->
+            </div>
+           
+        </div>
+</div>
+{{/if}}
+    </div>
+
+
 </body>
 </html>

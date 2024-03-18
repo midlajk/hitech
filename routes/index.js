@@ -1,7 +1,10 @@
 var express = require('express');
 var router = express.Router();
 const pdfMaster = require("pdf-master");
+const mongoose = require('mongoose');
 
+const ClientModel = mongoose.model('Client')
+const Reference = mongoose.model('Reference')
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.json({ title: 'Express' });
@@ -16,8 +19,12 @@ router.get('/dashboard', async function(req, res, next) {
 
   // res.render('dashboard',{ route: 'dashboard' });
 });
-router.get('/generatereport', function(req, res, next) {
-  res.render('generatereport',{ route: 'generatereport',refferance:'CROP 23-24' });
+router.get('/generatereport', async function(req, res, next) {
+
+   const reference = await Reference.findOne({})
+    .sort({ defaulted: -1 }) // Sort by 'defaulted' date in descending order
+    
+    res.render('generatereport',{ route: 'generatereport',refferance:reference?reference.name:'' });
 });
 router.get('/accounts', function(req, res, next) {
   res.render('accounts',{ route: 'accounts' });
