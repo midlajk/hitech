@@ -10,13 +10,108 @@ const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 const { nanoid } = require('nanoid');
 const pdfMaster = require("pdf-master");
-exports.generatepurchasereport = async (req, res) => {
+const { Console } = require('console');
+
+async function purchasebill(req, res, client) {
+  let payable;
+  let recievable;
+  let paid ;
+  let recieved;
+  console.log(req)
+  let existingClient
+if(client){
+  console.log('here')
+  existingClient = client;
+  payable = req.body.payable
+  recievable = req.body.recievable ;
+  paid = req.body.paid
+  recieved = req.body.recieved
+}else{ 
+   payable = 0
+   recievable = 0 ;
+   paid = 0
+   recieved = 0
+  existingClient = await ClientModel.findOne({ name: req.body.name });
+}
+  // Push the new sales bill document to the client's salesbillSchema array
+  existingClient.purchasebillSchema.push({
+    date: req.body.date,
+    item: req.body.item,
+    invoice: req.body.billid,
+    uniqueid: req.body.uniqueid,
+    commitment: req.body.id,
+    lotnumber: req.body.lot,
+    weight:parseInt((req.body.quantity*100)/req.body.eppercentage),
+    qty: req.body.quantity,
+    amount: req.body.rate,
+    subtotal: req.body.total,
+    tax: req.body.tax,
+    total: (parseFloat(req.body.total)+req.body.total*parseFloat(req.body.tax)/100),
+    tds: parseInt(req.body.total*0.1/100)
+  });
+  // const payable = (existingClient.payable||0) + req.body.total
+  // const recievable = (existingClient.recievable||0) + 0
+  // const paid = (existingClient.paid||0) + payable>5000000?parseInt(req.body.total*0.1/100):0
+  // const recieved = (existingClient.recieved||0) + 0
+  payable = (parseFloat(req.body.total)+req.body.total*parseFloat(req.body.tax)/100)
+  recievable = recievable 
+  paid = ((existingClient.payable + payable)>5000000?parseInt(req.body.total*0.1/100):0)
+  recieved = recieved + 0
+
+  
+  existingClient.transaction.push({
+    name:req.body.name,
+    date: req.body.date,
+    refference: req.body.item + ' ' + req.body.quantity + '*' + req.body.rate,
+    revievable:0,
+    payable:req.body.total,
+    medium:payable>5000000?'TDS':'Bill',
+    id:req.body.uniqueid,
+    recieved:0,
+    paid:payable>5000000?parseInt(req.body.total*0.1/100):0,
+  
+    // Add other fields as needed
+  });
+
+  
+
+  const purchasecommitment = existingClient.purchasecommitments.find(commitment => commitment.id === req.body.id);
+
+  if (purchasecommitment) {
+    // Calculate the new balance by subtracting the delivered quantity from the total quantity
+    const newBalance = purchasecommitment.balance - parseInt((req.body.quantity*100)/req.body.eppercentage) ;
+
+    // Update the balance in the sales commitment object
+    purchasecommitment.balance = newBalance<0?0:newBalance;
+}
+
+if(client){
+  console.log('hhh',payable)
+
+  return {existingClient:existingClient,payable:payable,recievable:recievable,recieved:recieved,paid :paid  }
+
+}else{
+  existingClient.payable = (existingClient.payable||0)+payable;
+       existingClient.recievable =  (existingClient.recievable||0) +recievable;
+       existingClient.paid =(existingClient.paid||0)+ paid;
+      existingClient.recieved = (existingClient.recieved||0)+recieved;
+  await existingClient.save();}
+  res.status(201).json({ message: 'Form submitted successfully' });
+
+}
+
+
+exports.purchasebill = purchasebill;
+
+
+
+exports.generatepurchasereport = async (req, res,hi) => {
   let payable = 0
   let recievable = 0 ;
   let paid = 0
   let recieved = 0
     try {
-      const existingClient = await ClientModel.findOne({ name: req.body.billTo });
+      let existingClient = await ClientModel.findOne({ name: req.body.billTo });
   
       if (existingClient) {
         // If the client exists, update the coffee array
@@ -56,74 +151,81 @@ exports.generatepurchasereport = async (req, res) => {
   
         });
         const storeout = (existingClient.storeout||0)+0
-        const storein = (existingClient.storein||0) + (req.body.netepweight - req.body.billedquantity)
+        const storein = (existingClient.storein||0) + (parseFloat(req.body.netepweight) - parseFloat(req.body.billedquantity))
         existingClient.storeout = storeout;
             existingClient.storein = storein;
         if(req.body.bill.length>0){
           for (const bill of req.body.bill) {
-  
-            // Push the new sales bill document to the client's salesbillSchema array
-            existingClient.purchasebillSchema.push({
-              date: bill.date,
-              item: req.body.item,
-              invoice: bill.billid,
-              uniqueid: bill.uniqueid,
-              commitment: bill.id,
-              lotnumber: bill.lot,
-              weight:parseInt((bill.quantity*100)/req.body.eppercentage),
-              qty: bill.quantity,
-              amount: bill.rate,
-              subtotal: bill.total,
-              sgst: bill.sgst,
-              cgst: bill.cgst,
-              igst: bill.igst,
-              total: bill.total,
-              tds: bill.tds
-            });
-            // const payable = (existingClient.payable||0) + bill.total
-            // const recievable = (existingClient.recievable||0) + 0
-            // const paid = (existingClient.paid||0) + payable>5000000?parseInt(bill.total*0.1/100):0
-            // const recieved = (existingClient.recieved||0) + 0
-            payable = payable + parseFloat(bill.total)
-            recievable = recievable + 0
-            paid = paid+((existingClient.payable + payable)>5000000?parseInt(bill.total*0.1/100):0)
-            recieved = recieved + 0
+            const calling = await purchasebill({body:{...bill,item:req.body.item,eppercentage:req.body.eppercentage,tax:req.body.tax,name:req.body.billTo,payable:payable,recievable:recievable,paid:paid,recieved:recieved}},res, existingClient);
+            existingClient = calling.existingClient
+            console.log(calling.payable)
+            payable += calling.payable;
+            recievable += calling.recievable;
+            paid += calling.paid;
+            recieved += calling.recieved;
 
-            existingClient.payable = payable;
-            existingClient.recievable = recievable;
-            existingClient.paid = paid;
-            existingClient.recieved = recieved;
-            existingClient.transaction.push({
-              name:req.body.name,
-              date: bill.date,
-              refference: req.body.item + ' ' + bill.quantity + '*' + bill.rate,
-              revievable:0,
-              payable:bill.total,
-              medium:payable>5000000?'TDS':'Bill',
-              id:bill.uniqueid,
-              recieved:0,
-              paid:payable>5000000?parseInt(bill.total*0.1/100):0,
+          //   // Push the new sales bill document to the client's salesbillSchema array
+          //   existingClient.purchasebillSchema.push({
+          //     date: bill.date,
+          //     item: req.body.item,
+          //     invoice: bill.billid,
+          //     uniqueid: bill.uniqueid,
+          //     commitment: bill.id,
+          //     lotnumber: bill.lot,
+          //     weight:parseInt((bill.quantity*100)/req.body.eppercentage),
+          //     qty: bill.quantity,
+          //     amount: bill.rate,
+          //     subtotal: bill.total,
+          //     tax: req.body.tax,
+          //     total: (parseFloat(bill.total)+bill.total*parseFloat(req.body.tax)/100),
+          //     tds: parseInt(bill.total*0.1/100)
+          //   });
+         
+          //   payable = payable + parseFloat(bill.total)
+          //   recievable = recievable + 0
+          //   paid = paid+((existingClient.payable + payable)>5000000?parseInt(bill.total*0.1/100):0)
+          //   recieved = recieved + 0
+
+          //   existingClient.payable = payable;
+          //   existingClient.recievable = recievable;
+          //   existingClient.paid = paid;
+          //   existingClient.recieved = recieved;
+          //   existingClient.transaction.push({
+          //     name:req.body.name,
+          //     date: bill.date,
+          //     refference: req.body.item + ' ' + bill.quantity + '*' + bill.rate,
+          //     revievable:0,
+          //     payable:bill.total,
+          //     medium:payable>5000000?'TDS':'Bill',
+          //     id:bill.uniqueid,
+          //     recieved:0,
+          //     paid:payable>5000000?parseInt(bill.total*0.1/100):0,
             
-              // Add other fields as needed
-            });
+          //     // Add other fields as needed
+          //   });
   
             
   
-            const purchasecommitment = existingClient.purchasecommitments.find(commitment => commitment.id === bill.id);
+          //   const purchasecommitment = existingClient.purchasecommitments.find(commitment => commitment.id === bill.id);
   
-            if (purchasecommitment) {
-              // Calculate the new balance by subtracting the delivered quantity from the total quantity
-              const newBalance = purchasecommitment.balance - parseInt((bill.quantity*100)/req.body.eppercentage) ;
+          //   if (purchasecommitment) {
+          //     // Calculate the new balance by subtracting the delivered quantity from the total quantity
+          //     const newBalance = purchasecommitment.balance - parseInt((bill.quantity*100)/req.body.eppercentage) ;
       
-              // Update the balance in the sales commitment object
-              purchasecommitment.balance = newBalance<0?0:newBalance;
-          }
+          //     // Update the balance in the sales commitment object
+          //     purchasecommitment.balance = newBalance<0?0:newBalance;
+          // }
          
           }
   
         }
+    console.log(existingClient.payable,payable)       
+        existingClient.payable = (existingClient.payable||0)+payable;
+       existingClient.recievable =  (existingClient.recievable||0) +recievable;
+       existingClient.paid =(existingClient.paid||0)+ paid;
+      existingClient.recieved = (existingClient.recieved||0)+recieved;
         await existingClient.save();
-      }
+      
       var data = {
         companyname:'HI TECH COFFEE',
         party:req.body.billTo ,
@@ -177,7 +279,7 @@ exports.generatepurchasereport = async (req, res) => {
   
     const filePath = path.join(__dirname, '..', 'public', 'report.pdf');
     fs.writeFileSync(filePath, PDF);
-  
+      }
       res.status(201).json({ message: 'Form submitted successfully' });
     } catch (error) {
       console.log(error)
@@ -301,7 +403,7 @@ exports.generatepurchasereport = async (req, res) => {
         bagweight: parseInt(req.body.bagweight*req.body.bags),
         netweights:parseInt(req.body.quantity-parseFloat(req.body.bagweight*req.body.bags)),
         forignobject: req.body.forignobject,
-        weightallowance: req.body.weightallowance,
+        weightallowance: parseFloat(req.body.quantity)-parseFloat(req.body.netWeight),
         huskpercentage: req.body.huskpercentage,
         outern: req.body.outern,
         huskcutting: req.body.huskcutting,
@@ -319,7 +421,7 @@ exports.generatepurchasereport = async (req, res) => {
         refference:req.body.referenceselect,
         netWeight:req.body.netWeight-req.body.huskcutting,
         bill:req.body.bill,
-        cuttings : parseInt(req.body.epweight)-parseInt(req.body.netepweight0)
+        cuttings : parseInt(req.body.epweight)-parseInt(req.body.netepweight)
     }
     
     let options = {

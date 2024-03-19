@@ -200,7 +200,7 @@
                       <div class="my-3">
                         <label class="fw-bold">Report:</label>
                         <br>
-                        <label for="">Outern</label>
+                        <label for="">Outern in 100</label>
 
                         <div class="my-1 flex-nowrap input-group">
                             <input type="number" name="outern" oninput="updateNetWeight()"  id="outern" class="bg-white border form-control" value="100" min="0.00" step="0.01" max="100.00">
@@ -366,7 +366,7 @@
               </thead>
               <tbody>
                 <tr><td>        <div class="my-1 flex-nowrap input-group">
-                    <input id="newcommitid" class="form-control" disabled/>
+                    <input id="newcommitid" class="form-control" />
 
                     <a class="bg-light fw-bold text-secondary small input-group-text" href="#" onclick="openCommitments()" data-bs-toggle="modal" data-bs-target="#commitmentmodal"><i class="menu-icon tf-icons bx bx-notepad"></i></a>
                   </div></td>
@@ -480,11 +480,15 @@
     document.getElementById('newcommitrate').value = ''
     document.getElementById('newcommittotal').innerText = ''
     var reportstatus =  $("input[type='radio'][name='reportstatus']:checked").val();
-    if ((consignment-commitQty) < 0 || reportstatus == 'pendingreport') {
+    if ((consignment-commitQty) < 0 || reportstatus == 'pendingreport'|| !commitTotal) {
            if(reportstatus=='pendingreport'){
             alert('You cant make bill before finalizing the report')
 
-           }else{
+           }else if(!commitTotal){
+            alert('Cant add empty data')
+
+           }
+           else{
                       alert('You cant add more bill than original End Product  quantity')
 
            }

@@ -10,10 +10,10 @@ router.post('/submit-bill', (req, res, next) => {
   
     if (req.body.billtype === 'Sales') {
       // If billType is 'sales', route to generatesalesreport
-      generatereport.generatesalesreport(req, res, next);
+      generatereport.generatesalesreport(req, res);
     } else {
       // For any other value or if not specified, route to generatepurchasereport
-      generatereport.generatepurchasereport(req, res, next);
+      generatereport.generatepurchasereport(req, res);
     }
 });
 router.post('/addseller', adminpostapis.addseller);

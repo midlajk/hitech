@@ -113,9 +113,8 @@ const purchasebillSchema = new Schema({
 
   amount: Number,
   subtotal:Number,
-  sgst:Number,
-  cgst:Number,
-  igst:Number,
+  tax:Number,
+
   total:Number,
   tds:Number
   // Add other fields as needed
