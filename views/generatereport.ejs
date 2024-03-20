@@ -1,6 +1,18 @@
 <%- include('./include/dashboardhead.ejs') -%>
 
 <div class="content-wrapper">
+  <div class="modal" id="Loadingmodal" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+      <div class="modal-body text-center">
+        <!-- Spinner -->
+        <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
   <!-- Content -->
   <div class="container-xxl flex-grow-1 container-p-y">
 
@@ -366,7 +378,7 @@
               </thead>
               <tbody>
                 <tr><td>        <div class="my-1 flex-nowrap input-group">
-                    <input id="newcommitid" class="form-control" />
+                    <input id="newcommitid" class="form-control" disabled/>
 
                     <a class="bg-light fw-bold text-secondary small input-group-text" href="#" onclick="openCommitments()" data-bs-toggle="modal" data-bs-target="#commitmentmodal"><i class="menu-icon tf-icons bx bx-notepad"></i></a>
                   </div></td>
@@ -547,8 +559,7 @@
         totalbill += parseFloat(billData.total);
         totalQty += parseFloat(billData.quantity);
         consignment = netepweight-totalQty
-        billedquantity+=totalQty;
-
+        billedquantity=totalQty;
         // Create a delete button/icon
         var deleteButton = document.createElement("button");
         deleteButton.innerHTML = "&times;"; // The 'times' symbol (×) for delete
@@ -574,6 +585,8 @@
         // Append the delete button to the delete cell
         cellDelete.appendChild(deleteButton);
     });
+   
+
 }
 function updatetotalbillamount() {
     var total = 0;
@@ -1205,6 +1218,8 @@ if (billtype === 'Purchase') {
 
 
 async function submitForm() {
+  $('#Loadingmodal').addClass('d-block');
+
   const form = document.querySelector('form');
   const formData = await new FormData(form);
   const formDataObj = {};
@@ -1219,6 +1234,7 @@ async function submitForm() {
       formDataObj['billedquantity'] = billedquantity;
       formDataObj['tax'] = document.getElementById('tax').value;
       formDataObj['epweight'] = epweight
+      formDataObj['consignment'] = consignment
 
     const response = await fetch('/submit-bill', {
         method: "POST", // Replace with the appropriate HTTP method (e.g., POST, PUT, etc.)
@@ -1242,6 +1258,7 @@ async function submitForm() {
         alert('Error opening PDF file');
       }
       // window.location.reload();
+      $('#Loadingmodal').removeClass('d-block');
 
     } else {
       alert('Error submitting the form');
@@ -1311,7 +1328,7 @@ document.getElementById('generateInvoiceBtn').addEventListener('click', () => {
     document.getElementById('moisturecutting').value = mcutting;
     document.getElementById('bbcutting').value = bbcutting;
     document.getElementById('berryborecutting').value = berrycutting;
-    eppercentage =((netepweight/netWeight)*100)
+    eppercentage = +parseFloat((netepweight / netWeight) * 100).toFixed(2)
     document.getElementById('epWeightDisplay').textContent = netepweight.toFixed(2) + " Kg";
     document.getElementById('eppercenagedisplay').textContent = eppercentage.toFixed(2) + " %";
 
@@ -1327,7 +1344,7 @@ document.getElementById('generateInvoiceBtn').addEventListener('click', () => {
     const allowance = parseFloat(document.getElementById('allowance').value) || 0;
 
     netepweight =  Math.round(epweight-hcutting-mcutting-bbcutting-berrycutting-other+allowance)
-    eppercentage =((netepweight/netWeight)*100)
+    eppercentage =+parseFloat((netepweight / netWeight) * 100).toFixed(2)
     document.getElementById('epWeightDisplay').textContent = netepweight.toFixed(2) + " Kg";
     document.getElementById('eppercenagedisplay').textContent = eppercentage.toFixed(2) + " %";
   }
