@@ -492,11 +492,11 @@
     document.getElementById('newcommitrate').value = ''
     document.getElementById('newcommittotal').innerText = ''
     var reportstatus =  $("input[type='radio'][name='reportstatus']:checked").val();
-    if ((consignment-commitQty) < 0 || reportstatus == 'pendingreport'|| !commitTotal) {
+    if ((consignment-commitQty) < 0 || reportstatus == 'pendingreport'|| commitTotal<=0) {
            if(reportstatus=='pendingreport'){
             alert('You cant make bill before finalizing the report')
 
-           }else if(!commitTotal){
+           }else if(commitTotal<=0){
             alert('Cant add empty data')
 
            }
