@@ -504,7 +504,6 @@ exports.salescommitments = async (req, res) => {
               
               ])
               const purchasebills = client.length > 0 ? client[0].purchasebillSchema : [];
-         console.log(purchasebills)
             const totalclients = await ClientModel.aggregate([
               {
                 $match: { name: name } // Match documents by name
@@ -903,3 +902,39 @@ exports.salescommitments = async (req, res) => {
           }
     
         };
+
+
+        ///////////////////// purchase bills /////////////
+        exports.invoicebasepurchasebills = async (req, res) => {
+          console.log('here');
+          const { lotnumber } = req.query;
+          console.log(lotnumber)
+          try {
+              const bills = await ClientModel.aggregate([
+                  // Unwind the purchasebillSchema array to de-normalize it
+                  { $unwind: "$purchasebillSchema" },
+                  // Match documents where the lotnumber matches
+                  { $match: { "purchasebillSchema.invoice": lotnumber } },
+                  // Group to get back purchasebillSchema array
+                  {
+                      $group: {
+                          _id: null,
+                          purchasebillSchema: { $push: '$purchasebillSchema' }
+                      }
+                  },
+                  // Project to include only the purchasebillSchema field
+                  {
+                      $project: {
+                          _id: 0, // Exclude _id field
+                          purchasebillSchema: 1
+                      }
+                  }
+              ]);
+              // Send the purchasebillSchema array as response
+              res.json(bills.length > 0 ? bills[0].purchasebillSchema : []);
+          } catch (error) {
+              console.error(error);
+              res.status(500).send('An error occurred while fetching purchase bills');
+          }
+      };
+      

@@ -155,224 +155,128 @@ exports.deletesalescommitments = async (req, res) => {
   }
 };
 
- 
-    //////arrivals   ////////////
-    // exports.arrivals  = (async (req, res) => {
-    //   // Assuming you have already imported required modules and set up your Express app
-      
-    //   // API endpoint for paginated data
-    //     try {
-    //       const draw = parseInt(req.query.draw) || 1; // Get the draw count (used by DataTables)
-    //       const start = parseInt(req.query.start) || 0; // Get the starting index of the data to fetch
-    //       const length = parseInt(req.query.length) || 10; // Get the number of records per page
-    //       // Fetch data from the database with pagination
-    //       const client = await ClientModel.aggregate([
-    //         {
-    //             $unwind: "$coffee"
-    //         },
-    //         {
-    //             $skip: start
-    //         },
-    //         {
-    //             $limit: start+length
-    //         },
-    //         // {
-    //         //     $project: {
-    //         //         draw: { $literal: draw }, // Include the draw value in the result
-    //         //         coffee: "$coffee"
-    //         //     }
-    //         // }
-    //       ])
-    //       if (!client || client.length === 0) {
-    //         // Handle case where no client or coffee data is found
-    //         res.status(404).json({ error: 'No client or coffee data found' });
-    //         return;
-    //     }
-    //     const totalclients = await ClientModel.aggregate([
-    //       {
-    //           $unwind: "$coffee"
-    //       }])
-    //       console.log(client)
-    //     res.json({
-    //         draw,
-    //         recordsTotal: totalclients.length,
-    //         recordsFiltered: totalclients.length,
-    //         data: client,
-    //     });
-    //     } catch (error) {
-    //       console.error('Error fetching data:', error);
-    //       res.status(500).json({ error: 'Server error' });
-    //     }
-      
-      
-    //   });
-    //   exports.despatch  = (async (req, res) => {
-    //     // Assuming you have already imported required modules and set up your Express app
-        
-    //     // API endpoint for paginated data
-    //       try {
-    //         const draw = parseInt(req.query.draw) || 1; // Get the draw count (used by DataTables)
-    //         const start = parseInt(req.query.start) || 0; // Get the starting index of the data to fetch
-    //         const length = parseInt(req.query.length) || 10; // Get the number of records per page
-    //         // Fetch data from the database with pagination
-    //         const client = await ClientModel.aggregate([
-    //           {
-    //               $unwind: "$despatch"
-    //           },
-    //           {
-    //               $skip: start
-    //           },
-    //           {
-    //               $limit: start+length
-    //           },
-    //           // {
-    //           //     $project: {
-    //           //         draw: { $literal: draw }, // Include the draw value in the result
-    //           //         coffee: "$coffee"
-    //           //     }
-    //           // }
-    //         ])
-    //         console.log(client)
-    //         if (!client || client.length === 0) {
-    //           // Handle case where no client or coffee data is found
-    //           res.status(404).json({ error: 'No client or coffee data found' });
-    //           return;
-    //       }
-    //       const totalclients = await ClientModel.aggregate([
-    //         {
-    //             $unwind: "$despatch"
-    //         }])
-    //       res.json({
-    //           draw,
-    //           recordsTotal: totalclients.length,
-    //           recordsFiltered: totalclients.length,
-    //           data: client,
-    //       });
-    //       } catch (error) {
-    //         console.error('Error fetching data:', error);
-    //         res.status(500).json({ error: 'Server error' });
-    //       }
-        
-        
-    //     });
-    //   ////////////////////////////////////////////////////////////////
-    // exports.individualarrivals  = (async (req, res) => {
-    //   // Assuming you have already imported required modules and set up your Express app
-      
-    //   // API endpoint for paginated data
-    //     try {
-    //       const draw = parseInt(req.query.draw) || 1; // Get the draw count (used by DataTables)
-    //       const start = parseInt(req.query.start) || 0; // Get the starting index of the data to fetch
-    //       const length = parseInt(req.query.length) || 10; // Get the number of records per page
-    //       // Fetch data from the database with pagination
-    //       const client = await ClientModel.findOne({ name: req.query.name });
-    
-    //       if (!client) {
-    //         // Handle case where client with the specified name is not found
-    //         res.status(404).json({ error: 'Client not found' });
-    //         return;
-    //       }
-    //       const coffee = client.coffee.slice(start, start + length);
-    // console.log(coffee)
-    //       res.json({
-    //         draw,
-    //       recordsTotal: client.coffee.length,
-    //       recordsFiltered: client.coffee.length,
-    //       data: coffee,
-    //       });
-    //     } catch (error) {
-    //       console.error('Error fetching data:', error);
-    //       res.status(500).json({ error: 'Server error' });
-    //     }
-      
-      
-    //   });
-    //   exports.individualdespatch  = (async (req, res) => {
-    //     // Assuming you have already imported required modules and set up your Express app
-        
-    //     // API endpoint for paginated data
-    //       try {
-    //         const draw = parseInt(req.query.draw) || 1; // Get the draw count (used by DataTables)
-    //         const start = parseInt(req.query.start) || 0; // Get the starting index of the data to fetch
-    //         const length = parseInt(req.query.length) || 10; // Get the number of records per page
-    //         // Fetch data from the database with pagination
-    //         const client = await ClientModel.findOne({ name: req.query.name });
-      
-    //         if (!client) {
-    //           // Handle case where client with the specified name is not found
-    //           res.status(404).json({ error: 'Client not found' });
-    //           return;
-    //         }
-    //         const coffee = client.despatch.slice(start, start + length);
-    //         res.json({
-    //           draw,
-    //         recordsTotal: client.despatch.length,
-    //         recordsFiltered: client.despatch.length,
-    //         data: coffee,
-    //         });
-    //       } catch (error) {
-    //         console.error('Error fetching data:', error);
-    //         res.status(500).json({ error: 'Server error' });
-    //       }
-        
-        
-    //     });
 
+    exports.deletepurchasebill = async (req, res) => {
+        const billId = req.params.billId;
 
+        try {
+            const client = await ClientModel.findOne({ name: req.params.name });
+      
+            if (!client) {
 
-    //     exports.getrefference = async (req, res) => {
-    //       try {
-    //         const searchTerm = req.query.term;
-    //     if(!searchTerm){
-    //       const refferences = await Reference.aggregate([{ $sample: { size: 20 } }]);
-    //       const names = refferences.map(reff => reff.name);  
-    //         res.json({ results: names })
-    //     }else{
-    //       const escapedSearchTerm = searchTerm.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+                return res.status(404).json({ error: 'Client not found' });
+            }
+            const purchasebill = client.purchasebillSchema.find(commitment => commitment.uniqueid == billId);
+            const transaction = client.transaction.find(data => data.id == billId);
+            console.log('lll',transaction)
+            const coffee = client.coffee.find(data => data.lotnumber == purchasebill.lotnumber);
+            if(coffee){
+                coffee.storage = coffee.storage + purchasebill.qty
 
-    //         const refferences = await Reference.find({ name: { $regex: escapedSearchTerm, $options: 'i' } }, 'newRouteName');
-        
-    //         const names = refferences.map(reff => reff.name);
-        
-    //         res.json({ results: names });
-            
-    //     }
-            
-              
-        
+            }
+            const purchasebillSchema = client.purchasebillSchema.findIndex(commitment => commitment.uniqueid == billId);
+            const transactionindex = client.transaction.findIndex(data => data.id == billId);
+            var payable = transaction.payable
+            var recievable = transaction.revievable
+            var paid = transaction.paid
+            var recieved = transaction.recieved
+            const storeout = client.storeout+0
+            const storein = client.storein +  parseFloat(purchasebill.qty)
+
+            if (purchasebillSchema === -1) {
+                return res.status(404).json({ error: 'Purchase commitment not found' });
+            }
+            const purchasecommitment = client.purchasecommitments.find(commitment => commitment.id === purchasebill.commitment);
+
+            if (purchasecommitment) {
+              // Calculate the new balance by subtracting the delivered quantity from the total quantity
+              // Update the balance in the sales commitment object
+              var weight = purchasecommitment.balanceweight + purchasebill.weight
+              purchasecommitment.balanceweight = purchasecommitment.balanceweight + purchasebill.weight;
+              purchasecommitment.balance = parseInt(weight*eppercentage/100);
           
-    //       } catch (error) {
-    //         console.error(error);
-    //         res.status(500).json({ error: 'Internal Server Error' });
-    //       }
-    
-    //     };
-      
-    //     exports.getTransportAgent = async (req, res) => {
-    //       try {
-    //         const searchTerm = req.query.term;
-    //     if(!searchTerm){
-    //       const agents = await Transportagent.aggregate([{ $sample: { size: 20 } }]);
-      
-    //       const names = agents.map(agent => agent.agent);  
-    //         res.json({ results: names })
-    //     }else{
-    //       const escapedSearchTerm = searchTerm.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-
-    //         const agents = await Transportagent.find({ agent: { $regex: escapedSearchTerm, $options: 'i' } }, 'agent');
-        
-    //         const names = agents.map(agent => agent.agent);
-        
-    //         res.json({ results: names });
-            
-    //     }
-            
-              
-        
+          }
+            // Remove the purchase commitment from the array
+            client.purchasebillSchema.splice(purchasebillSchema, 1);
+            client.transaction.splice(transactionindex, 1);
+            client.payable = client.payable-payable;
+            client.recievable = client.recievable -recievable;
+            client.paid =client.paid- paid;
+            client.recieved = client.recieved-recieved;
           
-    //       } catch (error) {
-    //         console.error(error);
-    //         res.status(500).json({ error: 'Internal Server Error' });
-    //       }
-    
-    //     };
+            client.storeout = storeout;
+            client.storein = storein;
+            await client.save();
+      
+            // If successful, send a success response
+            return res.json({ message: 'Purchase commitment deleted successfully' });
+        } catch (error) {
+            console.log(error)
+
+            console.log('Error deleting purchase commitment:', error);
+            return res.status(500).json({ error: 'Server error' });
+        }
+      };
+
+
+      exports.deletesalesbill = async (req, res) => {
+        const billId = req.params.billId;
+
+        try {
+            const client = await ClientModel.findOne({ name: req.params.name });
+      
+            if (!client) {
+
+                return res.status(404).json({ error: 'Client not found' });
+            }
+            const salesbill = client.salesbillSchema.find(commitment => commitment.uniqueid == billId);
+            const transaction = client.transaction.find(data => data.id == billId);
+            console.log('lll',transaction)
+            const coffee = client.despatch.find(data => data.lotnumber == salesbill.lotnumber);
+            if(coffee){
+                coffee.storage = coffee.storage + salesbill.qty
+
+            }
+            const salesbillSchema = client.salesbillSchema.findIndex(commitment => commitment.uniqueid == billId);
+            const transactionindex = client.transaction.findIndex(data => data.id == billId);
+            var payable = transaction.payable
+            var recievable = transaction.revievable
+            var paid = transaction.paid
+            var recieved = transaction.recieved
+            const storeout = client.storeout+0
+            const storein = client.storein +  parseFloat(salesbill.qty)
+
+            if (salesbillSchema === -1) {
+                return res.status(404).json({ error: 'Purchase commitment not found' });
+            }
+            const salescommitment = client.salescommitmentsschema.find(commitment => commitment.id === salesbill.commitment);
+
+            if (salescommitment) {
+              // Calculate the new balance by subtracting the delivered quantity from the total quantity
+              // Update the balance in the sales commitment object
+              var weight = salescommitment.balanceweight + salesbill.weight
+              salescommitment.balanceweight = salescommitment.balanceweight + salesbill.weight;
+              salescommitment.balance = parseInt(weight*eppercentage/100);
+          
+          }
+            // Remove the purchase commitment from the array
+            client.salesbillSchema.splice(salesbillSchema, 1);
+            client.transaction.splice(transactionindex, 1);
+            client.payable = client.payable-payable;
+            client.recievable = client.recievable -recievable;
+            client.paid =client.paid- paid;
+            client.recieved = client.recieved-recieved;
+          
+            client.storeout = storeout;
+            client.storein = storein;
+            await client.save();
+      
+            // If successful, send a success response
+            return res.json({ message: 'Purchase commitment deleted successfully' });
+        } catch (error) {
+            console.log(error)
+
+            console.log('Error deleting purchase commitment:', error);
+            return res.status(500).json({ error: 'Server error' });
+        }
+      };

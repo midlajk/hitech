@@ -5,6 +5,8 @@ const ClientModel = mongoose.model('Client')
 const Reference = mongoose.model('Reference')
 const PoductsSchema = mongoose.model('PoductsSchema')
 const Transportagent = mongoose.model('Transportagent')
+const { purchasecommitmentcount, incrementPurchaseCommitmentCount, decrementPurchaseCommitmentCount } = require('../model/variables');
+
 const fs = require('fs');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
@@ -33,7 +35,6 @@ exports.addseller = async (req, res) => {
   }
 }
 exports.addpurchasecommitment = async (req, res) => {
-  console.log(req.body)
   try {
 
       // Find the client by name
@@ -47,7 +48,7 @@ exports.addpurchasecommitment = async (req, res) => {
  const day = ('0' + currentDate.getDate()).slice(-2); // Get the day with leading zero if necessary
  const month = ('0' + (currentDate.getMonth() + 1)).slice(-2); // Get the month with leading zero if necessary
 
- const formattedDate = `${month}${day}`;
+ const formattedDate = `${month}-${day}`;
  
  const trimmedItem = req.body.pccomitem.trim().split(' ')[0]; // Get the first part of the item by trimming and splitting
  
@@ -61,7 +62,8 @@ exports.addpurchasecommitment = async (req, res) => {
         id:uniqueId,
         weight:req.body.pccomweight,
         eppercentage:req.body.pccomep,
-        balance:req.body.pccomweight,
+        balanceweight:req.body.pccomweight,
+        balance:parseInt(req.body.pccomweight*req.body.pccomep/100),
         rate:req.body.pccomrate,
         additional:req.body.pccomAdditional,
         info:req.body.pccomInfo
@@ -90,7 +92,7 @@ exports.addsalecommitment = async (req, res) => {
  const month = ('0' + (currentDate.getMonth() + 1)).slice(-2); // Get the month with leading zero if necessary
 
  
- const formattedDate = `${month}${day}`;
+ const formattedDate = `${month}-${day}`;
  
  const trimmedItem = req.body.scitem.trim().split(' ')[0]; // Get the first part of the item by trimming and splitting
  
@@ -103,7 +105,8 @@ exports.addsalecommitment = async (req, res) => {
         id:uniqueId,
         weight:req.body.scweight,
         eppercentage:req.body.scep,
-        balance:req.body.scweight,
+        balanceweight:req.body.scweight,
+        balance:parseInt(req.body.scweight*req.body.scep/100),
         rate:req.body.scrate,
         additional:req.body.scAdditional,
         info:req.body.scInfo

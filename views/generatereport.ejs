@@ -478,7 +478,7 @@
       var commitTotal = document.getElementById('newcommittotal').innerText;
       var billData = {
         date:billingdate,
-        lot:lotnumber,
+        lotnumber:lotnumber,
         uniqueid:uniqueid,
         billid:billid,
         id: commitId,
@@ -831,7 +831,7 @@ function updatetotalbillamount() {
               </select>
 
             </div>   
-            <div id="byproducts">
+            <div id="byproducts-main">
 
             <div class="row"> 
            
@@ -856,6 +856,9 @@ function updatetotalbillamount() {
               <div class="col mb-3"> 
                   <button type="button" class="btn btn-primary" onclick=" addByProductRow();" id="addByProduct">Add By-Product</button> 
               </div> 
+          </div>
+          <div id="byproducts">
+
           </div>
           </div>
         </div>
@@ -1143,13 +1146,8 @@ if (billtype === 'Purchase') {
         }
       },
             { data: 'id' },
+            { data: 'balanceweight' },
             { data: 'balance' },
-            { data: null,
-          render: function (data, type, row) {
-            return parseInt(data.balance*(data.eppercentage/100))
-
-          } },
-
             { data: 'rate' },
             {
           data: null,
@@ -1157,7 +1155,7 @@ if (billtype === 'Purchase') {
             return `<div class="dropdown">
                 <button type="button" class="btn p-0 dropdown-toggle hide-arrow assign-commitment-btn" 
                          data-id="${row.id}"
-                        data-weight="${parseInt(data.balance*(data.eppercentage/100))}"
+                        data-weight="${row.balance}"
                         data-rate="${row.rate}"
                         >
                   <i class="bx bx-plus-circle text-primary"></i>

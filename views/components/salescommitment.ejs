@@ -88,7 +88,7 @@
       <button type="button" class="btn btn-outline-secondary" onclick="closepcModal()" data-bs-dismiss="modal">
         Close
       </button>
-      <button onclick="submitsalescommitment()" id="submitbutton" class="btn btn-primary">Add Party</button>
+      <button onclick="submitsalescommitment()" id="submitbutton" class="btn btn-primary">Add Sale Commitment</button>
     </div>
   </div>
 </div>
@@ -96,6 +96,8 @@
   function openpcModal() {
     const modal = document.getElementById('addsalescommitment');
     modal.style.display = 'flex';
+    const inputElement = document.getElementById('scdate');
+    inputElement.focus();
   }
 
   // Function to close the modal
@@ -141,15 +143,9 @@
         { data: 'eppercentage' },
 
         { data: 'rate' },
+        { data: 'balanceweight' },
         { data: 'balance' },
-        {
-          data: null,
-          render: function (data, type, row) {
-          
-            var adjustedWeight = Math.round(row.balance * (row.eppercentage / 100));
-            return adjustedWeight;
-          }
-        },
+
         {
           data: null,
           render: function (data, type, row) {

@@ -39,7 +39,7 @@ if(client){
     invoice: req.body.billid,
     uniqueid: req.body.uniqueid,
     commitment: req.body.id,
-    lotnumber: req.body.lot,
+    lotnumber: req.body.lotnumber,
     weight:parseInt((req.body.quantity*100)/req.body.eppercentage),
     qty: req.body.quantity,
     amount: req.body.rate,
@@ -78,14 +78,14 @@ if(client){
 
   if (purchasecommitment) {
     // Calculate the new balance by subtracting the delivered quantity from the total quantity
-    const newBalance = purchasecommitment.balance - parseInt((req.body.quantity*100)/req.body.eppercentage) ;
-
+    const newBalance = purchasecommitment.balanceweight - parseInt((req.body.quantity*100)/req.body.eppercentage) ;
     // Update the balance in the sales commitment object
-    purchasecommitment.balance = newBalance<0?0:newBalance;
+    purchasecommitment.balanceweight = newBalance<=0?0:newBalance;
+    purchasecommitment.balance = newBalance<=0?0:parseInt(newBalance*purchasecommitment.eppercentage/100);
+
 }
 
 if(client){
-  console.log('hhh',payable)
 
   return {existingClient:existingClient,payable:payable,recievable:recievable,recieved:recieved,paid :paid  }
 
@@ -105,7 +105,6 @@ exports.purchasebill = purchasebill;
 
 
 exports.generatepurchasereport = async (req, res,hi) => {
-  console.log(req.body.netepweight,req.body.billedquantity,req.body.consignment)
   let payable = 0
   let recievable = 0 ;
   let paid = 0
@@ -158,7 +157,6 @@ exports.generatepurchasereport = async (req, res,hi) => {
           for (const bill of req.body.bill) {
             const calling = await purchasebill({body:{...bill,item:req.body.item,eppercentage:req.body.eppercentage,tax:req.body.tax,name:req.body.billTo,payable:payable,recievable:recievable,paid:paid,recieved:recieved}},res, existingClient);
             existingClient = calling.existingClient
-            console.log(calling.payable)
             payable += calling.payable;
             recievable += calling.recievable;
             paid += calling.paid;
@@ -219,7 +217,6 @@ exports.generatepurchasereport = async (req, res,hi) => {
           }
   
         }
-    console.log(existingClient.payable,payable)       
         existingClient.payable = (existingClient.payable||0)+payable;
        existingClient.recievable =  (existingClient.recievable||0) +recievable;
        existingClient.paid =(existingClient.paid||0)+ paid;
@@ -353,10 +350,14 @@ if(client){
 
   if (salescommitment) {
     // Calculate the new balance by subtracting the delivered quantity from the total quantity
-    const newBalance = salescommitment.balance - parseInt((req.body.quantity*100)/req.body.eppercentage) ;
+    const newBalance = salescommitment.balanceweight - parseInt((req.body.quantity*100)/req.body.eppercentage) ;
 
     // Update the balance in the sales commitment object
-    salescommitment.balance = newBalance<0?0:newBalance;
+    salescommitment.balanceweight = newBalance<=0?0:newBalance;
+
+    salescommitment.balance = newBalance<=0?0:parseInt(newBalance*salescommitment.eppercentage/100);
+    
+
 }
 
 if(client){

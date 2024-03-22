@@ -78,7 +78,7 @@ const purchasecommitmentsschema = new Schema({
     id:String,
     weight:Number,
     eppercentage:Number,
-    delivered:Number,
+    balanceweight:Number,
     balance:Number,
     rate:Number,
     additional:String,
@@ -93,6 +93,7 @@ const salescommitmentsschema = new Schema({
     weight:Number,
     eppercentage:Number,
     delivered:Number,
+    balanceweight:Number,
     balance:Number,
     rate:Number,
     additional:String,
@@ -114,7 +115,6 @@ const purchasebillSchema = new Schema({
   amount: Number,
   subtotal:Number,
   tax:Number,
-
   total:Number,
   tds:Number
   // Add other fields as needed
@@ -212,9 +212,11 @@ const Transportagent = mongoose.model('Transportagent', transportagent);
 const PoductsSchema = mongoose.model('PoductsSchema', productsSchema);
 
 const Reference = mongoose.model('Reference', referenceSchema);
-  
+const Variables = mongoose.model('Variables', variables);
+
 module.exports = ClientModel;
 module.exports = Reference;
 module.exports = PoductsSchema;
 module.exports = Transportagent;
 module.exports = CoffeeSchema;
+module.exports = Variables;

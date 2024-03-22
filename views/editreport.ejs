@@ -156,23 +156,31 @@
                                 <span class="fw-bold">Subtotal:</span>
                                 <span>₹0.00</span>
                             </div> -->
-                          
+                            <%
+                            var weight =0
+                            var huskcutting=0
+                            var bag =0
+                            weight = coffee.quantity - (coffee.bags*coffee.bagweight)
+                            bags = (coffee.bags*coffee.bagweight)
+                            forign = parseInt(weight*(coffee.forignobject)/100)
+                            %>
                             <div class="d-flex flex-row align-items-start justify-content-between mt-2">
                                 <span class="fw-bold mt-2">Bag Weight (One):</span>
                                 <span>
                                   <div class="my-1 flex-nowrap input-group" >
                                   <input type="number" name="bagweight" value="<%=coffee.bagweight%>"  oninput="updateNetWeight()" id="bagweight" class="bg-white border form-control" style="width: 80px;" placeholder="0.2" min="0.00" step="0.01" max="100.0">
-                                  <span class="bg-light fw-bold text-secondary small input-group-text"><span id="bagweightDisplay"></span> Kg</span>  
+                                  <span class="bg-light fw-bold text-secondary small input-group-text"><span id="bagweightDisplay"><%=bags%></span> Kg</span>  
                                  
                                 </div>
                               </span>
                             </div>
+                            
                             <div class="d-flex flex-row align-items-start justify-content-between mt-2">
                               <span class="fw-bold mt-2">Forign Object (%):</span>
                               <span>
                                 <div class="my-1 flex-nowrap input-group" >
                                 <input type="number" name="forignobject" id="forignobject" value="<%=coffee.forignobject%>" class="bg-white border form-control"  oninput="updateNetWeight()" style="width: 80px;" placeholder="0.2" min="0.0" step="0.1" max="100.0">
-                                <span class="bg-light fw-bold text-secondary small input-group-text"> <span id="forignobjectDisplay"></span> Kg</span>  
+                                <span class="bg-light fw-bold text-secondary small input-group-text"> <span id="forignobjectDisplay"><%=forign%></span> Kg</span>  
                                
                               </div>
                             </span>
@@ -465,12 +473,12 @@
   </div>
  </div>
 <script>
- 
+ var party = '<%=coffee.billTo%>';
   var bill = [] ;
-  var consignment = 0  ;
-  var epweight = '<%=coffee.netepweight%>';
+  var consignment = '<%=coffee.storage%>'  ;
+  var epweight =  parseInt((parseFloat('<%=coffee.netWeight%>') / 100) * parseFloat('<%=coffee.outern%>')); 
   var lotnumber = '<%=coffee.lotnumber%>' ;
-  var netepweight = parseInt((parseFloat('<%=coffee.netWeight%>') / 100) * parseFloat('<%=coffee.outern%>'));
+  var netepweight = '<%=coffee.netepweight%>';
   var netWeight = '<%=coffee.netWeight%>';
   var eppercentage = '<%=coffee.eppercentage%>';
   var billedquantity = 0;
@@ -496,7 +504,7 @@
       var commitTotal = document.getElementById('newcommittotal').innerText;
       var billData = {
         date:billingdate,
-        lot:lotnumber,
+        lotnumber:lotnumber,
         uniqueid:uniqueid,
         billid:billid,
         id: commitId,
@@ -571,6 +579,17 @@
         deleteButton.addEventListener("click", function() {
             // Remove the row from the table
             // Remove the corresponding data from the bill array 
+            fetch(`/bills/${billData.uniqueid}/${party}`, {
+        method: 'DELETE'
+    })
+    .then(response => {
+        if (response.ok) {
+            // Remove the bill from the client-side array or any other data structure
+            const index = bill.findIndex(item => item.id === billId);
+            if (index !== -1) {
+                bill.splice(index, 1);
+            }
+            // Update total bill amount
             row.remove();
             if(bill.length==1){
               bill=[]
@@ -578,6 +597,17 @@
             bill.splice(index,1);
             }
             updatetotalbillamount()
+        } else {
+            // Handle errors
+            console.error('Failed to delete bill:', response.statusText);
+            alert('Failed to delete bill. Please try again.');
+        }
+    })
+    .catch(error => {
+        console.log('Error deleting bill:', error);
+        alert('An error occurred while deleting bill. Please try again.');
+    });
+            
         });
         document.getElementById('totalbillamount').innerText = "₹"+ totalbill  
         document.getElementById('consignmentdisplay').innerText = consignment+" Kg"  
@@ -956,7 +986,7 @@ closeButton.click();
 <script>
   var dataTable;
   // Function to open the modal
-  function openModal() {
+ async  function openModal() {
     setBillDateToCurrentDate()
     var item = document.getElementById('item').value
     var referenceselect = document.getElementById('referenceselect').value
@@ -975,7 +1005,6 @@ document.getElementById('lotnumber').innerText = lotnumber
    document.getElementById('Transportvehicle').innerText = Transportvehicle.toUpperCase()
    document.getElementById('billingnumber').value = lotnumber
    document.getElementById('itemnamedisplay').innerText = item
-console.log(lotnumber,party,referenceselect,billtype,eppercentage,item)
 
     if(party && item && eppercentage >=0 && referenceselect){
       const modal = document.getElementById('invoiceModal');
@@ -983,7 +1012,34 @@ console.log(lotnumber,party,referenceselect,billtype,eppercentage,item)
     }else{
       alert('Please choose a party name , Item,Refferennce and ep percentage')
     }
-    
+
+    try {
+        const response = await fetch(`/invoicebasepurchasebills?lotnumber=${lotnumber}`);
+        const data = await response.json();
+
+        if (response.ok) {
+          data.forEach(function(billData, index) { 
+            var billData = {
+        date:billData.date,
+        lotnumber:billData.lotnumber,
+        uniqueid:billData.uniqueid,
+        billid:billData.invoice,
+        id: billData.commitment,
+        quantity: billData.qty,
+        rate: billData.amount,
+        total: billData.subtotal
+          };
+              bill.push(billData)
+          })
+          displayBill(bill);
+        } else {
+          alert(data.error || 'Failed to get purchase bills.');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Failed to get purchase bills.');
+      } 
+
   }
   function openCommitments() {
 
@@ -1233,7 +1289,7 @@ document.getElementById('generateInvoiceBtn').addEventListener('click', () => {
   }
   function modalclicked(){
     
-    consignment = netepweight || 0
+    consignment = '<%=coffee.storage%>'
     document.getElementById('epweightdisplay').innerText = netepweight
     document.getElementById('consignmentdisplay').innerText = consignment + " Kg"
     document.getElementById('actualweightdisplay').innerText = netWeight
@@ -1260,7 +1316,7 @@ document.getElementById('generateInvoiceBtn').addEventListener('click', () => {
 });
 
  
-var party = '<%=coffee.billTo%>';
+
 
 
 </script>
