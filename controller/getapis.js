@@ -467,6 +467,8 @@ exports.salescommitments = async (req, res) => {
       
       
         exports.purchasebills  = (async (req, res) => {
+          console.log('ssfdf')
+
           // Assuming you have already imported required modules and set up your Express app
           
           // API endpoint for paginated data
@@ -906,9 +908,7 @@ exports.salescommitments = async (req, res) => {
 
         ///////////////////// purchase bills /////////////
         exports.invoicebasepurchasebills = async (req, res) => {
-          console.log('here');
           const { lotnumber } = req.query;
-          console.log(lotnumber)
           try {
               const bills = await ClientModel.aggregate([
                   // Unwind the purchasebillSchema array to de-normalize it
@@ -930,9 +930,11 @@ exports.salescommitments = async (req, res) => {
                       }
                   }
               ]);
+              console.log(bills)
               // Send the purchasebillSchema array as response
               res.json(bills.length > 0 ? bills[0].purchasebillSchema : []);
           } catch (error) {
+
               console.error(error);
               res.status(500).send('An error occurred while fetching purchase bills');
           }

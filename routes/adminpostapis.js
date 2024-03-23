@@ -23,6 +23,18 @@ router.post('/addreference', adminpostapis.addrefference);
 router.post('/addproducts', adminpostapis.addproducts);
 router.post('/addtransportagent', adminpostapis.addtransportagent);
 router.post('/saveTransaction', adminpostapis.addTransactions);
+router.post('/generatebill', (req, res, next) => {
+  console.log(req.body)
+  // Check the value of req.body.billtype
 
+  if (req.body.billtype == 'Purchase') {
+    console.log('hetre')
+    // If billType is 'sales', route to generatesalesreport
+    generatereport.purchasebill(req, res);
+  } else {
+    // For any other value or if not specified, route to generatepurchasereport
+    generatereport.salesbill(req, res);
+  }
+});
 
 module.exports = router;

@@ -50,7 +50,7 @@
                               <label class="fw-bold">Party:</label>
                               
                         <div class="my-1 flex-nowrap input-group">
-                          <input type="text" value="<%=coffee.billTo%>" disabled name="billTo" id="billTo"  class="form-control">
+                          <input type="text" value="<%=coffee.billTo%>"  name="billTo" id="billTo"  class="form-control" disabled>
 
                         </div>
                         <label class="fw-bold">Transportation Agent:</label>
@@ -273,7 +273,7 @@
                                   <span class="bg-light fw-bold text-secondary small input-group-text">Kg</span>
                                 </div>
                                 <label for="">Report Finalized</label>
-                                <input type="radio" name="reportstatus" value="finalizedreport">
+                                <input type="radio" name="reportstatus" checked value="finalizedreport">
                           <br>
                           <hr>
                           <div style="font-size: 1.125rem;" class="d-flex flex-row align-items-start justify-content-between">
@@ -287,6 +287,7 @@
                       
                         </div>
                         <a href="#" id="openModalBtn" onclick="modalclicked()"  class="btn btn-primary d-block w-100">Review Report</a>
+                        <a href="/viewcurrentreport?billTo=<%=coffee.billTo%>&status=<%=status%>&lotnumber=<%=coffee.lotnumber%>" target="_blank"  class="btn btn-secondary d-block w-100 mt-1">View Current Report</a>
 
                       </div>
                   </div>
@@ -355,10 +356,9 @@
               <div class="col-md-4">
                 <div class="fw-bold">Product Tax:</div>
                 <div><select name="tax" class="form-control" id="tax">
-                  <option value="0-0-0">sgst-0% + cgst-0% + igst-0%</option>
-                  <option value="2.5-2.5-0">sgst-2.5% + cgst-2.5% + igst-0%</option>
-                  <option value="2.5-2.5-5">sgst-2.5% + cgst-2.5% + igst-5%</option>
-
+                  <option value="0">sgst-0% + cgst-0% + igst-0%</option>
+                  <option value="5">sgst-2.5% + cgst-2.5% + igst-0%</option>
+                  <option value="10">sgst-2.5% + cgst-2.5% + igst-5%</option>
                 </select> </div>
               </div>
             </div>
@@ -490,13 +490,16 @@
     document.getElementById('billingdate').value = currentDate;
   }
 
-  function onButtonClick() {
+ async function onButtonClick() {
     var referenceselect = document.getElementById('referenceselect').value
     var billid=document.getElementById('billingnumber').value;
     const uniqueid = new Date().getTime().toString();
     var referenceselect = document.getElementById('referenceselect').value
-    var billingdate = document.getElementById('billingdate').value || new Date().toISOString().slice(0, 10);
+    var tax = document.getElementById('tax').value
+    var item = '<%=coffee.item%>'
 
+    var billingdate = document.getElementById('billingdate').value || new Date().toISOString().slice(0, 10);
+ var billtype = '<%=status%>'
       // Extract data from HTML elements
       var commitId = document.getElementById('newcommitid').value || referenceselect;
       var commitQty = document.getElementById('newcommitqty').value;
@@ -512,13 +515,25 @@
         rate: commitRate,
         total: commitTotal
     };
-    if ((consignment-commitQty) < 0) {
-          alert('You cant add more bill than original End Product  quantity')
+    var reportstatus =  $("input[type='radio'][name='reportstatus']:checked").val();
+
+    if ((consignment-commitQty) < 0 || reportstatus == 'pendingreport'|| commitTotal<=0) {
+          if(reportstatus=='pendingreport'){
+            alert('You cant make bill before finalizing the report')
+
+           }else if(commitTotal<=0){
+            alert('Cant add empty data')
+
+           }else{
+                      alert('You cant add more bill than original End Product  quantity')
+
+           }
             return; // Skip the iteration
         }else{
           function isIdAlreadyExists(newId, billArray) {
            for (var i = 0; i < billArray.length; i++) {
-        if (billArray[i].id === newId) {
+        if (billArray[i].id === newId&& billArray[i].id != referenceselect) {
+
             return true; // If the id already exists, return true
         }
     }
@@ -529,9 +544,30 @@
 
     if (isIdAlreadyExists(billData.id, bill)) {
         alert("Bill for "+billData.id+" already exists!");
-    } else {+
-      bill.push(billData);
-      displayBill();
+    } else {
+
+      try {
+        const report = await updatereport()
+        const response = await fetch('/generatebill', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({...billData,billtype:billtype,name:party,eppercentage:eppercentage,tax:tax,item:item})
+        });
+
+        if (response.ok) {
+          bill.push(billData);
+           displayBill();
+            // Handle the response data as needed
+        } else {
+            throw new Error('Failed to submit purchase bill');
+        }
+    } catch (error) {
+        console.log('Error:', error.message);
+        // Handle errors
+    }
+    
 
     }
               
@@ -583,9 +619,10 @@
         method: 'DELETE'
     })
     .then(response => {
+      console.log(response)
         if (response.ok) {
             // Remove the bill from the client-side array or any other data structure
-            const index = bill.findIndex(item => item.id === billId);
+            const index = bill.findIndex(item => item.uniqueid === billData.uniqueid);
             if (index !== -1) {
                 bill.splice(index, 1);
             }
@@ -1176,9 +1213,15 @@ async function submitForm() {
       formDataObj['netWeight'] = netWeight;
       formDataObj['eppercentage'] = eppercentage;
       formDataObj['billedquantity'] = billedquantity;
+      formDataObj['prevnetepweight']='<%=coffee.netepweight%>'
+      formDataObj['billTo']=party;
+      formDataObj['transportagent']='<%=coffee.transportagent%>'
+      formDataObj['billtype']='<%=status%>'
+      formDataObj['item']='<%=coffee.item%>'
+
 
   try {
-    const response = await fetch('/submit-bill', {
+    const response = await fetch('/edit-bill', {
         method: "POST", // Replace with the appropriate HTTP method (e.g., POST, PUT, etc.)
         headers: {
           "Content-Type": "application/json",
@@ -1193,6 +1236,41 @@ async function submitForm() {
     } else {
       alert('Error submitting the form');
     }
+  } catch (error) {
+    console.error('Error:', error);
+    alert('Error submitting the form');
+  }
+}
+async function updatereport() {
+  const form = document.querySelector('form');
+  const formData = await new FormData(form);
+  const formDataObj = {};
+      formData.forEach((value, key) => {
+        formDataObj[key] = value;
+      });
+      formDataObj['bill'] = bill;
+      formDataObj['lotnumber'] = lotnumber;
+      formDataObj['netepweight'] = netepweight;
+      formDataObj['netWeight'] = netWeight;
+      formDataObj['eppercentage'] = eppercentage;
+      formDataObj['billedquantity'] = billedquantity;
+      formDataObj['prevnetepweight']='<%=coffee.netepweight%>'
+      formDataObj['billTo']=party;
+      formDataObj['transportagent']='<%=coffee.transportagent%>'
+      formDataObj['billtype']='<%=status%>'
+      formDataObj['item']='<%=coffee.item%>'
+
+
+  try {
+    const response = await fetch('/edit-bill', {
+        method: "POST", // Replace with the appropriate HTTP method (e.g., POST, PUT, etc.)
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formDataObj),
+      });
+
+    
   } catch (error) {
     console.error('Error:', error);
     alert('Error submitting the form');

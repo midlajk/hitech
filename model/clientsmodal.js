@@ -193,15 +193,16 @@ const referenceSchema = new mongoose.Schema({
     loads:[]
 
   });
-  const variables = new mongoose.Schema({
-    refference: String,
+  const user = new mongoose.Schema({
     pbillid: Number,
     sbill: Number,
     creditnoteid: Number,
     debitnoteid: Number,
     urdbillid: Number,
     financialyear: String,
-
+    username:String,
+    password:String,
+    uid:String,
   });
 const ClientModel = mongoose.model('Client', clientSchema); // Use a different variable name here
 const CoffeeSchema = mongoose.model('CoffeeSchema', coffeeSchema); // Use a different variable name here
@@ -212,11 +213,11 @@ const Transportagent = mongoose.model('Transportagent', transportagent);
 const PoductsSchema = mongoose.model('PoductsSchema', productsSchema);
 
 const Reference = mongoose.model('Reference', referenceSchema);
-const Variables = mongoose.model('Variables', variables);
+const User = mongoose.model('User', user);
 
 module.exports = ClientModel;
 module.exports = Reference;
 module.exports = PoductsSchema;
 module.exports = Transportagent;
 module.exports = CoffeeSchema;
-module.exports = Variables;
+module.exports = User;

@@ -176,12 +176,14 @@
             <tbody>
                 {{#each data.bill}}
                 <tr> 
-                    <td>{{this.date}}</td>
-                    <td>{{this.id}}</td>
-                    <td>{{this.weight}}</td>
-                    <td>{{this.quantity}}</td>
-                    <td>{{this.rate}}</td>
-                    <td>{{this.total}}</td>
+                    <tr> 
+        <td>{{#if this.formatted_date}}{{this.formatted_date}}{{else}}{{this.date}}{{/if}}</td>
+    <td>{{#if this.id}}{{this.id}}{{else}}{{this.commitment}}{{/if}}</td>
+    <td>{{this.weight}}</td>
+    <td>{{#if this.quantity}}{{this.quantity}}{{else}}{{this.qty}}{{/if}}</td>
+    <td>{{#if this.rate}}{{this.rate}}{{else}}{{this.amount}}{{/if}}</td>
+    <td>{{#if this.total}}{{this.total}}{{else}}{{this.subtotal}}{{/if}}</td>
+</tr>            
 
                 </tr>
                 {{/each}}

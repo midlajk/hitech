@@ -22,6 +22,6 @@ router.get('/alltransactions', adminpostapis.transactions);
 router.get('/arrivals', adminpostapis.arrivals);
 router.get('/despatch', adminpostapis.despatch);
 
-router.get('/invoicebasepurchasebillspurchasebills', adminpostapis.invoicebasepurchasebills);
+router.get('/invoicebasepurchasebills', adminpostapis.invoicebasepurchasebills);
 
 module.exports = router;
