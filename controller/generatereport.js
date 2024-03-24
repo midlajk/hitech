@@ -11,6 +11,8 @@ const { v4: uuidv4 } = require('uuid');
 const { nanoid } = require('nanoid');
 const pdfMaster = require("pdf-master");
 const { Console } = require('console');
+const pdf = require('html-pdf');
+const handlebars = require('handlebars');
 
 async function purchasebill(req, res, client) {
   let payable;
@@ -235,7 +237,60 @@ exports.generatepurchasereport = async (req, res, hi) => {
       existingClient.recieved = (existingClient.recieved || 0) + recieved;
       await existingClient.save();
 
-      var data = {
+      // var data = {
+      //   companyname: 'HI TECH COFFEE',
+      //   party: req.body.billTo,
+      //   item: req.body.item,
+      //   delivery: req.body.delivery,
+      //   date: req.body.dateOfIssue,
+      //   vehicleno: req.body.lorry,
+      //   type: 'Purchase',
+      //   bags: req.body.bags,
+      //   quantity: req.body.quantity,
+      //   bagweight: parseInt(req.body.bagweight * req.body.bags),
+      //   netweights: parseInt(req.body.quantity - parseFloat(req.body.bagweight * req.body.bags)),
+      //   forignobject: req.body.forignobject,
+      //   weightallowance: parseFloat(req.body.quantity) - parseFloat(req.body.netWeight),
+      //   huskpercentage: req.body.huskpercentage,
+      //   outern: req.body.outern,
+      //   huskcutting: req.body.huskcutting,
+      //   moisturepercentage: req.body.moisturepercentage,
+      //   moisturecutting: req.body.moisturecutting,
+      //   bbpercentage: req.body.bbpercentage,
+      //   bbcutting: req.body.bbcutting,
+      //   berryborepercentage: req.body.berryborepercentage,
+      //   berryborecutting: req.body.berryborecutting,
+      //   other: req.body.other,
+      //   allowance: req.body.allowance,
+      //   lotnumber: req.body.lotnumber,
+      //   netepweight: req.body.netepweight,
+      //   eppercentage: parseFloat(req.body.eppercentage).toFixed(2),
+      //   refference: req.body.referenceselect,
+      //   netWeight: req.body.netWeight - req.body.huskcutting,
+      //   status: req.body.reportstatus,
+      //   bill: req.body.bill,
+      //   tax: req.body.tax,
+      //   taxtype: req.body.tax == 0 ? 'tax-exempt' : req.body.tax == 5 ? 'cgst 2.5% + sgst 2.5%' : 'cgst 2.5% + sgst 2.5% + igst 5%',
+      //   taxtotal: parseInt(payable * req.body.tax / 100),
+      //   total: payable,
+      //   grandtotal: payable + parseInt(payable * req.body.tax / 100),
+      //   cuttings: parseInt(req.body.epweight) - parseInt(req.body.netepweight)
+
+      // }
+
+      // let options = {
+      //   // displayHeaderFooter: true,
+      //   format: "A4",
+      //   margin: { top: "60px", bottom: "100px" },
+      //   // base: 'file://' + path.resolve('./public') + '/'
+
+      // };
+
+      // let PDF = await pdfMaster.generatePdf("template.hbs", { data }, options);
+
+      // const filePath = path.join(__dirname, '..', 'public', 'report.pdf');
+      // fs.writeFileSync(filePath, PDF);
+      const data = {
         companyname: 'HI TECH COFFEE',
         party: req.body.billTo,
         item: req.body.item,
@@ -273,23 +328,43 @@ exports.generatepurchasereport = async (req, res, hi) => {
         total: payable,
         grandtotal: payable + parseInt(payable * req.body.tax / 100),
         cuttings: parseInt(req.body.epweight) - parseInt(req.body.netepweight)
+    };
+    
+    const templatePath = path.join(__dirname, 'template.hbs');
 
-      }
+    // Compile Handlebars template
+    const template = fs.readFileSync(templatePath, 'utf8');
+    const compiledTemplate = handlebars.compile(template);
+    const html = compiledTemplate({ data });
+    console.log(html)
+    
+    // Options for PDF generation
+    const options = {
+      format: 'A4',           // Specify A4 paper size
+      orientation: 'portrait', // Set portrait orientation
+      border: {
+          top: '60px',        // Define top margin
+          bottom: '100px',    // Define bottom margin
+      },
+      header: {
+          height: '10mm',     // Define header height
+      },
+      footer: {
+          height: '10mm',     // Define footer height
+      },
+  };
+    // Output PDF path
+    const pdfPath = path.join(__dirname, '..', 'public', 'report.pdf');
+    
+    // Generate PDF from the compiled HTML
+    pdf.create(html, options).toFile(pdfPath, (err) => {
+        if (err) return console.error('Error generating PDF:', err);
+        console.log('PDF generated successfully:', pdfPath);
+        res.status(201).json({ message: 'Form submitted successfully' });
 
-      let options = {
-        // displayHeaderFooter: true,
-        format: "A4",
-        margin: { top: "60px", bottom: "100px" },
-        // base: 'file://' + path.resolve('./public') + '/'
+    });        
 
-      };
-
-      let PDF = await pdfMaster.generatePdf("template.hbs", { data }, options);
-
-      const filePath = path.join(__dirname, '..', 'public', 'report.pdf');
-      fs.writeFileSync(filePath, PDF);
     }
-    res.status(201).json({ message: 'Form submitted successfully' });
   } catch (error) {
     console.log(error)
     res.status(500).json({ message: 'Error submitting the form' });

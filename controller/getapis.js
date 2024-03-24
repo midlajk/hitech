@@ -930,7 +930,6 @@ exports.salescommitments = async (req, res) => {
                       }
                   }
               ]);
-              console.log(bills)
               // Send the purchasebillSchema array as response
               res.json(bills.length > 0 ? bills[0].purchasebillSchema : []);
           } catch (error) {

@@ -14,7 +14,11 @@
     "debug": "~2.6.9",
     "ejs": "^3.1.9",
     "express": "~4.16.1",
+    "express-handlebars": "^7.1.2",
     "express-session": "^1.17.3",
+    "handlebars": "^4.7.8",
+    "handlebars-pdf": "^1.0.1",
+    "html-pdf": "^3.0.1",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
     "jsonwebtoken": "^9.0.2",
@@ -24,6 +28,7 @@
     "nanoid": "^3.1.20",
     "nodemon": "^3.0.1",
     "pdf-creator-node": "^2.3.5",
-    "pdf-master": "^1.1.0"
+    "pdf-master": "^1.1.0",
+    "puppeteer": "^22.6.0"
   }
 }
