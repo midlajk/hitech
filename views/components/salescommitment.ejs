@@ -117,7 +117,7 @@
       processing: true,
       serverSide: true,
       ajax: {
-        url: 'http://localhost:3000/salescommitments', // Replace with your API endpoint
+        url: '/salescommitments', // Replace with your API endpoint
         dataSrc: 'data', // Key that holds the array of data in the API response
         data: function (d) {
           // Add any additional parameters you want to send to the server here
@@ -166,7 +166,7 @@
     // Delete Button Click Event
     function deletesalescommData(id) {
       $.ajax({
-        url: `http://localhost:3000/deletesalescommitments/${id}/${name}`,
+        url: `/deletesalescommitments/${id}/${name}`,
         type: 'DELETE',
         success: function (response) {
           scTable.ajax.reload();
@@ -216,7 +216,7 @@
 
     try {
       // Use Axios to make the POST request
-      const response = await axios.post('http://localhost:3000/addsalecommitment', payload, {
+      const response = await axios.post('/addsalecommitment', payload, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -237,7 +237,7 @@
     dropdownParent: $("#addsalescommitment"),
 
               ajax: {
-                  url: 'http://localhost:3000/getproducts',
+                  url: '/getproducts',
                   dataType: 'json',
                   delay: 250, // Delay in milliseconds before making the request
                   processResults: function (data) {
@@ -253,7 +253,7 @@
                   dropdownParent: $("#addsalescommitment"),
 
               ajax: {
-                  url: 'http://localhost:3000/getrefferance',
+                  url: '/getrefferance',
                   dataType: 'json',
                   delay: 250, // Delay in milliseconds before making the request
                   processResults: function (data) {

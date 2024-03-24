@@ -508,7 +508,7 @@
         }else{
           function isIdAlreadyExists(newId, billArray) {
            for (var i = 0; i < billArray.length; i++) {
-        if (billArray[i].id === newId && billArray[i].id != drefferance) {
+        if (billArray[i].id === newId && billArray[i].id != referenceselect) {
             return true; // If the id already exists, return true
         }
     }
@@ -902,7 +902,7 @@ const formattedDate = today.toISOString().split('T')[0];
 document.getElementById('dateOfIssue').value = formattedDate;
     $('.items-js').select2({
               ajax: {
-                  url: 'http://localhost:3000/getproducts',
+                  url: '/getproducts',
                   dataType: 'json',
                   delay: 250, // Delay in milliseconds before making the request
                   processResults: function (data) {
@@ -937,7 +937,7 @@ document.getElementById('dateOfIssue').value = formattedDate;
     $('.js-data-example-ajax-byproduct').select2({
             dropdownParent: $("#newitem"),
               ajax: {
-                  url: 'http://localhost:3000/getproducts',
+                  url: '/getproducts',
                   dataType: 'json',
                   delay: 250, // Delay in milliseconds before making the request
                   processResults: function (data) {
@@ -997,7 +997,7 @@ byproduct : byproducts
 if(productname){
 
 // Send a POST request to the server using Axios
-axios.post('http://localhost:3000/addproducts', data)
+axios.post('/addproducts', data)
   .then(response => {
     // Handle the server response here
 
@@ -1129,7 +1129,7 @@ if (billtype === 'Purchase') {
         searching: false, // Disable search option
         lengthChange: false,
         ajax: {
-            url: 'http://localhost:3000/' + api, 
+            url: '/' + api, 
             dataSrc: 'data', // Key that holds the array of data in the API response
             data: function (d) {
               d.name = party;
@@ -1245,7 +1245,7 @@ async function submitForm() {
     if (response) {
       alert('Form submitted successfully');
       // You can redirect or perform any other action here
-      const pdfWindow = window.open('http://localhost:3000/report.pdf', '_blank');
+      const pdfWindow = window.open('/report.pdf', '_blank');
       if (pdfWindow) {
         // Listen for the beforeunload event
         window.addEventListener('beforeunload', () => {
@@ -1367,7 +1367,7 @@ document.getElementById('generateInvoiceBtn').addEventListener('click', () => {
   $('.js-data-example-ajax').select2({
 
     ajax: {
-    url: 'http://localhost:3000/getnames',
+    url: '/getnames',
     dataType: 'json',
     delay: 250, // Delay in milliseconds before making the request
     processResults: function (data) {
@@ -1382,7 +1382,7 @@ document.getElementById('generateInvoiceBtn').addEventListener('click', () => {
 $('#referenceselect').select2({
 
 ajax: {
-url: 'http://localhost:3000/getrefferance',
+url: '/getrefferance',
 dataType: 'json',
 delay: 250, // Delay in milliseconds before making the request
 processResults: function (data) {
@@ -1406,7 +1406,7 @@ var party
 $('#transportagent').select2({
 
 ajax: {
-url: 'http://localhost:3000/getTransportAgent',
+url: '/getTransportAgent',
 dataType: 'json',
 delay: 250, // Delay in milliseconds before making the request
 processResults: function (data) {
@@ -1440,7 +1440,7 @@ var party
   };
   
     // Send a POST request to the server using Axios
-    axios.post('http://localhost:3000/addreference', data)
+    axios.post('/addreference', data)
       .then(response => {
         // Handle the server response here
 
@@ -1476,7 +1476,7 @@ var data = {
 
 
 // Send a POST request to the server using Axios
-axios.post('http://localhost:3000/addtransportagent', data)
+axios.post('/addtransportagent', data)
   .then(response => {
     // Handle the server response here
 
@@ -1514,7 +1514,7 @@ closeButton.click();
     };
 
  
-      axios.post('http://localhost:3000/addseller', data)
+      axios.post('/addseller', data)
   .then(response => {
     // Handle the server response here
     closeButton.click();

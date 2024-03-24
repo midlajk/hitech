@@ -10,7 +10,7 @@ function addrefferance(){
     };
 
     // Send a POST request to the server using Axios
-    axios.post('http://localhost:3000/addreference', data)
+    axios.post('/addreference', data)
       .then(response => {
         // Handle the server response here
         console.log(response.data);

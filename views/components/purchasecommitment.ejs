@@ -136,7 +136,7 @@
       processing: true,
       serverSide: true,
       ajax: {
-        url: 'http://localhost:3000/purchasecommitments', // Replace with your API endpoint
+        url: '/purchasecommitments', // Replace with your API endpoint
         dataSrc: 'data', // Key that holds the array of data in the API response
         data: function (d) {
              d.name = name; // Add the 'name' parameter to the data object
@@ -180,7 +180,7 @@
     // Delete Button Click Event
     // function deleteData(id) {
     //   $.ajax({
-    //     url: `http://localhost:3000/deletepurchasecommitments/${id}/${name}`,
+    //     url: `/deletepurchasecommitments/${id}/${name}`,
     //     type: 'DELETE',
     //     success: function (response) {
     //       dataTable.ajax.reload();
@@ -241,7 +241,7 @@ console.log(payload)
   
     try {
       // Use Axios to make the POST request
-      const response = await axios.post('http://localhost:3000/addpurchasecommitment', payload, {
+      const response = await axios.post('/addpurchasecommitment', payload, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -262,7 +262,7 @@ console.log(payload)
     dropdownParent: $("#purchasecommitmentadd"),
 
               ajax: {
-                  url: 'http://localhost:3000/getproducts',
+                  url: '/getproducts',
                   dataType: 'json',
                   delay: 250, // Delay in milliseconds before making the request
                   processResults: function (data) {
@@ -278,7 +278,7 @@ console.log(payload)
                   dropdownParent: $("#purchasecommitmentadd"),
 
               ajax: {
-                  url: 'http://localhost:3000/getrefferance',
+                  url: '/getrefferance',
                   dataType: 'json',
                   delay: 250, // Delay in milliseconds before making the request
                   processResults: function (data) {

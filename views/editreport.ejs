@@ -962,7 +962,7 @@ byproduct : byproducts
 if(productname){
 
 // Send a POST request to the server using Axios
-axios.post('http://localhost:3000/addproducts', data)
+axios.post('/addproducts', data)
   .then(response => {
     // Handle the server response here
 
@@ -1109,7 +1109,7 @@ if (billtype === 'Purchase') {
         searching: false, // Disable search option
         lengthChange: false,
         ajax: {
-            url: 'http://localhost:3000/' + api, 
+            url: '/' + api, 
             dataSrc: 'data', // Key that holds the array of data in the API response
             data: function (d) {
               d.name = party;
@@ -1380,7 +1380,7 @@ document.getElementById('generateInvoiceBtn').addEventListener('click', () => {
   $('.js-data-example-ajax').select2({
 
     ajax: {
-    url: 'http://localhost:3000/getnames',
+    url: '/getnames',
     dataType: 'json',
     delay: 250, // Delay in milliseconds before making the request
     processResults: function (data) {
@@ -1462,7 +1462,7 @@ const actualWeightInput = document.getElementById('actualweightcom');
     $('#referenceselect').select2({
 
 ajax: {
-url: 'http://localhost:3000/getrefferance',
+url: '/getrefferance',
 dataType: 'json',
 delay: 250, // Delay in milliseconds before making the request
 processResults: function (data) {

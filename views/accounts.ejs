@@ -104,7 +104,7 @@
         // Show loading indicator
       
         // Send GET request to fetch data using Axios
-        axios.get('http://localhost:3000/getpurchasesum')
+        axios.get('/getpurchasesum')
             .then(function(response) {
               console.log(response)
                 var data = response.data.data;
@@ -122,7 +122,7 @@
                 // Hide loading indicator in case of error
             });
 
-            axios.get('http://localhost:3000/getsalessum')
+            axios.get('/getsalessum')
             .then(function(response) {
               console.log(response)
                 var data = response.data.data;

@@ -76,7 +76,7 @@
       processing: true,
       serverSide: true,
       ajax: {
-        url: 'http://localhost:3000/alltransactions', // Replace with your API endpoint
+        url: '/alltransactions', // Replace with your API endpoint
         dataSrc: 'data', // Key that holds the array of data in the API response
         data: function (d) {
              d.name = name; // Add the 'name' parameter to the data object
@@ -180,7 +180,7 @@
 
   // Send data to the server
   $.ajax({
-    url: 'http://localhost:3000/saveTransaction',
+    url: '/saveTransaction',
     type: 'POST',
     contentType: 'application/json',
     data: JSON.stringify(data),

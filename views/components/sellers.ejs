@@ -79,7 +79,7 @@ var dataTable
         processing: true,
         serverSide: true,
         ajax: {
-          url: 'http://localhost:3000/getclients',
+          url: '/getclients',
           dataSrc: 'docs', // Key that holds the array of data in the API response
           data: function (d) {
 
@@ -175,7 +175,7 @@ var dataTable
     };
 
  
-      axios.post('http://localhost:3000/addseller', data)
+      axios.post('/addseller', data)
   .then(response => {
     // Handle the server response here
     dataTable.ajax.reload();
