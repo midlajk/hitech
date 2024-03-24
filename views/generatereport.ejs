@@ -1245,7 +1245,7 @@ async function submitForm() {
     if (response) {
       alert('Form submitted successfully');
       // You can redirect or perform any other action here
-      const pdfWindow = window.open('/report.pdf', '_blank');
+      const pdfWindow = window.open('/report.html', '_blank');
       if (pdfWindow) {
         // Listen for the beforeunload event
         window.addEventListener('beforeunload', () => {

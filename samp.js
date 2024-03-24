@@ -78,3 +78,40 @@ action="/submit-bill" method="post"
 // // }
 
 // // // Add an event listener to the "Generate Invoice" button
+
+
+
+  //   pdf.create(url, options).toFile(filePath, (err) => {
+        // if (err) return console.error('Error generating PDF:', err);
+        // console.log('PDF generated successfully:', filePath);
+
+        //   });     
+       
+  
+      // let PDF = await pdfMaster.generatePdf("template.hbs", { data }, options);
+
+      // const filePath = path.join(__dirname, '..', 'public', 'report.pdf');
+      // fs.writeFileSync(filePath, PDF);
+
+    // const templatePath = path.join(__dirname, 'template.hbs');
+
+    // // Compile Handlebars template
+    // const template = fs.readFileSync(templatePath, 'utf8');
+    // const compiledTemplate = handlebars.compile(template);
+    // const html = compiledTemplate({ data });
+    // console.log(html)
+    
+    // // Options for PDF generation
+ 
+    // // Output PDF path
+    // const pdfPath = path.join(__dirname, '..', 'public', 'report.pdf');
+    
+    // // Generate PDF from the compiled HTML
+    // pdf.create(html, options).toFile(pdfPath, (err) => {
+    //     if (err) return console.error('Error generating PDF:', err);
+    //     console.log('PDF generated successfully:', pdfPath);
+
+    // });        
+
+  //   const html = fs.readFileSync(path.join(__dirname, 'template.html'), 'utf-8');
+    
