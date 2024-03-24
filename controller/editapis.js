@@ -283,17 +283,28 @@ exports.viewcurrentpurchasereport = async (req, res, hi) => {
 
       };
 
-      let PDF = await pdfMaster.generatePdf("template.hbs", { data }, options);
+      // let PDF = await pdfMaster.generatePdf("template.hbs", { data }, options);
 
-      const filePath = path.join(__dirname, '..', 'public', 'report.pdf');
-      fs.writeFileSync(filePath, PDF);
+      // 
+      // fs.writeFileSync(filePath, PDF);
 
+      
+      const templatePath = path.join(__dirname, 'template.hbs');
+  
+          const template = fs.readFileSync(templatePath, 'utf8');
+      const compiledTemplate = handlebars.compile(template);
+      const html = compiledTemplate({ data });
+      fs.writeFile(path.join(__dirname, '..', 'public', 'report.html'), html, (d) => {
+        const url = `http://localhost:3000/report.html`
+        res.status(201).json({ message: 'Form submitted successfully' });
+        res.redirect('/report.html')
 
+      })
     }
-    res.redirect('/report.pdf')
+    res.redirect('/report.html')
 
   } catch (error) {
-    res.redirect('/report.pdf')
+    res.redirect('/report.html')
   }
 };
 exports.viewcurrentsales = async (req, res, hi) => {
@@ -380,16 +391,27 @@ exports.viewcurrentsales = async (req, res, hi) => {
 
       };
 
-      let PDF = await pdfMaster.generatePdf("template.hbs", { data }, options);
+      // let PDF = await pdfMaster.generatePdf("template.hbs", { data }, options);
 
-      const filePath = path.join(__dirname, '..', 'public', 'report.pdf');
-      fs.writeFileSync(filePath, PDF);
+      // 
+      // fs.writeFileSync(filePath, PDF);
 
+      
+      const templatePath = path.join(__dirname, 'template.hbs');
+  
+          const template = fs.readFileSync(templatePath, 'utf8');
+      const compiledTemplate = handlebars.compile(template);
+      const html = compiledTemplate({ data });
+      fs.writeFile(path.join(__dirname, '..', 'public', 'report.html'), html, (d) => {
+        const url = `http://localhost:3000/report.html`
+        res.status(201).json({ message: 'Form submitted successfully' });
+        res.redirect('/report.html')
 
+      })
     }
-    res.redirect('/report.pdf')
+    res.redirect('/report.html')
 
   } catch (error) {
-    res.redirect('/report.pdf')
+    res.redirect('/report.html')
   }
 };

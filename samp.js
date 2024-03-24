@@ -90,7 +90,7 @@ action="/submit-bill" method="post"
   
       // let PDF = await pdfMaster.generatePdf("template.hbs", { data }, options);
 
-      // const filePath = path.join(__dirname, '..', 'public', 'report.pdf');
+      // 
       // fs.writeFileSync(filePath, PDF);
 
     // const templatePath = path.join(__dirname, 'template.hbs');

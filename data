@@ -179,7 +179,7 @@ req.body.name   // const payable = (existingClient.payable||0) + bill.total
     
     let PDF = await pdfMaster.generatePdf("template.hbs", { data }, options);
   
-    const filePath = path.join(__dirname, '..', 'public', 'report.pdf');
+    
     fs.writeFileSync(filePath, PDF);
       }
       res.status(201).json({ message: 'Form submitted successfully' });
