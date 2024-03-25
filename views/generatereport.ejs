@@ -1317,7 +1317,8 @@ document.getElementById('generateInvoiceBtn').addEventListener('click', () => {
     const other = parseFloat(document.getElementById('other').value) || 0;
     const allowance = parseFloat(document.getElementById('allowance').value) || 0;
 
-    netepweight =  Math.round(epweight-hcutting-mcutting-bbcutting-berrycutting-other+allowance)
+    // netepweight =  Math.round(epweight-hcutting-mcutting-bbcutting-berrycutting-other+allowance)
+    netepweight = +parseFloat(epweight-hcutting-mcutting-bbcutting-berrycutting-other+allowance).toFixed(1)
 
 
 
@@ -1341,7 +1342,9 @@ document.getElementById('generateInvoiceBtn').addEventListener('click', () => {
     const other = parseFloat(document.getElementById('other').value) || 0;
     const allowance = parseFloat(document.getElementById('allowance').value) || 0;
 
-    netepweight =  Math.round(epweight-hcutting-mcutting-bbcutting-berrycutting-other+allowance)
+    // netepweight =  Math.round(epweight-hcutting-mcutting-bbcutting-berrycutting-other+allowance)
+    netepweight = +parseFloat(epweight-hcutting-mcutting-bbcutting-berrycutting-other+allowance).toFixed(1)
+
     eppercentage =+parseFloat((netepweight / netWeight) * 100).toFixed(2)
     document.getElementById('epWeightDisplay').textContent = netepweight.toFixed(2) + " Kg";
     document.getElementById('eppercenagedisplay').textContent = eppercentage.toFixed(2) + " %";
