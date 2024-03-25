@@ -28,18 +28,18 @@
 <body>
     <div class="container" style="padding-top: 60px;padding-bottom:100px;padding-left:30px;padding-right:30px">
         <div class="row">
-            <div class="col-md-1">
+            <div class="col-1">
                 <!-- Logo -->
                 <img src="http://77.37.47.185/logob.png" style="width: 100px;height:100px"  class="company-logo"></img>
             </div>
-            <div class="col-md-5">
+            <div class="col-5">
                 <!-- Company Info -->
                 <div class="company-info">
                     <h2>{{data.companyname}}</h2>
-                    <p>Industrial Area, KushalNagara</p>
+                    <p>Industrial Area, KushalNagar</p>
                 </div>
             </div>
-            <div class="col-md-6 text-right">
+            <div class="col-6 text-right">
                 <h6>Email: hitechcoffy@gmail.com</h6>
                 <h6>Phone: +91 9744061516</h6>
                     <h2>{{data.lotnumber}}</h2>
@@ -51,20 +51,20 @@
 
         <!-- Bill Type -->
 <div class="row">
-    <div class="col-md-12 text-center ">
+    <div class="col-12 text-center ">
         <h4  class="border border-success rounded" style="padding: 5px;">{{data.type}} Delivery Report</h4>
     </div>
 </div>
         <!-- Party Info -->
         <div class="row mb-1">
-            <div class="col-md-6">
+            <div class="col-6">
                 <h4>PARTY : {{data.party}}</h4>
                 <h5>ITEM :  {{data.item}}</h5>
                 <h5>Refference :  {{data.refference}}</h5>
 
                 <!-- Include more address lines as needed -->
             </div>
-            <div class="col-md-6 text-right">
+            <div class="col-6 text-right">
                     <h6>{{data.date}}</h6>
                 <h6>Delivery : {{data.delivery}}</h6>
                 <h6>Vehicle No. : {{data.vehicleno}}</h6>
@@ -74,7 +74,7 @@
 
         <!-- Item List -->
         <div class="row">
-            <div class="col-md-12" style="height: 350px;">
+            <div class="col-12" style="height: 350px;">
                 <table class="table table-bordered table-custom" >
                     <thead>
                         <tr style="height: 60px;">
@@ -146,11 +146,11 @@
 
         <!-- Deduction -->
         <div class="row">
-            <div class="col-md-10">
+            <div class="col-10">
                 <p>The report has been finalized according to company standards and verified by our expert team.</p>
                 <!-- You can style this area as needed -->
             </div>
-             <div class="col-md-2">
+             <div class="col-2">
                 <p>Signature.</p>
                 <!-- You can style this area as needed -->
             </div>
@@ -159,7 +159,7 @@
         {{!-- if data.bill.length greater than 0  --}}
 {{#if data.bill.length}}
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-12">
         <h2>Billing Confirmation</h2>
         <table class="table table-bordered table-custom">
             <thead>
@@ -210,11 +210,11 @@
         </table>
     </div>
      <div class="row p-3 mt-1">
-            <div class="col-md-10">
+            <div class="col-10">
                 <p>This document serves solely as a billing confirmation for reference purposes and does not constitute the actual bill. .</p>
                 <!-- You can style this area as needed -->
             </div>
-             <div class="col-md-2">
+             <div class="col-2">
                 <p>Party Signature.</p>
                 <!-- You can style this area as needed -->
             </div>

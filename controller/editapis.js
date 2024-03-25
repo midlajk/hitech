@@ -300,8 +300,10 @@ exports.viewcurrentpurchasereport = async (req, res, hi) => {
         res.redirect('/report.html')
 
       })
+    }else{
+      res.redirect('/report.html')
+
     }
-    res.redirect('/report.html')
 
   } catch (error) {
     res.redirect('/report.html')
@@ -408,8 +410,10 @@ exports.viewcurrentsales = async (req, res, hi) => {
         res.redirect('/report.html')
 
       })
+    }else{
+      res.redirect('/report.html')
+
     }
-    res.redirect('/report.html')
 
   } catch (error) {
     res.redirect('/report.html')
