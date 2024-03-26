@@ -50,6 +50,6 @@ router.get('/purchaseaccount',authMiddleware, function(req, res, next) {
   res.render('salesstorage',{ route: 'salesstorage' });
 });
 router.get('/settings',authMiddleware, function(req, res, next) {
-  res.render('settings',{ route: 'settings' });
+  res.render('settings',{ route: 'settings',user:req.session.user });
 });
 module.exports = router;

@@ -6,6 +6,7 @@ const adminpostapis = require('../controller/getapis');
 router.get('/getclients', adminpostapis.getclients);
 router.get('/getnames', adminpostapis.getnames);
 router.get('/getproducts', adminpostapis.getproducts);
+router.get('/getdetailedproductproducts', adminpostapis.getdetailedproductproducts);
 
 router.get('/purchasecommitments', adminpostapis.purchasecommitment);
 router.get('/salescommitments', adminpostapis.salescommitments);

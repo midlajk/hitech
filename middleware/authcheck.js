@@ -10,6 +10,7 @@ const authMiddleware = async(req, res, next) => {
     }else{
        const user = await User.findOne({uid:req.session.token})
        if(user){
+        req.session.user = user
         next()
        }else{
         return res.redirect('/login');

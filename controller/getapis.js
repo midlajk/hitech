@@ -72,6 +72,7 @@ exports.getclients = async (req, res) => {
 //     }
   };
   exports.getproducts = async (req, res) => {
+
     try {
       const searchTerm = req.query.term;
   if(!searchTerm){
@@ -102,7 +103,25 @@ exports.getclients = async (req, res) => {
 
   };
 
+  exports.getdetailedproductproducts = async (req, res) => {
+    console.log('here')
+    try {
 
+
+    const products = await PoductsSchema.find();
+    console.log(products)
+
+    res.json(products);
+
+        
+  
+    
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+
+  };
 // exports.purchasecommitment = async (req, res) => {
 //   try {
 //       const draw = parseInt(req.query.draw) || 1;
