@@ -5,7 +5,8 @@ const ClientModel = mongoose.model('Client')
 const Reference = mongoose.model('Reference')
 const PoductsSchema = mongoose.model('PoductsSchema')
 const Transportagent = mongoose.model('Transportagent')
-const { purchasecommitmentcount, incrementPurchaseCommitmentCount, decrementPurchaseCommitmentCount } = require('../model/variables');
+// const { purchasecommitmentcount, incrementPurchaseCommitmentCount, decrementPurchaseCommitmentCount } = require('../model/variables');
+const Financialyear = mongoose.model('Financialyear')
 
 const fs = require('fs');
 const path = require('path');
@@ -122,6 +123,35 @@ exports.addsalecommitment = async (req, res) => {
 };
 
 
+exports.addfinancial = async (req, res) => {
+  const year = req.body.year.trim().toUpperCase();
+
+  try {
+     const existingClient = await Financialyear.findOne({ year: year });
+  if (existingClient) {
+    res.json({ success: true, message: 'Reference added successfully' });
+
+  }else{
+    // Create a new reference document based on the request body
+    const financialyear = new Financialyear({
+      year: year,
+      default:new Date()
+    });
+
+    // Save the reference document to MongoDB
+    await financialyear.save();
+
+    // Send a success response to the client
+    res.json({ success: true, message: 'Reference added successfully' });
+  }
+  } catch (error) {
+    // Handle errors and send an error response
+    console.log('Error:', error);
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};
+
+
 exports.addrefference = async (req, res) => {
   const name = req.body.refference.trim().toUpperCase();
 
@@ -133,7 +163,8 @@ exports.addrefference = async (req, res) => {
   }else{
     // Create a new reference document based on the request body
     const newReference = new Reference({
-      name: name
+      name: name,
+      defaulted:new Date()
     });
 
     // Save the reference document to MongoDB
@@ -160,7 +191,10 @@ exports.addproducts = async (req, res) => {
     const newproduct = new PoductsSchema({
       itemtype:req.body.itemtype,
       product: name,
-    byproduct:req.body.byproduct
+    byproduct:req.body.byproduct,
+    stockweight:0,
+    stockep:0,
+    stockpercentage:0,
     });
 
     // Save the newproduct document to MongoDB
@@ -246,3 +280,5 @@ exports.addtransportagent = async (req, res) => {
       res.status(500).json({ error: 'Internal Server Error' });
   }
   }
+
+  /////

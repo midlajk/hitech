@@ -3,7 +3,7 @@
     <div class="content-wrapper">
         <!-- Content -->
 
-        <div class="container-xxl flex-grow-1 container-p-y">
+        <div class="flex-grow-1 m-4">
 
 
             <!-- Basic Bootstrap Table -->
@@ -24,15 +24,21 @@
                         <tbody class="table-border-bottom-0" id="table-body">
                           <tr>
                             <td>
-                              Refference
+                              Default Reff.
                             </td>
                             <td>
-                              <input type="text" class="form-control">
-                            </td>
+                              <div class="my-1 flex-nowrap input-group">
+                                <select class="form-control" name="referenceselect" id="referenceselect" >
+                                  <option value="<%=refferance%>" ><%=refferance%></option>
+
+                                </select>
+      
+                                <a class="bg-light fw-bold text-secondary small input-group-text" href="#" data-bs-toggle="modal" data-bs-target="#referanceAdd"><i class="menu-icon tf-icons bx bx-user-plus"></i></a>
+                              </div>                            </td>
                             
 
                             <td>
-                              <a href="" class="btn btn-primary">Update</a>
+                              <a href="#" onclick="setrefferencedefault()" class="btn btn-primary">Update</a>
                             </td>
 
                           </tr>
@@ -41,12 +47,19 @@
                               Financial Year
                             </td>
                             <td>
-                              <input type="text" class="form-control">
+                              <div class="my-1 flex-nowrap input-group">
+                                <select class="form-control" name="financialyear" id="financialyear" >
+                                  <option value="<%=year%>" ><%=year%></option>
+
+                                </select>
+      
+                                <a class="bg-light fw-bold text-secondary small input-group-text" href="#" data-bs-toggle="modal" data-bs-target="#financialyearadd"><i class="menu-icon tf-icons bx bx-user-plus"></i></a>
+                              </div>    
                             </td>
                             
 
                             <td>
-                              <a href="" class="btn btn-primary">Update</a>
+                              <a href="#" onclick="setfinancialdefault()" class="btn btn-primary">Update</a>
                             </td>
 
                           </tr>
@@ -168,6 +181,8 @@
 
 </div>
 <div class="col-7">
+  <h3>Products <a href="" class="btn btn-success float-right " data-bs-toggle="modal" data-bs-target="#newitems">Add Product</a></h3>
+  
   <table class="table table-bordered" id="example">
     <thead>
         <tr>
@@ -210,12 +225,12 @@
 <div class="layout-overlay layout-menu-toggle"></div>
 </div>
 <!-- / Layout wrapper -->
-<div class="modal fade hidden" id="newitem" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="newitem" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="modalCenterTitle">Item <span id="currentitemname"></span></h5>
-      
+      <a href="#" id="closeaddproductmodal" data-bs-dismiss="modal" class="float-right">X</a>
       </div>
 
       <div class="modal-body">
@@ -268,8 +283,8 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-outline-secondary" id="closeaddproductmodal" data-bs-dismiss="modal" >
-          Close
+        <button type="button" onclick="deleteproduct()"  class="btn btn-outline-danger" id="deleteproduct">
+          Delete
         </button>
         <a onclick="addproduct()" class="btn btn-primary text-white">Update Product</a>
       </div>
@@ -277,12 +292,141 @@
     </div>
   </div>
  </div>
+ <div class="modal fade hidden" id="newitems" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalCenterTitle">New Item</h5>
+      
+      </div>
 
+      <div class="modal-body">
+          <form id="newproductform">
+        <div class="row">
+          <div class="col mb-3">
+            <label for="name" class="form-label">New Item</label>
+            <div class="my-1 flex-nowrap input-group">
+              <input required type="text" name="productname" id="productname" class="form-control" placeholder="Enter Name">
+              <select name="itemtypea" id="itemtypea" class="form-control">
+                <option value="Primary">Primary Item</option>
+                <option value="Secondary">Secondary Item</option>
+
+              </select>
+
+            </div>   
+            <div id="byproducts-main">
+
+            <div class="row"> 
+           
+              <div class="col mb-3">
+                <label for="name" class="form-label">By-Product name</label>
+              </div>
+              <div class="col mb-3">
+                <label for="name" class="form-label">Percentage</label>
+              </div>
+              <div class="col mb-3">
+                <label for="name" class="form-label">Action</label>
+              </div>
+             
+            </div>
+            <div class="row byproduct-row"> 
+              <div class="col mb-3"> 
+                <select class="js-data-example-ajax-byproduct" name="byproductitemA" id="byproductitemA" required></select> 
+              </div> 
+              <div class="col mb-3"> 
+                  <input type="text" class="form-control" name="byproductpercentageA" id="byproductpercentageA" placeholder="Enter Percentage"> 
+              </div> 
+              <div class="col mb-3"> 
+                  <button type="button" class="btn btn-primary" onclick="addByProducta();" id="addByProduct">Add By-Product</button> 
+              </div> 
+          </div>
+          <div id="byproductA">
+
+          </div>
+          </div>
+        </div>
+          </div>
+ 
+       
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" id="closeaddproductmodal" data-bs-dismiss="modal" >
+          Close
+        </button>
+        <a onclick="addprod()" class="btn btn-primary text-white">Add Product</a>
+      </div>
+  
+    </div>
+  </div>
+ </div>
+ <div class="modal fade hidden" id="referanceAdd">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalCenterTitle">New Refference</h5>
+      
+      </div>
+      <div class="modal-body">
+          <form id="referanceform">
+        <div class="row">
+          <div class="col mb-3">
+            <label for="name" class="form-label">New Refference</label>
+            <input required type="text" name="newreferance" id="newreferance" class="form-control" placeholder="Enter Name">
+          </div>
+        
+          </div>
+ 
+       
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" id="closeReferenceModalBtn" data-bs-dismiss="modal" >
+          Close
+        </button>
+        <a onclick="addrefferance()" class="btn btn-primary text-white">Add Referance</a>
+      </div>
+  </form>
+    </div>
+  </div>
+ </div>
+ <div class="modal fade hidden" id="financialyearadd">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalCenterTitle">New Financial Year</h5>
+      
+      </div>
+      <div class="modal-body">
+          <form id="referanceform">
+        <div class="row">
+          <div class="col mb-3">
+            <label for="name" class="form-label">Financial Year</label>
+            <input required type="text" name="newfinancial" id="newfinancial" class="form-control" placeholder="Enter Year">
+          </div>
+        
+          </div>
+ 
+       
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" id="closefinancialModalBtn" data-bs-dismiss="modal" >
+          Close
+        </button>
+        <a onclick="addfinancial()" class="btn btn-primary text-white">Add Financial Year</a>
+      </div>
+  </form>
+    </div>
+  </div>
+ </div>
 <script src="../assets/vendor/libs/jquery/jquery.js"></script>
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 
 <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap4.min.js"></script>
 
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 <script>
   async function fetchData() {
@@ -318,105 +462,151 @@
 </script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
+<script src="/js/settingsproduct.js"></script>
 <script>
-// function openmodel(p){   
-//   console.log(p) 
-//   var myModal = new bootstrap.Modal(document.getElementById('newitem'));
-//       myModal.show();
-// }
-var byproducts = []
+$('#referenceselect').select2({
 
-document.addEventListener('click', function(event) {
-            const target = event.target;
-            if (target.matches('#openModalButton')) {
-              var myModal = new bootstrap.Modal(document.getElementById('newitem'));
-              myModal.show();
-                const productData = JSON.parse(target.dataset.product); 
-                document.getElementById('itemtype').value= productData.itemtype
-                var byproductsDiv = document.getElementById('byproducts');
-        byproductsDiv.innerHTML = '';
-        byproducts=productData.byproduct
-        productData.byproduct.forEach((byproduct, index) => {
-            // Create a table row
-            var newRowHtml = '<div class="row byproduct-row"> \
-                            <div class="col mb-3">'+byproduct.name+'\
-                             \
-                            </div> \
-                            <div class="col mb-3"> \
-                                '+byproduct.percentage+' \
-                            </div> \
-                            <div class="col mb-3"> \
-                                <button type="button" class="btn btn-danger delete-row" data-index="' + index + '">Delete</button> \
-                            </div> \
-                        </div>';   
-                        
-                        
-                        $("#byproducts").append(newRowHtml);
+ajax: {
+url: '/getrefferance',
+dataType: 'json',
+delay: 250, // Delay in milliseconds before making the request
+processResults: function (data) {
+  return {
+    results: data.results.map(name => ({ id: name, text: name }))
+  };
+},
+cache: true // Enable caching to reduce server requests
+}
 
-            // Append table row to byproducts div
-        });
+});
+function addrefferance(){
 
-                // Now you can use the product data as needed
-                // For example, open a modal with the product details
-            }
-        });
-        function addByProductRow() {
-     
-
-     var byproductname = document.getElementById('byproductitem').value
-     var byproductpercentage = document.getElementById('byproductpercentage').value
-
-     var byProduct = {
-    name: byproductname,
-    percentage: byproductpercentage
+var referance = document.getElementById("newreferance").value;
+var data = {
+refference: referance
 };
 
-byproducts.push(byProduct);
-var rowIndex = byproducts.length - 1
+// Send a POST request to the server using Axios
+axios.post('/addreference', data)
+  .then(response => {
+    // Handle the server response here
+
+    // Close the modal on successful response
+    if (response.data.success) {
+    var closeButton = document.getElementById('closeReferenceModalBtn');
+
+// Trigger the click event on the button
+closeButton.click();
+
+    }
+  })
+  .catch(error => {
+    // Handle errors here
+    console.log('Error:', error);
+  });
 
 
+}
 
-      var newRowHtml = '<div class="row byproduct-row"> \
-                            <div class="col mb-3">'+byproductname+'\
-                             \
-                            </div> \
-                            <div class="col mb-3"> \
-                                '+byproductpercentage+' \
-                            </div> \
-                            <div class="col mb-3"> \
-                                <button type="button" class="btn btn-danger delete-row" data-index="' + rowIndex + '">Delete</button> \
-                            </div> \
-                        </div>';
 
-      $("#byproducts").append(newRowHtml);
+function setrefferencedefault(){
+  var referance = document.getElementById("referenceselect").value;
+  
+  var data = {
+refference: referance
+};
 
-      
-  }
-  $('#newitem').on('shown.bs.modal', function () {
-    $('.js-data-example-ajax-byproduct').select2({
-            dropdownParent: $("#newitem"),
-              ajax: {
-                  url: '/getproducts',
-                  dataType: 'json',
-                  delay: 250, // Delay in milliseconds before making the request
-                  processResults: function (data) {
-                      return {
-                          results: data.results.map(name => ({ id: name, text: name }))
-                      };
-                  },
-                  cache: true // Enable caching to reduce server requests
-              }
-          });
+// Send a POST request to the server using Axios
+axios.post('/updaterefferencedefault', data)
+  .then(response => {
+    // Handle the server response here
+
+    // Close the modal on successful response
+    if (response.data.success) {
+      window.location.reload();
+
+    }
+  })
+  .catch(error => {
+    // Handle errors here
+    console.log('Error:', error);
+  });
+
+
+}
+
+function addfinancial(){
+
+var financial = document.getElementById("newfinancial").value;
+var data = {
+year: financial
+};
+
+// Send a POST request to the server using Axios
+axios.post('/newfinancial', data)
+  .then(response => {
+    // Handle the server response here
+
+    // Close the modal on successful response
+    if (response.data.success) {
+    var closeButton = document.getElementById('closefinancialModalBtn');
+
+// Trigger the click event on the button
+closeButton.click();
+
+    }
+  })
+  .catch(error => {
+    // Handle errors here
+    console.log('Error:', error);
+  });
+
+
+}
+
+
+function setfinancialdefault(){
+  var referance = document.getElementById("financialyear").value;
+  
+  var data = {
+refference: referance
+};
+
+// Send a POST request to the server using Axios
+axios.post('/updatefinancialdefault', data)
+  .then(response => {
+    // Handle the server response here
+
+    // Close the modal on successful response
+    if (response.data.success) {
+      window.location.reload();
+
+    }
+  })
+  .catch(error => {
+    // Handle errors here
+    console.log('Error:', error);
+  });
+
+
+}
+
+
+$('#financialyear').select2({
+
+ajax: {
+url: '/getfinancialyears',
+dataType: 'json',
+delay: 250, // Delay in milliseconds before making the request
+processResults: function (data) {
+  return {
+    results: data.results.map(name => ({ id: name, text: name }))
+  };
+},
+cache: true // Enable caching to reduce server requests
+}
+
 });
-$(document).on('click', '.delete-row', function () {
-        var index = $(this).data('index');
-        if(index < byproducts.length-1){
-          alert('delete the last item first')
-        }else{ byproducts.splice(index, 1);
-        $(this).closest('.byproduct-row').remove();
-        console.log(byproducts)}
-       
-      });
-</script>
-                                    
+</script>          
+
                                         <%- include('./include/end.ejs') -%>

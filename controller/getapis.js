@@ -7,6 +7,7 @@ const Reference = mongoose.model('Reference');
 const PoductsSchema = mongoose.model('PoductsSchema')
 const Transportagent = mongoose.model('Transportagent')
 
+const Financialyear = mongoose.model('Financialyear')
 
 exports.getclients = async (req, res) => {
   
@@ -894,6 +895,36 @@ exports.salescommitments = async (req, res) => {
           }
     
         };
+
+        
+        exports.getfinancialyears = async (req, res) => {
+          try {
+            const searchTerm = req.query.term;
+        if(!searchTerm){
+          const refferences = await Financialyear.aggregate([{ $sample: { size: 20 } }]);
+          const names = refferences.map(reff => reff.year);  
+            res.json({ results: names })
+        }else{
+          const escapedSearchTerm = searchTerm.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+
+            const refferences = await Financialyear.find({ name: { $regex: escapedSearchTerm, $options: 'i' } }, 'newRouteName');
+        
+            const names = refferences.map(reff => reff.year);
+        
+            res.json({ results: names });
+            
+        }
+            
+              
+        
+          
+          } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal Server Error' });
+          }
+    
+        };
+        ///////////////////////////////////////////
       
         exports.getTransportAgent = async (req, res) => {
           try {

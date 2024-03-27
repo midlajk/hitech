@@ -20,6 +20,8 @@ router.post('/addseller', adminpostapis.addseller);
 router.post('/addpurchasecommitment', adminpostapis.addpurchasecommitment);
 router.post('/addsalecommitment', adminpostapis.addsalecommitment);
 router.post('/addreference', adminpostapis.addrefference);
+router.post('/newfinancial', adminpostapis.addfinancial);
+
 router.post('/addproducts', adminpostapis.addproducts);
 router.post('/addtransportagent', adminpostapis.addtransportagent);
 router.post('/saveTransaction', adminpostapis.addTransactions);

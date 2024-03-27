@@ -13,6 +13,8 @@ router.get('/salescommitments', adminpostapis.salescommitments);
 router.get('/individualarrivals', adminpostapis.individualarrivals);
 router.get('/individualdespatch', adminpostapis.individualdespatch);
 router.get('/getrefferance', adminpostapis.getrefference);
+router.get('/getfinancialyears', adminpostapis.getfinancialyears);
+
 router.get('/getTransportAgent', adminpostapis.getTransportAgent);
 router.get('/salesbills', adminpostapis.salesbills);
 router.get('/purchasebills', adminpostapis.purchasebills);

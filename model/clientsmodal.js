@@ -176,6 +176,10 @@ const referenceSchema = new mongoose.Schema({
     name: String,
     defaulted:Date
   });
+  const financialyear = new mongoose.Schema({
+    year: String,
+    defaulted:Date
+  });
   const productsSchema = new mongoose.Schema({
     itemtype:String,
     product: String,
@@ -214,6 +218,7 @@ const PoductsSchema = mongoose.model('PoductsSchema', productsSchema);
 
 const Reference = mongoose.model('Reference', referenceSchema);
 const User = mongoose.model('User', user);
+const Financialyear = mongoose.model('Financialyear', financialyear);
 
 module.exports = ClientModel;
 module.exports = Reference;
@@ -221,3 +226,4 @@ module.exports = PoductsSchema;
 module.exports = Transportagent;
 module.exports = CoffeeSchema;
 module.exports = User;
+module.exports = Financialyear;

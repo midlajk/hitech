@@ -33,4 +33,8 @@ router.get('/viewcurrentreport',  (req, res) => {
         // Render your current sales report template
     }
 });
+router.post('/updateproduct', adminget.updateproduct);
+router.post('/deleteproduct', adminget.deleteproduct);
+router.post('/updaterefferencedefault', adminget.updaterefferencedefault);
+
 module.exports = router;

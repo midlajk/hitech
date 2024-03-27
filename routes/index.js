@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const ClientModel = mongoose.model('Client')
 const Reference = mongoose.model('Reference')
 const authMiddleware = require('../middleware/authcheck.js');
+const Financialyear = mongoose.model('Financialyear')
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -49,7 +50,11 @@ router.get('/salesstorage',authMiddleware, function(req, res, next) {
 router.get('/purchaseaccount',authMiddleware, function(req, res, next) {
   res.render('salesstorage',{ route: 'salesstorage' });
 });
-router.get('/settings',authMiddleware, function(req, res, next) {
-  res.render('settings',{ route: 'settings',user:req.session.user });
+router.get('/settings',authMiddleware, async function(req, res, next) {
+  const reference = await Reference.findOne({})
+    .sort({ defaulted: -1 })
+    const year = await Financialyear.findOne({})
+    .sort({ defaulted: -1 })
+  res.render('settings',{ route: 'settings',user:req.session.user ,refferance:reference?reference.name:'',year:year?year.year:'' });
 });
 module.exports = router;

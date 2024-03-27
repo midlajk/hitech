@@ -6,6 +6,7 @@ const CoffeeSchema = mongoose.model('CoffeeSchema');
 const Reference = mongoose.model('Reference');
 const PoductsSchema = mongoose.model('PoductsSchema')
 const Transportagent = mongoose.model('Transportagent')
+const Financialyear = mongoose.model('Financialyear')
 
 const fs = require('fs');
 const path = require('path');
@@ -13,6 +14,7 @@ const { v4: uuidv4 } = require('uuid');
 const { nanoid } = require('nanoid');
 const pdfMaster = require("pdf-master");
 const { Console } = require('console');
+const { findOneAndUpdate } = require('../model/clientsmodal');
 
 exports.editentry = async (req, res) => {
   const clientId = new mongoose.Types.ObjectId(req.params.id); // Convert id to ObjectId
@@ -418,4 +420,85 @@ exports.viewcurrentsales = async (req, res, hi) => {
   } catch (error) {
     res.redirect('/report.html')
   }
+};
+
+////update product /////
+  exports.updateproduct = async (req, res, hi) => {
+    console.log('here')
+  try {
+      const { id, item, product } = req.body;
+      console.log(req.body)
+
+      // Find the product by id and update its itemtype and product fields
+      const updatedProduct = await PoductsSchema.findByIdAndUpdate(id, {
+          itemtype: item,
+          byproduct: product
+      }, { new: true });
+
+      if (!updatedProduct) {
+          return res.status(404).json({ error: 'Product not found' });
+      }
+
+      res.json(updatedProduct); // Return the updated product
+  } catch (error) {
+      console.error('Error updating product:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+exports.deleteproduct = async (req, res, hi) => {
+try {
+    const { id } = req.body;
+
+    // Find the product by id and update its itemtype and product fields
+    const updatedProduct = await PoductsSchema.findByIdAndDelete(id);
+
+    if (!updatedProduct) {
+        return res.status(404).json({ error: 'Product not found' });
+    }
+
+    res.json(updatedProduct); // Return the updated product
+} catch (error) {
+    console.error('Error updating product:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+}
+};
+
+exports.updaterefferencedefault = async (req, res, hi) => {
+try {
+    const { refference } = req.body;
+    // Find the product by id and update its itemtype and product fields
+    const updatedProduct = await Reference.findOneAndUpdate(
+      { name: refference }, // Search criteria
+      { defaulted: new Date() }, // Fields to update
+      { new: true } // Options: return the modified document
+  );
+  console.log(updatedProduct)
+    if (!updatedProduct) {
+        return res.status(404).json({ error: 'Product not found' });
+    }
+
+    res.json(updatedProduct); // Return the updated product
+} catch (error) {
+    console.log('Error updating product:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+}
+};
+exports.updatefinancial = async (req, res, hi) => {
+try {
+    const { year } = req.body;
+    // Find the product by id and update its itemtype and product fields
+    const updatedProduct = await Financialyear.findOneAndUpdate(
+      { year: year }, // Search criteria
+      { defaulted: new Date() }, // Fields to update
+      { new: true } // Options: return the modified document
+  );
+    if (!updatedProduct) {
+        return res.status(404).json({ error: 'Product not found' });
+    }
+
+    res.json(updatedProduct); // Return the updated product
+} catch (error) {
+    console.log('Error updating product:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+}
 };
