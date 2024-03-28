@@ -24,4 +24,9 @@ router.get('/despatch', adminpostapis.despatch);
 
 router.get('/invoicebasepurchasebills', adminpostapis.invoicebasepurchasebills);
 
+/////////////mac local changes ///////
+router.get('/allpurchasebill', adminpostapis.allpurchasebill);
+
+
+
 module.exports = router;

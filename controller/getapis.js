@@ -938,4 +938,102 @@ exports.salescommitments = async (req, res) => {
               res.status(500).send('An error occurred while fetching purchase bills');
           }
       };
-      
+      /////////////mac local changes //////////////////////////////////////
+
+
+      exports.allpurchasebill = async (req, res) => {
+        try {
+            const draw = parseInt(req.query.draw) || 1;
+            const start = parseInt(req.query.start) || 0;
+            const length = parseInt(req.query.length) || 10;
+    
+            let pipeline = [
+                {
+                    $unwind: "$purchasebillSchema"
+                },
+                {
+                    $skip: start
+                },
+                {
+                    $limit: length
+                },
+                {
+                  $group: {
+                    _id: null,
+                    name: '$name',
+                    purchasebillSchema: { $push: '$purchasebillSchema' } // Push matching salescommitmentsschema to array
+                }}
+            ];
+    
+            // If name is provided in the query, add a $match stage to filter by name
+            // if (name) {
+            //     pipeline.unshift({
+            //         $match: { name: name }
+            //     });
+            // }
+    
+            const client = await ClientModel.aggregate(pipeline);
+    
+    
+            const totalclients = await ClientModel.aggregate([{ $unwind: "$purchasebillSchema" }]);
+    
+            res.json({
+                draw,
+                recordsTotal: totalclients.length,
+                recordsFiltered: totalclients.length,
+                data: client.length>0?client[0].purchasebillSchema:[],
+            });
+           
+        } catch (error) {
+            console.log('Error fetching data:', error);
+            res.status(500).json({ error: 'Server error' });
+        }
+    };
+    exports.allsales = async (req, res) => {
+      try {
+          const draw = parseInt(req.query.draw) || 1;
+          const start = parseInt(req.query.start) || 0;
+          const length = parseInt(req.query.length) || 10;
+  
+          let pipeline = [
+              {
+                  $unwind: "$salesbillSchema"
+              },
+              {
+                  $skip: start
+              },
+              {
+                  $limit: length
+              },
+              {
+                $group: {
+                  _id: null,
+                  name: '$name',
+                  salesbillSchema: { $push: '$salesbillSchema' } // Push matching salescommitmentsschema to array
+              }}
+          ];
+  
+          // If name is provided in the query, add a $match stage to filter by name
+          // if (name) {
+          //     pipeline.unshift({
+          //         $match: { name: name }
+          //     });
+          // }
+  
+          const client = await ClientModel.aggregate(pipeline);
+  
+  
+          const totalclients = await ClientModel.aggregate([{ $unwind: "$salesbillSchema" }]);
+  
+          res.json({
+              draw,
+              recordsTotal: totalclients.length,
+              recordsFiltered: totalclients.length,
+              data: client.length>0?client[0].salesbillSchema:[],
+          });
+         
+      } catch (error) {
+          console.log('Error fetching data:', error);
+          res.status(500).json({ error: 'Server error' });
+      }
+  };

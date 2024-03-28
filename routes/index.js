@@ -52,4 +52,10 @@ router.get('/purchaseaccount',authMiddleware, function(req, res, next) {
 router.get('/settings',authMiddleware, function(req, res, next) {
   res.render('settings',{ route: 'settings' });
 });
+router.get('/purchases',authMiddleware, function(req, res, next) {
+  res.render('purchase',{ route: 'purchases' });
+});
+router.get('/sales',authMiddleware, function(req, res, next) {
+  res.render('sales',{ route: 'sales' });
+});
 module.exports = router;
